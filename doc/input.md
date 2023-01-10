@@ -1,147 +1,146 @@
-# Input file <!-- omit in toc -->
+- [Input file](#input-file)
+  - [Structure of the Input file](#structure-of-the-input-file)
+  - [List of keywords](#list-of-keywords)
+    - [INPUT_PARAMETERS](#input_parameters)
+      - [nspin](#nspin)
+      - [package](#package)
+      - [fermi_energy](#fermi_energy)
+      - [fermi_energy_unit](#fermi_energy_unit)
+      - [HR_route](#hr_route)
+      - [SR_route](#sr_route)
+      - [rR_route](#rr_route)
+      - [binary](#binary)
+      - [HR_unit](#hr_unit)
+      - [rR_unit](#rr_unit)
+      - [max_kpoint_num](#max_kpoint_num)
+      - [sparse_format](#sparse_format)
+    - [LATTICE](#lattice)
+      - [lattice_constant](#lattice_constant)
+      - [lattice_constant_unit](#lattice_constant_unit)
+      - [lattice_vector](#lattice_vector)
+    - [BAND_STRUCTURE](#band_structure)
+      - [wf_collect](#wf_collect)
+      - [kpoint_mode](#kpoint_mode)
+    - [BANDUNFOLDING](#bandunfolding)
+      - [stru_file](#stru_file)
+      - [ecut](#ecut)
+      - [band_range](#band_range)
+      - [m_matrix](#m_matrix)
+      - [kpoint_mode](#kpoint_mode-1)
+    - [FAT_BAND](#fat_band)
+      - [band_range](#band_range-1)
+      - [stru_file](#stru_file-1)
+      - [kpoint_mode](#kpoint_mode-2)
+    - [FERMI_ENERGY](#fermi_energy-1)
+      - [temperature](#temperature)
+      - [electron_num](#electron_num)
+      - [grid](#grid)
+      - [epsilon](#epsilon)
+    - [FERMI_SURFACE](#fermi_surface)
+      - [bar](#bar)
+      - [energy](#energy)
+      - [kpoint_mode](#kpoint_mode-3)
+    - [FIND_NODES](#find_nodes)
+      - [energy_range](#energy_range)
+      - [bar](#bar-1)
+      - [kpoint_mode](#kpoint_mode-4)
+    - [JDOS](#jdos)
+      - [occ_band](#occ_band)
+      - [omega](#omega)
+      - [domega](#domega)
+      - [eta](#eta)
+      - [grid](#grid-1)
+    - [PDOS](#pdos)
+      - [e_range](#e_range)
+      - [de](#de)
+      - [sigma](#sigma)
+      - [kpoint_mode](#kpoint_mode-5)
+      - [SPIN_TEXTURE](#spin_texture)
+      - [nband](#nband)
+      - [kpoint_mode](#kpoint_mode-6)
+    - [AHC](#ahc)
+      - [method](#method)
+      - [integrate_mode](#integrate_mode)
+    - [BERRY_CURVATURE](#berry_curvature)
+      - [method](#method-1)
+      - [occ_band](#occ_band-1)
+      - [kpoint_mode](#kpoint_mode-7)
+    - [BERRY_CURVATURE_DIPOLE](#berry_curvature_dipole)
+      - [omega](#omega-1)
+      - [domega](#domega-1)
+      - [integrate_mode](#integrate_mode-1)
+    - [CHERN_NUMBER](#chern_number)
+      - [method](#method-2)
+      - [occ_band](#occ_band-2)
+      - [k_start](#k_start)
+      - [k_vect1](#k_vect1)
+      - [k_vect2](#k_vect2)
+      - [integrate_mode](#integrate_mode-2)
+    - [CHIRALITY](#chirality)
+      - [method](#method-3)
+      - [k_vect](#k_vect)
+      - [radius](#radius)
+      - [point_num](#point_num)
+    - [CPGE](#cpge)
+      - [omega](#omega-2)
+      - [domega](#domega-2)
+      - [integrate_mode](#integrate_mode-3)
+    - [OPTICAL_CONDUCTIVITY](#optical_conductivity)
+      - [occ_band](#occ_band-3)
+      - [omega](#omega-3)
+      - [domega](#domega-3)
+      - [eta](#eta-1)
+      - [grid](#grid-2)
+    - [POLARIZATION](#polarization)
+      - [occ_band](#occ_band-4)
+      - [nk1](#nk1)
+      - [nk2](#nk2)
+      - [nk3](#nk3)
+      - [atom_type](#atom_type)
+      - [stru_file](#stru_file-2)
+      - [valence_e](#valence_e)
+    - [SHIFT_CURRENT](#shift_current)
+      - [occ_band](#occ_band-5)
+      - [omega](#omega-4)
+      - [domega](#domega-4)
+      - [eta](#eta-2)
+      - [grid](#grid-3)
+      - [method](#method-4)
+    - [WILSON_LOOP](#wilson_loop)
+      - [occ_band](#occ_band-6)
+      - [k_start](#k_start-1)
+      - [k_vect1](#k_vect1-1)
+      - [k_vect2](#k_vect2-1)
+      - [nk1](#nk1-1)
+      - [nk2](#nk2-1)
+    - [Drude Weight](#drude-weight)
+      - [omega](#omega-5)
+      - [domega](#domega-5)
+      - [integrate_mode](#integrate_mode-4)
+  - [Setting of k points](#setting-of-k-points)
+    - [1. When kpoint_mode is 'mp'](#1-when-kpoint_mode-is-mp)
+      - [mp_grid](#mp_grid)
+      - [k_start](#k_start-2)
+      - [k_vect1](#k_vect1-2)
+      - [k_vect2](#k_vect2-2)
+      - [k_vect3](#k_vect3)
+    - [2. When kpoint_mode is 'line'](#2-when-kpoint_mode-is-line)
+      - [kpoint_num](#kpoint_num)
+      - [high_symmetry_kpoint](#high_symmetry_kpoint)
+    - [3. When kpoint_mode is 'direct'](#3-when-kpoint_mode-is-direct)
+      - [kpoint_num](#kpoint_num-1)
+      - [kpoint_direct_coor](#kpoint_direct_coor)
+  - [Setting of integration](#setting-of-integration)
+    - [1. When integrate_mode is Grid](#1-when-integrate_mode-is-grid)
+      - [integrate_grid](#integrate_grid)
+      - [adaptive_grid](#adaptive_grid)
+      - [adaptive_grid_threshold](#adaptive_grid_threshold)
+    - [2. When integrate_mode is Adaptive](#2-when-integrate_mode-is-adaptive)
+      - [relative_error](#relative_error)
+      - [absolute_error](#absolute_error)
+      - [initial_grid](#initial_grid)
 
-- [Structure of the Input file](#structure-of-the-input-file)
-- [List of keywords](#list-of-keywords)
-  - [INPUT_PARAMETERS](#input_parameters)
-    - [nspin](#nspin)
-    - [package](#package)
-    - [fermi_energy](#fermi_energy)
-    - [fermi_energy_unit](#fermi_energy_unit)
-    - [HR_route](#hr_route)
-    - [SR_route](#sr_route)
-    - [rR_route](#rr_route)
-    - [binary](#binary)
-    - [HR_unit](#hr_unit)
-    - [rR_unit](#rr_unit)
-    - [max_kpoint_num](#max_kpoint_num)
-    - [sparse_format](#sparse_format)
-  - [LATTICE](#lattice)
-    - [lattice_constant](#lattice_constant)
-    - [lattice_constant_unit](#lattice_constant_unit)
-    - [lattice_vector](#lattice_vector)
-  - [BAND_STRUCTURE](#band_structure)
-    - [wf_collect](#wf_collect)
-    - [kpoint_mode](#kpoint_mode)
-  - [BANDUNFOLDING](#bandunfolding)
-    - [stru_file](#stru_file)
-    - [ecut](#ecut)
-    - [band_range](#band_range)
-    - [m_matrix](#m_matrix)
-    - [kpoint_mode](#kpoint_mode-1)
-  - [FERMI_ENERGY](#fermi_energy-1)
-    - [temperature](#temperature)
-    - [electron_num](#electron_num)
-    - [grid](#grid)
-    - [epsilon](#epsilon)
-  - [FERMI_SURFACE](#fermi_surface)
-    - [bar](#bar)
-    - [nbands](#nbands)
-    - [kpoint_mode](#kpoint_mode-2)
-  - [FIND_NODES](#find_nodes)
-    - [energy_range](#energy_range)
-    - [initial_grid](#initial_grid)
-    - [initial_threshold](#initial_threshold)
-    - [adaptive_grid](#adaptive_grid)
-    - [adaptive_threshold](#adaptive_threshold)
-    - [k_start](#k_start)
-    - [k_vect1](#k_vect1)
-    - [k_vect2](#k_vect2)
-    - [k_vect3](#k_vect3)
-  - [JDOS](#jdos)
-    - [occ_band](#occ_band)
-    - [omega](#omega)
-    - [domega](#domega)
-    - [eta](#eta)
-    - [grid](#grid-1)
-  - [PDOS](#pdos)
-    - [e_range](#e_range)
-    - [de](#de)
-    - [sigma](#sigma)
-    - [kpoint_mode](#kpoint_mode-3)
-    - [SPIN_TEXTURE](#spin_texture)
-    - [nband](#nband)
-    - [kpoint_mode](#kpoint_mode-4)
-  - [AHC](#ahc)
-    - [method](#method)
-    - [integrate_mode](#integrate_mode)
-  - [BERRY_CURVATURE](#berry_curvature)
-    - [method](#method-1)
-    - [occ_band](#occ_band-1)
-    - [kpoint_mode](#kpoint_mode-5)
-  - [BERRY_CURVATURE_DIPOLE](#berry_curvature_dipole)
-    - [omega](#omega-1)
-    - [domega](#domega-1)
-    - [integrate_mode](#integrate_mode-1)
-  - [CHERN_NUMBER](#chern_number)
-    - [method](#method-3)
-    - [occ_band](#occ_band-2)
-    - [k_start](#k_start-2)
-    - [k_vect1](#k_vect1-2)
-    - [k_vect2](#k_vect2-2)
-    - [integrate_mode](#integrate_mode-2)
-  - [CHIRALITY](#chirality)
-    - [method](#method-4)
-    - [k_vect](#k_vect)
-    - [radius](#radius)
-    - [point_num](#point_num)
-  - [CPGE](#cpge)
-    - [omega](#omega-2)
-    - [domega](#domega-2)
-    - [integrate_mode](#integrate_mode-3)
-  - [OPTICAL_CONDUCTIVITY](#optical_conductivity)
-    - [occ_band](#occ_band-3)
-    - [omega](#omega-3)
-    - [domega](#domega-3)
-    - [eta](#eta-1)
-    - [grid](#grid-2)
-  - [POLARIZATION](#polarization)
-    - [occ_band](#occ_band-4)
-    - [nk1](#nk1)
-    - [nk2](#nk2)
-    - [nk3](#nk3)
-    - [atom_type](#atom_type)
-    - [stru_file](#stru_file-1)
-    - [valence_e](#valence_e)
-  - [SHIFT_CURRENT](#shift_current)
-    - [occ_band](#occ_band-5)
-    - [omega](#omega-4)
-    - [domega](#domega-4)
-    - [eta](#eta-2)
-    - [grid](#grid-3)
-    - [method](#method-5)
-  - [WILSON_LOOP](#wilson_loop)
-    - [occ_band](#occ_band-6)
-    - [k_start](#k_start-3)
-    - [k_vect1](#k_vect1-3)
-    - [k_vect2](#k_vect2-3)
-    - [nk1](#nk1-1)
-    - [nk2](#nk2-1)
-  - [DRUDE_WEIGHT](#drude_weight)
-    - [omega](#omega-5)
-    - [domega](#domega-5)
-    - [integrate_mode](#integrate_mode-4)
-- [Setting of k points](#setting-of-k-points)
-  - [1. When kpoint_mode is mp](#1-when-kpoint_mode-is-mp)
-    - [mp_grid](#mp_grid)
-    - [k_start](#k_start-4)
-    - [k_vect1](#k_vect1-4)
-    - [k_vect2](#k_vect2-4)
-    - [k_vect3](#k_vect3-2)
-  - [2. When kpoint_mode is line](#2-when-kpoint_mode-is-line)
-    - [kpoint_num](#kpoint_num)
-    - [high_symmetry_kpoint](#high_symmetry_kpoint)
-  - [3. When kpoint_mode is direct](#3-when-kpoint_mode-is-direct)
-    - [kpoint_num](#kpoint_num-1)
-    - [kpoint_direct_coor](#kpoint_direct_coor)
-- [Setting of integration](#setting-of-integration)
-  - [1. When integrate_mode is Grid](#1-when-integrate_mode-is-grid)
-    - [integrate_grid](#integrate_grid)
-    - [adaptive_grid](#adaptive_grid-1)
-    - [adaptive_grid_threshold](#adaptive_grid_threshold)
-  - [2. When integrate_mode is Adaptive](#2-when-integrate_mode-is-adaptive)
-    - [relative_error](#relative_error)
-    - [absolute_error](#absolute_error)
-    - [initial_grid](#initial_grid-1)
+# Input file
 
 ## Structure of the Input file
 
@@ -362,6 +361,26 @@ PDOS            // FUNCTIONS 2
 - **Description**: Used to set the k point of unitcell. See [Setting of k points](#setting-of-k-points)
 - **Default**: No default value
 
+### FAT_BAND
+
+#### band_range
+
+- **Type**: Integer
+- **Description**: There are two numbers (separated by spaces) to indicate which bands are selected for projection, counting from 1.
+- **Default**: No default value
+
+#### stru_file
+
+- **Type**: String
+- **Description**: The structure file name. This file indicates the crystal structure and the corresponding orbital file. Make sure that both the structure file and the orbital file exist.
+- **Default**: No default value
+
+#### kpoint_mode
+
+- **Type**: String
+- **Description**: Used to set the k point of unitcell. See [Setting of k points](#setting-of-k-points)
+- **Default**: No default value
+
 ### FERMI_ENERGY
 
 #### temperature
@@ -392,15 +411,15 @@ PDOS            // FUNCTIONS 2
 
 #### bar
 
-- **Type**: 
-- **Description**: 
-- **Default**: 
+- **Type**: Real
+- **Description**: The max tolerable error bar for the Fermi surface
+- **Default**: No default value
 
-#### nbands
+#### energy
 
-- **Type**: 
-- **Description**: 
-- **Default**: 
+- **Type**: Real
+- **Description**: The given energy. The default value would be the Fermi energy of this system.
+- **Default**: `fermi_energy` in INPUT_PARAMETERS
 
 #### kpoint_mode
 
@@ -412,57 +431,21 @@ PDOS            // FUNCTIONS 2
 
 #### energy_range
 
-- **Type**: 
-- **Description**: 
-- **Default**: 
+- **Type**: Integer
+- **Description**: The energy range in which the program searches for degenerate points, the energy unit is eV.
+- **Default**: No default value
 
-#### initial_grid
+#### bar
 
-- **Type**: 
-- **Description**: 
-- **Default**: 
+- **Type**: Real
+- **Description**: The minimum difference considered in independent bands, the energy unit is eV. This means if the band gap is below this bar, it will be recognized as degenerate bands.
+- **Default**: No default value
 
-#### initial_threshold
+#### kpoint_mode
 
-- **Type**: 
-- **Description**: 
-- **Default**: 
-
-#### adaptive_grid
-
-- **Type**: 
-- **Description**: 
-- **Default**: 
-
-#### adaptive_threshold
-
-- **Type**: 
-- **Description**: 
-- **Default**: 
-
-#### k_start
-
-- **Type**: 
-- **Description**: 
-- **Default**: 
-
-#### k_vect1
-
-- **Type**: 
-- **Description**: 
-- **Default**: 
-
-#### k_vect2
-
-- **Type**: 
-- **Description**: 
-- **Default**: 
-
-#### k_vect3
-
-- **Type**: 
-- **Description**: 
-- **Default**: 
+- **Type**: String
+- **Description**: Used to set the k point. See [Setting of k points](#setting-of-k-points)
+- **Default**: No default value
 
 ### JDOS
 

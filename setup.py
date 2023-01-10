@@ -2,12 +2,12 @@ import os
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 
-# 用户修改的参数
+# Parameters that need to be modified
 CXX = "icpc"
-LAPACK_DIR = "/opt/intel/oneapi/mkl/2022.0.2"
+LAPACK_DIR = "/opt/intel/compilers_and_libraries_2018.1.163/linux/mkl"
 
 
-# 一般不需要修改
+# Generally do not need to modify
 os.environ["CXX"] = CXX
 os.environ["CC"] = CXX
 os.environ['CFLAGS'] = "-O2 -std=c++11 -fPIC -Wall -shared"
@@ -68,7 +68,7 @@ setup(name='pyatb',
       url='None',
       packages=find_packages(),
       py_modules=[],
-      install_requires=['numpy', 'mpi4py', 'scipy', 'mpi4py'],
+      install_requires=['numpy', 'scipy', 'mpi4py', 'matplotlib'],
       ext_modules=[extension],
       entry_points={'console_scripts': ['pyatb = pyatb.main:main']})
 

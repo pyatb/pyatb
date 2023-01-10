@@ -14,7 +14,10 @@ def abacus_readHR(nspin, HR_route, HR_unit, **kwarg):
         unit = Ry_to_eV
 
     with open(HR_route, 'r') as fread:
-        line = fread.readline().split()
+        while True:
+            line = fread.readline().split()
+            if line[0] == 'Matrix':
+                break
         basis_num = int(line[-1])
         line = fread.readline().split()
         R_num = int(line[-1])
@@ -81,7 +84,10 @@ def abacus_readSR(nspin, SR_route, **kwarg):
     unit = 1.0
 
     with open(SR_route, 'r') as fread:
-        line = fread.readline().split()
+        while True:
+            line = fread.readline().split()
+            if line[0] == 'Matrix':
+                break
         basis_num = int(line[-1])
         line = fread.readline().split()
         R_num = int(line[-1])
@@ -152,7 +158,10 @@ def abacus_readrR(rR_route, rR_unit, **kwarg):
         unit = 1.0 / Ang_to_Bohr
 
     with open(rR_route, 'r') as fread:
-        line = fread.readline().split()
+        while True:
+            line = fread.readline().split()
+            if line[0] == 'Matrix':
+                break
         basis_num = int(line[-1])
         line = fread.readline().split()
         R_num = int(line[-1])
