@@ -305,6 +305,7 @@ pband.plot_contributions(fig, ax, atom_index=atom_index, efermi=efermi, energy_r
 # pband.plot(fig, ax, atom_index=atom_index, efermi=efermi, energy_range=energy_range)
 
 fig.savefig('fatband.png')
+plt.close('all')
 """.format(fermi_energy=fermi_energy, pband_file=pband_file, kpt_file=kpt_file)
             f.write(plot_script)
 

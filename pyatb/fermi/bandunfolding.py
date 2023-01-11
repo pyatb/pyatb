@@ -276,6 +276,7 @@ ax.set_ylabel('Energy (eV)')
 # ax.set_xticklabels([r'$U_2$', r'$\Gamma$', r'$V_2$'])
 
 fig.savefig('unfold.pdf')
+plt.close('all')
 """.format(fermi_energy=fermi_energy, sw_file=sw_file)
             f.write(plot_script)
         

@@ -178,11 +178,11 @@ class Spin_Texture:
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-kpoints = np.loadtxt('{kpt_file}}')
+kpoints = np.loadtxt('{kpt_file}')
 data = np.loadtxt('{data_file}')
 
 fig = plt.figure()
-ax = fig.gca(projection='3d')
+ax = fig.add_subplot(projection='3d')
 plt.title('Spin Texture')
 ax.set_xlabel('$k_x$')
 ax.set_ylabel('$k_y$')
@@ -201,7 +201,7 @@ quiver_length = max(np.max(x)-np.min(x),np.max(y)-np.min(y), np.max(z)-np.min(z)
 ax.quiver(x, y, z, u, v, w, color='blue', length=quiver_length, arrow_length_ratio=0.3, normalize=True)
 ax.grid(False) 
 plt.savefig('{fig_name}')
-
+plt.close('all')
 """.format(kpt_file=kpt_file, data_file=data_file, fig_name=fig_name)
 
             f.write(plot_script)

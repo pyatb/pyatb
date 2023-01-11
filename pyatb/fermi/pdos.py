@@ -298,6 +298,7 @@ fig, ax = plt.subplots(1, 1, sharex=True, figsize=(6.4, 4.8))
 dosplots = pdos.plot(fig, ax, atom_index=atom_index, efermi=efermi, shift=False, energy_range=energy_range)
 fig.savefig('pdos.png')
 pdos.write(atom_index=atom_index)
+plt.close('all')
 """.format(fermi_energy=fermi_energy, Emin=start_E, Emax=end_E, tdos_file=tdos_file, pdos_file=pdos_file)
             f.write(plot_script)
 
