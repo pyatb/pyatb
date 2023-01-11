@@ -140,6 +140,8 @@ def main():
         if nspin == 4:
             cal_ST = Spin_Texture(m_tb)
             cal_ST.calculate_spin_texture(**spin_texture_parameters)
+        if RANK == 0:
+            cal_ST.print_plot_script()
 
     if function_switch['BERRY_CURVATURE']:
         berry_curvature_parameters = INPUT['BERRY_CURVATURE']

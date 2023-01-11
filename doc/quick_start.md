@@ -1,11 +1,11 @@
-- [1. Installation](#1-installation)
-  - [1.1 Download](#11-download)
-  - [1.2 Prerequisites](#12-prerequisites)
-  - [1.3 Install](#13-install)
-- [2. Run](#2-run)
-- [3. Introduction](#3-introduction)
-  - [3.1 Capabilities](#31-capabilities)
-  - [3.2 Workflow](#32-workflow)
+- [1. Introduction](#1-introduction)
+  - [1.1 Capabilities](#11-capabilities)
+  - [1.2 Workflow](#12-workflow)
+- [2. Installation](#2-installation)
+  - [2.1 Download](#21-download)
+  - [2.2 Prerequisites](#22-prerequisites)
+  - [2.3 Install](#23-install)
+- [3. Run](#3-run)
 - [4. Brief introduction of the input files](#4-brief-introduction-of-the-input-files)
   - [4.1 Input](#41-input)
   - [4.2 HR, SR, rR](#42-hr-sr-rr)
@@ -32,62 +32,9 @@
   - [6.3 Setting of integration](#63-setting-of-integration)
 
 
-# 1. Installation
+# 1. Introduction
 
-## 1.1 Download
-
-The latest version of the PYATB package can be obtained from the github repository:
-
-```shell
-git clone https://github.com/jingan-181/pyatb.git
-```
-
-## 1.2 Prerequisites
-
-At present, PYATB is running in the Linux system, and the Win system and Mac system have not been tested. In order to use PYATB properly, you need to install the following prerequisites:
-
-- Python 3.7 or newer
-- NumPy
-- SciPy
-- mpi4py
-- Matplotlib
-- C++ compiler
-- Intel MKL 
-
-## 1.3 Install
-
-You can install it with the following simple command:
-
-```shell
-python setup.py install --record log
-```
-
-In the `setup.py` file you need to modify the **CXX** and **LAPACK_DIR** variables according to your environment. **CXX** is used to specify the C++ compilation (e.g. icpc, note that it is not the mpi version) and **LAPACK_DIR** is used to specify the intel MKL path.
-
-After completing the installation the executable `pyatb` and the corresponding module `pyatb` (which can be called by `import pyatb`) will be added to the Python environment.
-
-The corresponding uninstall operation is to delete the files generated during Python installation. A simple uninstall command is as follows:
-
-```shell
-cat log | xargs rm -rf
-```
-
-# 2. Run
-
-Please set OpenMP threads by setting environment variable:
-```shell
-export OMP_NUM_THREADS=1
-```
-
-Use 4 MPI processes to run, for example:
-```shell
-mpirun -n 4 pyatb
-```
-
-
-# 3. Introduction
-
-PYATB is an open-source software package for calculating the electronic structure of materials based on the first-principles tightbinding model.
+PYATB is an open-source software package for calculating the electronic structure of materials based on the first-principles tight binding model.
 
 The periodic system follows Bloch's theorem, and the Schrödinger equation satisfied by a single electron is $H |\Psi_{n\mathbf{k}}\rangle = E_{n\mathbf{k}} |\Psi_{n\mathbf{k}}\rangle$. We expand the wave function of a single electron in the numerical atomic orbitals,
 $$
@@ -114,7 +61,7 @@ $$
 A_{\nu\mu, \alpha}^{R}(\mathbf{k}) = \sum_{\mathbf{R}} \mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}\langle\mathbf{0}\nu|r_{\alpha}|\mathbf{R}\mu\rangle
 $$
 
-## 3.1 Capabilities
+## 1.1 Capabilities
 
 PYATB provides the following functionalities:
 
@@ -137,9 +84,62 @@ PYATB provides the following functionalities:
   5. [polarization](#514-polarization)
   6. [Wilson loop](#515-wilson_loop)
 
-## 3.2 Workflow
+## 1.2 Workflow
 
 ![workflow](workflow.png)
+
+# 2. Installation
+
+## 2.1 Download
+
+The latest version of the PYATB package can be obtained from the github repository:
+
+```shell
+git clone https://github.com/jingan-181/pyatb.git
+```
+
+## 2.2 Prerequisites
+
+At present, PYATB is running in the Linux system, and the Win system and Mac system have not been tested. In order to use PYATB properly, you need to install the following prerequisites:
+
+- Python 3.7 or newer
+- NumPy
+- SciPy
+- mpi4py
+- Matplotlib
+- C++ compiler
+- Intel MKL 
+
+## 2.3 Install
+
+You can install it with the following simple command:
+
+```shell
+python setup.py install --record log
+```
+
+In the `setup.py` file you need to modify the **CXX** and **LAPACK_DIR** variables according to your environment. **CXX** is used to specify the C++ compilation (e.g. icpc, note that it is not the mpi version) and **LAPACK_DIR** is used to specify the intel MKL path.
+
+After completing the installation the executable `pyatb` and the corresponding module `pyatb` (which can be called by `import pyatb`) will be added to the Python environment.
+
+The corresponding uninstall operation is to delete the files generated during Python installation. A simple uninstall command is as follows:
+
+```shell
+cat log | xargs rm -rf
+```
+
+# 3. Run
+
+Please set OpenMP threads by setting environment variable:
+```shell
+export OMP_NUM_THREADS=1
+```
+
+Use 4 MPI processes to run, for example:
+```shell
+mpirun -n 4 pyatb
+```
+
 
 # 4. Brief introduction of the input files
 

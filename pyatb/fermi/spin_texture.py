@@ -93,8 +93,8 @@ class Spin_Texture:
         for i in range(num):
             pauli_x[2*i, 2*i+1] = 1
             pauli_x[2*i+1, 2*i] = 1
-            pauli_y[2*i, 2*i+1] = 1.j
-            pauli_y[2*i+1, 2*i] = -1.j
+            pauli_y[2*i, 2*i+1] = -1.j
+            pauli_y[2*i+1, 2*i] = 1.j
             pauli_z[2*i, 2*i] = 1
             pauli_z[2*i+1, 2*i+1] = -1
         return [pauli_x, pauli_y, pauli_z]
@@ -184,9 +184,9 @@ data = np.loadtxt('{data_file}')
 fig = plt.figure()
 ax = fig.gca(projection='3d')
 plt.title('Spin Texture')
-plt.xlabel('$k_x$')
-plt.ylabel('$k_y$')
-plt.zlabel('$k_z$')
+ax.set_xlabel('$k_x$')
+ax.set_ylabel('$k_y$')
+ax.set_zlabel('$k_z$')
 
 x = kpoints[:, 0]
 y = kpoints[:, 1]
@@ -200,7 +200,7 @@ w = data[:, 2]
 quiver_length = max(np.max(x)-np.min(x),np.max(y)-np.min(y), np.max(z)-np.min(z)) / 10
 ax.quiver(x, y, z, u, v, w, color='blue', length=quiver_length, arrow_length_ratio=0.3, normalize=True)
 ax.grid(False) 
-plt.savefig({fig_name})
+plt.savefig('{fig_name}')
 
 """.format(kpt_file=kpt_file, data_file=data_file, fig_name=fig_name)
 
