@@ -151,7 +151,11 @@ old/
 job.err
 jol.log
 
-example/
+#example/
 #include/
 
 log
+
+*.pbs
+
+OUT*/

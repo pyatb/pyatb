@@ -1,0 +1,55 @@
+INPUT_PARAMETERS
+{
+    nspin                           4
+    package                         ABACUS
+    fermi_energy                    9.2309138700265265
+    fermi_energy_unit               eV
+    HR_route                        data-HR-sparse_SPIN0.csr
+    SR_route                        data-SR-sparse_SPIN0.csr
+    rR_route                        data-rR-sparse.csr
+    HR_unit                         Ry
+    rR_unit                         Bohr
+}
+
+LATTICE
+{
+    lattice_constant                1.8897162
+    lattice_constant_unit           Bohr
+    lattice_vector
+    4.3773399999000002 0.0000000000000000  0.0000000000000000
+    2.1886700000000001 3.7908876409999999  0.0000000000000000
+    2.1886700000000001 1.2636292099999999 13.7730333333000008
+}
+
+BAND_STRUCTURE
+{
+    wf_collect                      0
+    kpoint_mode                     line
+    kpoint_num                      5
+    high_symmetry_kpoint
+    0    0   0    200  # G
+    0    0   0.5  200  # Z
+    0.5  0   0.5  200  # F
+    0    0   0    200  # G
+    0.5  0   0    1    # L
+}
+
+CHERN_NUMBER
+{
+    method                          0
+    occ_band                        109
+    integrate_mode                  Grid
+    integrate_grid                  100 100 1
+    adaptive_grid                   20  20  1
+    adaptive_grid_threshold         100
+    k_start                         0 0 0
+    k_vect1                         1 0 0
+    k_vect2                         0 1 0
+}
+
+CHIRALITY
+{
+    k_vect                          0 0 0.08
+    radius                          0.02
+    point_num                       500
+}

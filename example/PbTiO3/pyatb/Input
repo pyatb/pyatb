@@ -1,0 +1,35 @@
+INPUT_PARAMETERS
+{
+    nspin               1
+    package             ABACUS
+    fermi_energy        13.38267075814371
+    fermi_energy_unit   eV
+    HR_route            data-HR-sparse_SPIN0.csr
+    SR_route            data-SR-sparse_SPIN0.csr
+    rR_route            data-rR-sparse.csr
+    HR_unit             Ry
+    rR_unit             Bohr
+}
+
+LATTICE
+{
+    lattice_constant        7.3699
+    lattice_constant_unit   Bohr
+    lattice_vector
+    1.0000000000         0.0000000000         0.0000000000
+    0.0000000000         1.0000000000         0.0000000000
+    0.0000000000         0.0000000000         1.0000000000
+}
+
+
+POLARIZATION
+{
+    occ_band      22
+    nk1           10
+    nk2           10
+    nk3           10
+    atom_type     3
+    stru_file     STRU
+    valence_e     14 12 6 
+}
+
