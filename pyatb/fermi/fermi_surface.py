@@ -233,7 +233,7 @@ lattice_vector = np.array(
 reciprocal_vector = np.linalg.inv(lattice_vector).transpose() * 2 * np.pi / lattice_constant
 
 fig = plt.figure()
-ax = fig.gca(projection='3d')
+ax = fig.add_subplot(projection='3d')
 plt.title('Fermi Surface')
 ax.set_xlabel('$k_x$')
 ax.set_ylabel('$k_y$')

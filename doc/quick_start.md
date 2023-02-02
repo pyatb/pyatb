@@ -1,6 +1,7 @@
 - [1. Introduction](#1-introduction)
-  - [1.1 Capabilities](#11-capabilities)
-  - [1.2 Workflow](#12-workflow)
+  - [1.1 Methodology](#11-methodology)
+  - [1.2 Capabilities](#12-capabilities)
+  - [1.3 Workflow](#13-workflow)
 - [2. Installation](#2-installation)
   - [2.1 Download](#21-download)
   - [2.2 Prerequisites](#22-prerequisites)
@@ -34,7 +35,23 @@
 
 # 1. Introduction
 
-PYATB is an open-source software package for calculating the electronic structure of materials based on the first-principles tight binding model.
+PYATB, Python ab initio tight binding simuation package, a python package for computing electronic structures and related properties based on the ab initio tight binding Hamiltonian.
+
+PYATB is an open-source software package under the GPLv3.0.
+
+Typical applications include calculation of band structure, density of states, projected density of states, Fermi energy, Fermi surface, etc.
+
+PYATB can be used to calculate the energy band spectrum function obtained by projecting the supercell wave function on the relevant k points of the primitive cell through the band unfolding method, which can be directly compared with the ARPES result. 
+
+PYATB can also be used to calculate Wilson loop and Berry curvature, which can simply classify topological phase, and study the properties of topological non-trivial materials such as topological insulators and Weyl/Dirac semimetals. 
+
+Furthermore, PYATB provides calculations of optical properties of solid materials, including linear optical response and nonlinear optical response, such as optical conductivity, shift current, Berry curvature dipole, etc.
+
+The PYATB Developer Group includes Lixin He, Gan jin, Hongsheng Pang, Yuyang Ji, Zujian Dai.
+
+## 1.1 Methodology
+
+PYATB works in the tight binding framework, and the tight binding parameters are obtained from first principles software based on the atomic orbital bases, such as [ABACUS](https://abacus.ustc.edu.cn/).
 
 The periodic system follows Bloch's theorem, and the Schrödinger equation satisfied by a single electron is $H |\Psi_{n\mathbf{k}}\rangle = E_{n\mathbf{k}} |\Psi_{n\mathbf{k}}\rangle$. We expand the wave function of a single electron in the numerical atomic orbitals,
 $$
@@ -46,22 +63,35 @@ where $|\mathbf{R}\mu\rangle$ is the atomic orbital localized at the $\mathbf{R}
 By definition, 
 $$
 \begin{aligned}
-H_{\nu\mu}(\mathbf{k}) &= \sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}\langle\mathbf{0}\nu|H|\mathbf{R}\mu\rangle \\
-S_{\nu\mu}(\mathbf{k}) &= \sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}\langle\mathbf{0}\nu|\mathbf{R}\mu\rangle,
+    H_{\nu\mu}(\mathbf{k}) &= \sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}H_{\nu\mu}(\mathbf{R})\, , \\
+    S_{\nu\mu}(\mathbf{k}) &= \sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}S_{\nu\mu}(\mathbf{R})\, ,
 \end{aligned} $$
+
+where
+$$
+\begin{aligned}
+    H_{\nu\mu}(\mathbf{R}) &= \langle\mathbf{0}\nu|H|\mathbf{R}\mu\rangle\, , \\
+    S_{\nu\mu}(\mathbf{R}) &= \langle\mathbf{0}\nu|\mathbf{R}\mu\rangle\, .
+\end{aligned}
+$$
 
 we can convert the Hamiltonian solution into a general eigenvalue solution problem
 
 $$
-H(\mathbf{k})C_n(\mathbf{k}) = E_{n\mathbf{k}}S(\mathbf{k})C_n.
+H(\mathbf{k})C_n(\mathbf{k}) = E_{n\mathbf{k}}S(\mathbf{k})C_n\, .
 $$
 
 When solving for the geometric properties of the bands, we also need the dipole matrix, namely:
 $$
-A_{\nu\mu, \alpha}^{R}(\mathbf{k}) = \sum_{\mathbf{R}} \mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}\langle\mathbf{0}\nu|r_{\alpha}|\mathbf{R}\mu\rangle
+\begin{aligned}
+    A_{\nu\mu, \alpha}^{R}(\mathbf{k}) &= \sum_{\mathbf{R}} \mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}} r_{\nu\mu, \alpha}(\mathbf{R}) \, , \\
+    r_{\nu\mu, \alpha}(\mathbf{R}) &= \langle\mathbf{0}\nu|r_{\alpha}|\mathbf{R}\mu\rangle\, .
+\end{aligned}
 $$
 
-## 1.1 Capabilities
+After obtaining the tight binding parameters $H_{\nu\mu}(\mathbf{R})$, $S_{\nu\mu}(\mathbf{R})$, and $r_{\nu\mu, \alpha}(\mathbf{R})$ from the first principles software, the electronic structure can be calculated using PYATB.
+
+## 1.2 Capabilities
 
 PYATB provides the following functionalities:
 
@@ -84,7 +114,9 @@ PYATB provides the following functionalities:
   5. [polarization](#514-polarization)
   6. [Wilson loop](#515-wilson_loop)
 
-## 1.2 Workflow
+## 1.3 Workflow
+
+The basic workflow of pyatb is as follows. First, you need to perform self-consistent calculations from ABAUCS to obtain $H_{\nu\mu}(\mathbf{R})$, $S_{\nu\mu}(\mathbf{R})$, and $r_{\nu\mu, \alpha}(\mathbf{R})$. In addition, some functions also require crystal structure information and atomic orbital data. After you have obtained these files, you can write an Input file to perform the corresponding function calculation of PYATB, or write a script based on the PYATB module to calculate.
 
 ![workflow](workflow.png)
 
@@ -112,13 +144,13 @@ At present, PYATB is running in the Linux system, and the Win system and Mac sys
 
 ## 2.3 Install
 
-You can install it with the following simple command:
+You can install PYATB with the following simple command:
 
 ```shell
 python setup.py install --record log
 ```
 
-In the `setup.py` file you need to modify the **CXX** and **LAPACK_DIR** variables according to your environment. **CXX** is used to specify the C++ compilation (e.g. icpc, note that it is not the mpi version) and **LAPACK_DIR** is used to specify the intel MKL path.
+In the `setup.py` file you need to modify the **CXX** and **LAPACK_DIR** variables according to your environment. **CXX** is used to specify the C++ compiler (e.g. icpc, note that it is not the mpi version) and **LAPACK_DIR** is used to specify the intel MKL path.
 
 After completing the installation the executable `pyatb` and the corresponding module `pyatb` (which can be called by `import pyatb`) will be added to the Python environment.
 
@@ -130,14 +162,15 @@ cat log | xargs rm -rf
 
 # 3. Run
 
-Please set OpenMP threads by setting environment variable:
-```shell
-export OMP_NUM_THREADS=1
-```
+PYATB supports mixed parallelism of OpenMP and MPI, and you need to determine the number of threads and processes to run depending on the actual configuration of your computer. 
 
-Use 4 MPI processes to run, for example:
+For example, set the number of threads to 2,
 ```shell
-mpirun -n 4 pyatb
+export OMP_NUM_THREADS=2
+```
+and then use 6 processes to run PYATB,
+```shell
+mpirun -n 6 pyatb
 ```
 
 
@@ -243,7 +276,7 @@ For the calculation of some functions, structure files and NAOs (numerical atomi
 
 An example (refer to folder `example/Bi2Se3`) of calculating the energy band structure of the topological insulator Bi$_2$Se$_3$ is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -312,12 +345,13 @@ $$
 \end{bmatrix}
 $$
 
+Detailed descriptions can be found in [First-principles calculations of the surface states of doped and alloyed topological materials via band unfolding method](https://doi.org/10.1016/j.commatsci.2022.111656).
 
 ### 5.2.2 example
 
 An example (refer to folder `example/MnBi2Te4-afm`) of calculating the spectral function of the AFM MnBi$_2$Te$_4$ slab is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -377,13 +411,13 @@ After the task calculation is completed, there will be three files in the `Out/B
 
 ### 5.3.1 introduction
 
-The fat band function is similar to the PDOS function, it is a projection of the bands onto specified atomic orbitals and is used to see the contribution of different atomic orbitals to the bands.
+The fat band is a projection of the bands onto specified atomic orbitals and is used to see the contribution of different atomic orbitals to the bands.
 
 ### 5.3.2 example
 
 An example (refer to folder `example/Si`) of calculating the fat band of the diamond Si is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -437,7 +471,7 @@ After the task calculation is completed, there will be four files in the `Out/Fa
 
 ### 5.4.1 introduction
 
-Fermi energy is a function calculating the Fermi energy of a metal given temperature and electronic occupation number. Note that the Fermi energy of insulators might not be well-defined.
+This function is to calculate the Fermi energy of solid materials given temperature and electronic occupation number. Note that the Fermi energy of insulators might not be well-defined.
 
 For each $\mathbf{k}$ point, the  probability of finding an electron in any energy state should obey the Fermi-Dirac distribution. The integration of occupied electrons over the entire Brillouin zone should be the occupation number. Though which, the exact Fermi energy could be attained following Newton interpolation.
 
@@ -453,7 +487,7 @@ $$
 
 An example (refer to folder `example/Cu`) of calculating the spectral function of the Cu is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -508,7 +542,7 @@ Fermi surface is a module calculating the iso-energy surface of a given energy. 
 
 An example (refer to folder `example/Cu`) of calculating the spectral function of the Cu is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -567,7 +601,7 @@ Find nodes is a method of finding k points with degenerate energy bands in a giv
 
 An example (refer to folder `example/MnBi2Te4`) of calculating the spectral function of the MnBi$_2$Te$_4$ slab is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -634,7 +668,7 @@ Currently JDOS is only used to calculate insulators and semiconductors.
 
 An example (refer to folder `example/Si`) of calculating the JDOS of the diamond Si is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -692,7 +726,7 @@ PDOS is to project the Bloch wave function onto the basis set of atomic orbitals
 
 An example (refer to folder `example/dos_si2`) of calculating the PDOS of the diamond Si is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -751,7 +785,7 @@ Spin texture is a method of calculating the spin texture of a given energy band 
 
 An example (refer to folder `example/MnBi2Te4-afm`) of calculating the spectral function of the AFM MnBi$_2$Te$_4$ slab is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -827,7 +861,7 @@ $$
 
 An example (refer to folder `example/Fe`) of calculating the AHC of the fcc-Fe is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```text {.line-numbers}
 INPUT_PARAMETERS
@@ -882,16 +916,18 @@ $$
 \Omega_n(\mathbf{k}) = \nabla \times \mathbf{A}_{n}(\mathbf{k}),
 $$ where Berry phase $\mathbf{A}_{n}(\mathbf{k}) = i \langle u_{n\mathbf{k}}|\nabla_{\mathbf{k}}|u_{n\mathbf{k}}\rangle$, $|u_{n\mathbf{}k}\rangle$ is the periodic part of the Bloch wave function.
 
-We calculated the totoal Berry curvature:
+We calculated the Berry curvature:
 $$
 \Omega_{\alpha\beta}(\mathbf{k}) = \sum_{n} f_n(\mathbf{k}) \Omega_{n, \alpha\beta}(\mathbf{k}),
 $$ where $f_n$ is the Fermi occupation function.
+
+Detailed descriptions can be found in [Calculation of Berry curvature using non-orthogonal atomic orbitals](https://doi.org/10.1088/1361-648X/ac05e5).
 
 ### 5.11.2 example
 
 An example (refer to folder `example/Fe`) of calculating the Berry curvature of the fcc-Fe is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```text {.line-numbers}
 INPUT_PARAMETERS
@@ -962,7 +998,7 @@ To calculate the Chern number, you must first select a closed 2D surface in the 
 
 An example (refer to folder `example/MnBi2Te4-afm`) of calculating Chern number of the AFM MnBi$_2$Te$_4$ slab is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -1026,14 +1062,37 @@ The frequency-dependent optical conductivity expressed by the Kubo-Greenwood for
 $$
 \sigma_{\alpha\beta}(\hbar\omega) = -\frac{i e^2\hbar}{N V_{\mathrm{cell}}}\sum_{\mathbf{k}}
 \sum_{n,m}\left(\frac{f_{n\mathbf{k}}-f_{m\mathbf{k}}}{E_{n\mathbf{k}}-E_{m\mathbf{k}}}\right)
-\frac{\langle\psi_{n\mathbf{k}}|v_{\alpha}|\psi_{m\mathbf{k}}\rangle\langle\psi_{m\mathbf{k}}|v_{\beta}|\psi_{n\mathbf{k}}\rangle}{\hbar\omega + E_{n\mathbf{k}}-E_{m\mathbf{k}} + i\eta}
+\frac{\langle\psi_{n\mathbf{k}}|v_{\alpha}|\psi_{m\mathbf{k}}\rangle\langle\psi_{m\mathbf{k}}|v_{\beta}|\psi_{n\mathbf{k}}\rangle}{\hbar\omega + E_{n\mathbf{k}}-E_{m\mathbf{k}} + i\eta}\, .
+$$
+
+
+The imaginary part of the dielectric function is 
+$$
+\epsilon_i^{\alpha\beta}(\omega) = -\frac{e^2 \pi}{\epsilon_0 \hbar} \int \frac{d\mathbf{k}}{\left(2\pi\right)^3} \sum_{nm}f_{nm}r_{nm}^{\alpha}r_{mn}^{\beta} \delta\left(\omega_{mn} - \omega\right)\, ,
+$$
+
+The real part of the dielectric function is obtained by the Kramer-Kronig transformation,
+$$
+\epsilon_{r}^{\alpha\beta}(\omega) = \delta_{\alpha\beta} + \frac{2}{\pi} \mathbf{P} \int_{0}^{\infty} d\omega^{\prime} \frac{\omega^{\prime}\epsilon_{i}^{\alpha\beta}\left(\omega^{\prime}\right)}{\omega^{\prime 2} - \omega^2}\, .
+$$
+
+
+The linear optical spectrum can be calculated through the dielectric function, such as refractive index $n(\omega)$, extinction coefficient $\kappa(\omega)$, absorption coefficient $\alpha(\omega)$, energy-loss function $L(\omega)$, reflectivity $R(\omega)$:
+$$
+\begin{aligned}
+n(\omega) &= \left[\frac{\sqrt{\varepsilon_1^2+\varepsilon_2^2}+\varepsilon_1}{2}\right]^{\frac{1}{2}} \\
+\kappa(\omega) &= \left[\frac{\sqrt{\varepsilon_1^2+\varepsilon_2^2}-\varepsilon_1}{2}\right]^{\frac{1}{2}} \\
+\alpha(\omega) &= \frac{\sqrt{2} \omega}{c}\left[\sqrt{\varepsilon_1^2+\varepsilon_2^2}-\varepsilon_1\right]^{\frac{1}{2}} \\
+L(\omega) &= \operatorname{Im}\left(\frac{-1}{\varepsilon(\omega)}\right)=\frac{\varepsilon_2}{\varepsilon_1^2+\varepsilon_2^2} \\
+R(\omega) &= \frac{(n-1)^2+k^2}{(n+1)^2+k^2}
+\end{aligned}
 $$
 
 ### 5.13.2 example
 
-An example (refer to folder `example/Si`) of calculating the optical conductivity of the diamond Si is given here.
+An example (refer to folder `example/Si`) of calculating the optical conductivity and dielectric function of the diamond Si is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -1098,7 +1157,7 @@ where $\mathbf{A}_{n}(\mathbf{k})$ is the Berry connection of a single band.
 
 An example (refer to folder `example/PTO`) of calculating the polarization of the PbTiO$_3$ is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -1180,7 +1239,7 @@ $$
 
 An example (refer to folder `example/Bi2Se3`) of calculating the Wilson loop of the topological insulator Bi$_2$Se$_3$ is given here.
 
-The `Input` file are:
+The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
