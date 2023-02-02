@@ -53,6 +53,8 @@ The PYATB Developer Group includes Lixin He, Gan jin, Hongsheng Pang, Yuyang Ji,
 
 PYATB works in the tight binding framework, and the tight binding parameters are obtained from first principles software based on the atomic orbital bases, such as [ABACUS](https://abacus.ustc.edu.cn/).
 
+Note: ABACUS (Atomic-orbital Based Ab-initio Computation at UStc) is an open-source package based on density functional theory (DFT). For a detailed introduction, please refer to [https://abacus.ustc.edu.cn/](https://abacus.ustc.edu.cn/).
+
 The periodic system follows Bloch's theorem, and the Schrödinger equation satisfied by a single electron is $H |\Psi_{n\mathbf{k}}\rangle = E_{n\mathbf{k}} |\Psi_{n\mathbf{k}}\rangle$. We expand the wave function of a single electron in the numerical atomic orbitals,
 $$
 |\Psi_{n\mathbf{k}}\rangle = \frac{1}{\sqrt{N}}\sum_{\mu}C_{n\mu}(\mathbf{k})\sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}|\mathbf{R}\mu\rangle,
@@ -283,11 +285,11 @@ INPUT_PARAMETERS
 {
     nspin                          4
     package                        ABACUS
-    fermi_energy                   9.481194886038594
+    fermi_energy                   9.557219691497478
     fermi_energy_unit              eV
     HR_route                       data-HR-sparse_SPIN0.csr
     SR_route                       data-SR-sparse_SPIN0.csr
-    rR_route                       new-data-rR-tr_SPIN4
+    rR_route                       data-rR-sparse.csr
     HR_unit                        Ry
     rR_unit                        Bohr
     max_kpoint_num                 8000
@@ -396,7 +398,7 @@ BANDUNFOLDING
 
 `stru_file`: The structure file name of the supercell. This file indicates the crystal structure of the supercell and the corresponding orbital file. Make sure that both the structure file and the orbital file exist.
 
-`ecut`: Determine the number of projections to the plane wave basis group, the energy unit is eV.
+`ecut`: Determine the number of projections to the plane wave basis group, the energy unit is Ry.
 
 `band_range`: Specify the energy band range of band unfolding.
 
@@ -415,7 +417,7 @@ The fat band is a projection of the bands onto specified atomic orbitals and is 
 
 ### 5.3.2 example
 
-An example (refer to folder `example/Si`) of calculating the fat band of the diamond Si is given here.
+An example (refer to folder `example/Si2`) of calculating the fat band of the diamond Si is given here.
 
 The `Input` file is:
 
@@ -424,18 +426,18 @@ INPUT_PARAMETERS
 {
     nspin               1
     package             ABACUS
-    fermi_energy        7.0
+    fermi_energy        6.389728305291531
     fermi_energy_unit   eV
     HR_route            data-HR-sparse_SPIN0.csr
     SR_route            data-SR-sparse_SPIN0.csr
-    rR_route            new-data-rR-tr_SPIN1
+    rR_route            data-rR-sparse.csr
     HR_unit             Ry
     rR_unit             Bohr
-    }
+}
 
 LATTICE
 {
-    lattice_constant        1.8897
+    lattice_constant        1.8897162
     lattice_constant_unit   Bohr
     lattice_vector
     0.000000000000  2.715000000000  2.715000000000
@@ -445,16 +447,16 @@ LATTICE
 
 FAT_BAND
 {
-    band_range    1 8
-    stru_file     STRU
-    kpoint_mode   line
-    kpoint_num    5
+    band_range                     1 8
+    stru_file                      STRU
+    kpoint_mode                    line
+    kpoint_num                     5
     high_symmetry_kpoint
-    0.50000  0.50000 0.5000 100 # L
-    0.00000  0.00000 0.0000 100 # G
-    0.50000  0.00000 0.5000 100 # X
-    0.37500 -0.37500 0.0000 100 # K
-    0.00000  0.00000 0.0000 1   # G
+    0.50000  0.50000 0.5000 100  # L
+    0.00000  0.00000 0.0000 100  # G
+    0.50000  0.00000 0.5000 100  # X
+    0.37500 -0.37500 0.0000 100  # K
+    0.00000  0.00000 0.0000 1    # G
 }
 ```
 
@@ -492,39 +494,36 @@ The `Input` file is:
 ```txt {.line-numbers}
 INPUT_PARAMETERS
 {
-    nspin               4
-    package             ABACUS
-    fermi_energy        9.540272009417667
-    fermi_energy_unit   eV
-    HR_route            data-HR-sparse_SPIN0.csr
-    SR_route            data-SR-sparse_SPIN0.csr
-    HR_unit             Ry
-    rR_unit             Bohr
-    max_kpoint_num      8000
+    nspin                  1
+    package                ABACUS
+    fermi_energy           Auto
+    fermi_energy_unit      eV
+    HR_route               data-HR-sparse_SPIN0.csr
+    SR_route               data-SR-sparse_SPIN0.csr
+    HR_unit                Ry
+    rR_unit                Bohr
+    max_kpoint_num         8000
 }
 
 LATTICE
 {
-    lattice_constant        1.8897162
-    lattice_constant_unit   Bohr
+    lattice_constant       6.91640 
+    lattice_constant_unit  Bohr
     lattice_vector
-    4.3337001801 0 0 
-    2.16685009 3.7530944483 0 
-    4.3339143734 2.50218663 27.2734777344 
+    0.50	0.50	0.00
+    0.50	0.00	0.50
+    0.00	0.50	0.50
 }
 
 FERMI_ENERGY
 {
-    occupation_number  19
-    temperature        0
-    integration_mode   Grid
-    integrate_grid     50 50 50 
-    adaptive_grid      10 10 10 
-    adaptive_threshold 1
-    epsilon            1e-6
+    temperature            0
+    electron_num           11
+    grid                   50 50 50
+    epsilon                1e-4
 }
 ```
-`occupation_number`: The number of the electrons in the system. It should be calculated by accumulating the orbital numbers of each elements which is taken into consideration.
+`electron_num`: The number of the electrons in the system. It should be calculated by accumulating the orbital numbers of each elements which is taken into consideration.
 
 `epsilon`:The max tolerable error of Newton interpolation. If two steps of Newton interpolation differs less than this epsilon, the calculation would stop and output the answer.
 
@@ -549,13 +548,13 @@ INPUT_PARAMETERS
 {
     nspin                  1
     package                ABACUS
-    fermi_energy           14.83967742042727
-    # fermi_energy           Auto
-    # fermi_energy           7
+    fermi_energy           Auto
     fermi_energy_unit      eV
     HR_route               data-HR-sparse_SPIN0.csr
     SR_route               data-SR-sparse_SPIN0.csr
     HR_unit                Ry
+    rR_unit                Bohr
+    max_kpoint_num         8000
 }
 
 LATTICE
@@ -568,17 +567,24 @@ LATTICE
     0.00	0.50	0.50
 }
 
-FERMI_SURFACE
-{ 
-    bar            0.01
-    kpoint_mode    mp
-    k_start        0 0 0
-    k_vect1        1 0.0 0.0
-    k_vect2        0.0 1 0.0
-    k_vect3        0.0 0.0 1
-    mp_grid        50 50 50
+FERMI_ENERGY
+{
+    temperature            0
+    electron_num           11
+    grid                   50 50 50
+    epsilon                1e-4
 }
 
+FERMI_SURFACE
+{
+    bar                    1e-5
+    kpoint_mode            mp
+    k_start                0 0 0
+    k_vect1                1 0 0
+    k_vect2                0 1 0
+    k_vect3                0 0 1
+    mp_grid                50 50 50
+}
 ```
 
 `bar`: The max tolerable error bar for the Fermi surface
@@ -666,7 +672,7 @@ Currently JDOS is only used to calculate insulators and semiconductors.
 
 ### 5.7.2 example
 
-An example (refer to folder `example/Si`) of calculating the JDOS of the diamond Si is given here.
+An example (refer to folder `example/Si2`) of calculating the JDOS of the diamond Si is given here.
 
 The `Input` file is:
 
@@ -675,18 +681,18 @@ INPUT_PARAMETERS
 {
     nspin               1
     package             ABACUS
-    fermi_energy        7.0
+    fermi_energy        6.389728305291531
     fermi_energy_unit   eV
     HR_route            data-HR-sparse_SPIN0.csr
     SR_route            data-SR-sparse_SPIN0.csr
-    rR_route            new-data-rR-tr_SPIN1
+    rR_route            data-rR-sparse.csr
     HR_unit             Ry
     rR_unit             Bohr
-    }
+}
 
 LATTICE
 {
-    lattice_constant        1.8897
+    lattice_constant        1.8897162
     lattice_constant_unit   Bohr
     lattice_vector
     0.000000000000  2.715000000000  2.715000000000
@@ -724,7 +730,7 @@ PDOS is to project the Bloch wave function onto the basis set of atomic orbitals
 
 ### 5.8.2 example
 
-An example (refer to folder `example/dos_si2`) of calculating the PDOS of the diamond Si is given here.
+An example (refer to folder `example/Si2`) of calculating the PDOS of the diamond Si is given here.
 
 The `Input` file is:
 
@@ -733,22 +739,23 @@ INPUT_PARAMETERS
 {
     nspin               1
     package             ABACUS
-    fermi_energy        6.585653951974235
+    fermi_energy        6.389728305291531
     fermi_energy_unit   eV
     HR_route            data-HR-sparse_SPIN0.csr
     SR_route            data-SR-sparse_SPIN0.csr
+    rR_route            data-rR-sparse.csr
     HR_unit             Ry
     rR_unit             Bohr
 }
 
 LATTICE
 {
-    lattice_constant        10.2
+    lattice_constant        1.8897162
     lattice_constant_unit   Bohr
     lattice_vector
-    0.5 0.5 0.0
-    0.5 0.0 0.5
-    0.0 0.5 0.5
+    0.000000000000  2.715000000000  2.715000000000
+    2.715000000000  0.000000000000  2.715000000000
+    2.715000000000  2.715000000000  0.000000000000
 }
 
 PDOS
@@ -783,60 +790,61 @@ Spin texture is a method of calculating the spin texture of a given energy band 
 
 ### 5.9.2 example
 
-An example (refer to folder `example/MnBi2Te4-afm`) of calculating the spectral function of the AFM MnBi$_2$Te$_4$ slab is given here.
+An example (refer to folder `example/Bi2Se3`) of calculating the spin texture of the Bi$_2$Se$_3$ is given here.
 
 The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
 {
-    nspin               4
-    package             ABACUS
-    fermi_energy        6.750410495504203
-    fermi_energy_unit   eV
-    HR_route            data-HR-sparse_SPIN0.csr
-    SR_route            data-SR-sparse_SPIN0.csr
-    HR_unit             Ry
-    rR_unit             Bohr
-    max_kpoint_num      100
+    nspin                          4
+    package                        ABACUS
+    fermi_energy                   9.557219691497478
+    fermi_energy_unit              eV
+    HR_route                       data-HR-sparse_SPIN0.csr
+    SR_route                       data-SR-sparse_SPIN0.csr
+    rR_route                       data-rR-sparse.csr
+    HR_unit                        Ry
+    rR_unit                        Bohr
+    max_kpoint_num                 8000
 }
 
 LATTICE
 {
-    lattice_constant        1.8897162
-    lattice_constant_unit   Angstrom
+    lattice_constant               1.8897162
+    lattice_constant_unit          Bohr
     lattice_vector
-    8.2759599686 0 0 
-    -4.1379699708 7.1671742294 0 
-    0 0 103.09400177 
+    -2.069  -3.583614  0.000000
+     2.069  -3.583614  0.000000
+     0.000   2.389075  9.546667
 }
 
 SPIN_TEXTURE
 {
-    nband                   2800
-    kpoint_mode             direct
-    kpoint_num              20
+    nband              78
+    kpoint_mode        direct
+    kpoint_num         20
     kpoint_direct_coor
-    1.000000000000000021e-02  0.000000000000000000e+00 0.000000000000000000e+00
-    9.510565162951536283e-03  3.090169943749474218e-03 0.000000000000000000e+00
-    8.090169943749473888e-03  5.877852522924731545e-03 0.000000000000000000e+00
-    5.877852522924731545e-03  8.090169943749473888e-03 0.000000000000000000e+00
-    3.090169943749474651e-03  9.510565162951536283e-03 0.000000000000000000e+00
-    6.123233995736765959e-19  1.000000000000000021e-02 0.000000000000000000e+00
-   -3.090169943749473350e-03  9.510565162951536283e-03 0.000000000000000000e+00
-   -5.877852522924730677e-03  8.090169943749473888e-03 0.000000000000000000e+00
-   -8.090169943749473888e-03  5.877852522924732412e-03 0.000000000000000000e+00
-   -9.510565162951536283e-03  3.090169943749475085e-03 0.000000000000000000e+00
-   -1.000000000000000021e-02  1.224646799147353192e-18 0.000000000000000000e+00
-   -9.510565162951536283e-03 -3.090169943749472917e-03 0.000000000000000000e+00
-   -8.090169943749475623e-03 -5.877852522924730677e-03 0.000000000000000000e+00
-   -5.877852522924732412e-03 -8.090169943749473888e-03 0.000000000000000000e+00
-   -3.090169943749475519e-03 -9.510565162951536283e-03 0.000000000000000000e+00
-   -1.836970198721029595e-18 -1.000000000000000021e-02 0.000000000000000000e+00
-    3.090169943749472483e-03 -9.510565162951536283e-03 0.000000000000000000e+00
-    5.877852522924728942e-03 -8.090169943749475623e-03 0.000000000000000000e+00
-    8.090169943749473888e-03 -5.877852522924734147e-03 0.000000000000000000e+00
-    9.510565162951536283e-03 -3.090169943749476386e-03 0.000000000000000000e+00
+    0.010000  0.000000 0.000000
+    0.009511  0.003090 0.000000
+    0.008090  0.005878 0.000000
+    0.005878  0.008090 0.000000
+    0.003090  0.009511 0.000000
+    0.000000  0.010000 0.000000
+   -0.003090  0.009511 0.000000
+   -0.005878  0.008090 0.000000
+   -0.008090  0.005878 0.000000
+   -0.009511  0.003090 0.000000
+   -0.010000  0.000000 0.000000
+   -0.009511 -0.003090 0.000000
+   -0.008090 -0.005878 0.000000
+   -0.005878 -0.008090 0.000000
+   -0.003090 -0.009511 0.000000
+   -0.000000 -0.010000 0.000000
+    0.003090 -0.009511 0.000000
+    0.005878 -0.008090 0.000000
+    0.008090 -0.005878 0.000000
+    0.009511 -0.003090 0.000000
 }
 ```
 
@@ -872,7 +880,7 @@ INPUT_PARAMETERS
     fermi_energy_unit   eV
     HR_route            data-HR-sparse_SPIN0.csr
     SR_route            data-SR-sparse_SPIN0.csr
-    rR_route            new-data-rR-tr_SPIN4
+    rR_route            data-rR-sparse.csr
     HR_unit             Ry
     rR_unit             Bohr
 }
@@ -938,7 +946,7 @@ INPUT_PARAMETERS
     fermi_energy_unit   eV
     HR_route            data-HR-sparse_SPIN0.csr
     SR_route            data-SR-sparse_SPIN0.csr
-    rR_route            new-data-rR-tr_SPIN4
+    rR_route            data-rR-sparse.csr
     HR_unit             Ry
     rR_unit             Bohr
 }
@@ -996,45 +1004,45 @@ To calculate the Chern number, you must first select a closed 2D surface in the 
 
 ### 5.12.2 example
 
-An example (refer to folder `example/MnBi2Te4-afm`) of calculating Chern number of the AFM MnBi$_2$Te$_4$ slab is given here.
+An example (refer to folder `example/MnBi2Te4-weyl`) of calculating Chern number of the Weyl semimetal MnBi$_2$Te$_4$ is given here.
 
 The `Input` file is:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
 {
-    nspin               4
-    package             ABACUS
-    fermi_energy        9.540272009417667
-    fermi_energy_unit   eV
-    HR_route            data-HR-sparse_SPIN0.csr
-    SR_route            data-SR-sparse_SPIN0.csr
-    HR_unit             Ry
-    rR_unit             Bohr
-    max_kpoint_num      8000
+    nspin                           4
+    package                         ABACUS
+    fermi_energy                    9.2309138700265265
+    fermi_energy_unit               eV
+    HR_route                        data-HR-sparse_SPIN0.csr
+    SR_route                        data-SR-sparse_SPIN0.csr
+    rR_route                        data-rR-sparse.csr
+    HR_unit                         Ry
+    rR_unit                         Bohr
 }
 
 LATTICE
 {
-    lattice_constant        1.8897162
-    lattice_constant_unit   Bohr
+    lattice_constant                1.8897162
+    lattice_constant_unit           Bohr
     lattice_vector
-    4.3337001801 0 0 
-    2.16685009 3.7530944483 0 
-    4.3339143734 2.50218663 27.2734777344 
+    4.3773399999000002 0.0000000000000000  0.0000000000000000
+    2.1886700000000001 3.7908876409999999  0.0000000000000000
+    2.1886700000000001 1.2636292099999999 13.7730333333000008
 }
 
 CHERN_NUMBER
 {
-    method                   0
-    occ_band                 107
-    k_start                  0.0 0.0 0.0
-    k_vect1                  1.0 0.0 0.0
-    k_vect2                  0.0 1.0 0.0
-    integrate_mode           Grid
-    integrate_grid           20 20 20
-    adaptive_grid            5  5  5
-    adaptive_grid_threshold  50
+    method                          0
+    occ_band                        109
+    integrate_mode                  Grid
+    integrate_grid                  100 100 1
+    adaptive_grid                   20  20  1
+    adaptive_grid_threshold         100
+    k_start                         0 0 0
+    k_vect1                         1 0 0
+    k_vect2                         0 1 0
 }
 ```
 
@@ -1099,18 +1107,18 @@ INPUT_PARAMETERS
 {
     nspin               1
     package             ABACUS
-    fermi_energy        7.0
+    fermi_energy        6.389728305291531
     fermi_energy_unit   eV
     HR_route            data-HR-sparse_SPIN0.csr
     SR_route            data-SR-sparse_SPIN0.csr
-    rR_route            new-data-rR-tr_SPIN1
+    rR_route            data-rR-sparse.csr
     HR_unit             Ry
     rR_unit             Bohr
 }
 
 LATTICE
 {
-    lattice_constant        1.8897
+    lattice_constant        1.8897162
     lattice_constant_unit   Bohr
     lattice_vector
     0.000000000000  2.715000000000  2.715000000000
@@ -1123,7 +1131,7 @@ OPTICAL_CONDUCTIVITY
     occ_band      4
     omega         0   10
     domega        0.01
-    eta           0.2
+    eta           0.1
     grid          50 50 50
 }
 ```
@@ -1155,7 +1163,7 @@ where $\mathbf{A}_{n}(\mathbf{k})$ is the Berry connection of a single band.
 
 ### 5.14.2 example
 
-An example (refer to folder `example/PTO`) of calculating the polarization of the PbTiO$_3$ is given here.
+An example (refer to folder `example/PbTiO3`) of calculating the polarization of the PbTiO$_3$ is given here.
 
 The `Input` file is:
 
@@ -1164,34 +1172,34 @@ INPUT_PARAMETERS
 {
     nspin               1
     package             ABACUS
-    fermi_energy        7.0
+    fermi_energy        13.38267075814371
     fermi_energy_unit   eV
     HR_route            data-HR-sparse_SPIN0.csr
     SR_route            data-SR-sparse_SPIN0.csr
-    rR_route            new-data-rR-tr_SPIN1
+    rR_route            data-rR-sparse.csr
     HR_unit             Ry
     rR_unit             Bohr
 }
 
 LATTICE
 {
-    lattice_constant        1.889725988579
+    lattice_constant        7.3699
     lattice_constant_unit   Bohr
     lattice_vector
-    3.8369998932         0.0000000000         0.0000000000
-    0.0000000000         3.8369998932         0.0000000000
-    0.0000000000         0.0000000000         4.7870001793
+    1.0000000000         0.0000000000         0.0000000000
+    0.0000000000         1.0000000000         0.0000000000
+    0.0000000000         0.0000000000         1.0000000000
 }
 
 POLARIZATION
 {
-    occ_band      16
-    nk1           8
-    nk2           8
-    nk3           8
-    stru_file     STRU
+    occ_band      22
+    nk1           10
+    nk2           10
+    nk3           10
     atom_type     3
-    valence_e     14 12 6
+    stru_file     STRU
+    valence_e     14 12 6 
 }
 ```
 
@@ -1246,11 +1254,11 @@ INPUT_PARAMETERS
 {
     nspin                          4
     package                        ABACUS
-    fermi_energy                   9.481194886038594
+    fermi_energy                   9.557219691497478
     fermi_energy_unit              eV
     HR_route                       data-HR-sparse_SPIN0.csr
     SR_route                       data-SR-sparse_SPIN0.csr
-    rR_route                       new-data-rR-tr_SPIN4
+    rR_route                       data-rR-sparse.csr
     HR_unit                        Ry
     rR_unit                        Bohr
     max_kpoint_num                 8000
@@ -1268,12 +1276,12 @@ LATTICE
 
 WILSON_LOOP
 {
-    occ_band                       16
-    k_start                        0.0 0.0 0.0
-    k_vect1                        1.0 0.0 0.0
-    k_vect2                        0.0 0.5 0.0
-    nk1                            100
-    nk2                            100
+    occ_band           78
+    k_start            0.0  0.0  0.5
+    k_vect1            1.0  0.0  0.0
+    k_vect2            0.0  0.5  0.0
+    nk1                101
+    nk2                101
 }
 ```
 
@@ -1463,7 +1471,7 @@ After the task calculation is completed, there will be two files in the `Out/Wil
 #### ecut
 
 - **Type**: Real
-- **Description**: Used to determine the number of plane wave basis sets. Unit is eV.
+- **Description**: Used to determine the number of plane wave basis sets. Unit is Ry.
 - **Default**: 10
 
 #### band_range
