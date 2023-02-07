@@ -207,7 +207,7 @@ class Fermi_Surface:
 
     def print_data(self, fermi_surface_points):
         output_path = self.output_path
-        if fermi_surface_points is not None:
+        if fermi_surface_points is not False:
             np.savetxt(os.path.join(output_path, 'fermi_surface_kpt.dat'), fermi_surface_points, fmt='%0.8f')
         else:
             with open(RUNNING_LOG, 'a') as f:
