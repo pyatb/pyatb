@@ -192,7 +192,7 @@ class Fat_Band:
         pband = np.loadtxt(os.path.join(self.output_path, pband_filename)).reshape(kpoint_num, basis_num, band_num)
 
         if self.nspin == 4:
-            basis_num = basis_num / 2
+            basis_num = int(basis_num / 2)
             out_pband = np.zeros([kpoint_num, basis_num, band_num], dtype=float)
             for ik in range(kpoint_num):
                 for iw in range(basis_num):

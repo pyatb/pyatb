@@ -191,7 +191,7 @@ class PDOS:
         with open(os.path.join(self.output_path, 'PDOS.xml'), 'w') as f:
             basis_num = self.__tb.basis_num
             if self.nspin == 4:
-                basis_num = basis_num / 2
+                basis_num = int(basis_num / 2)
                 out_pdos = np.zeros(basis_num, E_num)
                 for iw in range(basis_num):
                     out_pdos[iw] = self.pdos[iw*2] + self.pdos[iw*2+1]
