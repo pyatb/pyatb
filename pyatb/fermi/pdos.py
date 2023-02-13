@@ -192,7 +192,7 @@ class PDOS:
             basis_num = self.__tb.basis_num
             if self.nspin == 4:
                 basis_num = int(basis_num / 2)
-                out_pdos = np.zeros(basis_num, E_num)
+                out_pdos = np.zeros([basis_num, E_num], dtype=float)
                 for iw in range(basis_num):
                     out_pdos[iw] = self.pdos[iw*2] + self.pdos[iw*2+1]
 
