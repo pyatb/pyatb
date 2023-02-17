@@ -171,6 +171,7 @@ public:
         const int &omega_num,
         const double &domega,
         const double &start_omega,
+        const int &smearing_method,
         const double &eta,
         const int &occupied_band_num,
         const MatrixXd &k_direct_coor,

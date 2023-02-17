@@ -564,6 +564,7 @@ void interface_python::get_shift_current(
     const int &omega_num,
     const double &domega,
     const double &start_omega,
+    const int &smearing_method,
     const double &eta,
     const int &occupied_band_num,
     const MatrixXd &k_direct_coor,
@@ -575,7 +576,7 @@ void interface_python::get_shift_current(
     auto data = shift_current.mutable_unchecked<2>();
 
     shift_current_solver SCS;
-    SCS.set_parameters(nspin, omega_num, domega, start_omega, eta);
+    SCS.set_parameters(nspin, omega_num, domega, start_omega, smearing_method, eta);
     MatrixXd tem = SCS.get_shift_current_conductivity(Base_Data, k_direct_coor, total_kpoint_num, occupied_band_num, method);
 
     for (int i = 0; i < 18; ++i)

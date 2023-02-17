@@ -18,6 +18,7 @@ public:
         const int &omega_num,
         const double &domega,
         const double &start_omega,
+        const int &smearing_method,
         const double &eta
     );
 
@@ -64,9 +65,10 @@ private:
 
     int nspin = 1;
     int omega_num;
-    double domega;       // unit is Ry
-    double start_omega;  // unit is Ry
-    double eta;          // unit is Ry
+    double domega;
+    double start_omega;
+    int smearing_method = 1;
+    double eta;
     
 };
 

@@ -6,6 +6,7 @@ void shift_current_solver::set_parameters(
     const int &omega_num,
     const double &domega,
     const double &start_omega,
+    const int &smearing_method,
     const double &eta
 )
 {
@@ -13,6 +14,7 @@ void shift_current_solver::set_parameters(
     this->omega_num = omega_num;
     this->domega = domega;
     this->start_omega = start_omega;
+    this->smearing_method = smearing_method;
     this->eta = eta;
 }
 
@@ -132,109 +134,119 @@ MatrixXd shift_current_solver::get_shift_current_conductivity_ik(
     // smearing method : No smearing
     //
 
-    // int interval = int(5 * eta / domega);
-    // for (int i = 0; i < total_pair; ++i)
-    // {
-    //     int in = n[i];
-    //     int im = m[i];
-    //     double fn = 0;
-    //     double fm = 1;
-    //     double delta_e = eigenvalues(in) - eigenvalues(im);
-    //     int ind = int((delta_e - start_omega)/domega);
+    if (smearing_method == 0)
+    {
+        int interval = int(5 * eta / domega);
+        for (int i = 0; i < total_pair; ++i)
+        {
+            int in = n[i];
+            int im = m[i];
+            double fn = 0;
+            double fm = 1;
+            double delta_e = eigenvalues(in) - eigenvalues(im);
+            int ind = int((delta_e - start_omega)/domega);
 
-    //     for (int j = 0; j < 18; ++j)
-    //     {
-    //         if (ind < 0 || ind >= omega_num) continue;
-    //         double I = (fn - fm) * I_nm(j, i);
-    //         scc(j, ind) += I;
-    //     }
-    // }
+            for (int j = 0; j < 18; ++j)
+            {
+                if (ind < 0 || ind >= omega_num) continue;
+                double I = (fn - fm) * I_nm(j, i);
+                scc(j, ind) += I;
+            }
+        }
+    }
 
 
     //
     //  smearing method : Gaussian smearing
     //
 
-    // int interval = int(5 * eta / domega);
-    // for (int i = 0; i < total_pair; ++i)
-    // {
-    //     int in = n[i];
-    //     int im = m[i];
-    //     double fn = 0;
-    //     double fm = 1;
-    //     double delta_e = eigenvalues(in) - eigenvalues(im);
-    //     int ind = int((delta_e - start_omega)/domega);
+    if (smearing_method == 1)
+    {
+        int interval = int(5 * eta / domega);
+        for (int i = 0; i < total_pair; ++i)
+        {
+            int in = n[i];
+            int im = m[i];
+            double fn = 0;
+            double fm = 1;
+            double delta_e = eigenvalues(in) - eigenvalues(im);
+            int ind = int((delta_e - start_omega)/domega);
 
-    //     for (int j = 0; j < 18; ++j)
-    //     {
-    //         for (int iomega = ind - interval; iomega <= ind+interval; ++iomega)
-    //         {
-    //             if (iomega < 0 || iomega >= omega_num) continue;
-    //             double omega = start_omega + iomega * domega;
-    //             double I = (fn - fm) * I_nm(j, i);
-    //             scc(j, iomega) += I * std::exp(-std::pow((delta_e - omega) / eta, 2) ) / eta / SQRT_PI;
-    //         }
-    //     }
-    // }
+            for (int j = 0; j < 18; ++j)
+            {
+                for (int iomega = ind - interval; iomega <= ind+interval; ++iomega)
+                {
+                    if (iomega < 0 || iomega >= omega_num) continue;
+                    double omega = start_omega + iomega * domega;
+                    double I = (fn - fm) * I_nm(j, i);
+                    scc(j, iomega) += I * std::exp(-std::pow((delta_e - omega) / eta, 2) ) / eta / SQRT_PI;
+                }
+            }
+        }
+    }
 
     //
     // smearing method : adaptive Gaussian smearing (eta is adaptive)
     //
 
-    std::map<int, double> dE[3];
-    for (int a = 0; a < 3; ++a)
+    if (smearing_method == 2)
     {
-        for (int i : n)
-        {
-            dE[a][i] = 0.0;
-        }
-
-        for (int i : m)
-        {
-            dE[a][i] = 0.0;
-        }
-
-        MatrixXcd H_a = xr_operation::get_partial_Hk(Base_Data, exp_ikR, a);
-        MatrixXcd S_a = xr_operation::get_partial_Sk(Base_Data, exp_ikR, a);
-        for (auto &it : dE[a])
-        {
-            it.second = linear_response::get_partial_eigenvalue(H_a, S_a, eigenvalues, eigenvectors, it.first);
-        }
-    }
-
-    for (int i = 0; i < total_pair; ++i)
-    {
-        int in = n[i];
-        int im = m[i];
-        double fn = 0;
-        double fm = 1;
-        double delta_e = eigenvalues(in) - eigenvalues(im);
-        int ind = int((delta_e - start_omega)/domega);
-
-        double partial_E = 0;
-        Matrix3d temp_v = Base_Data.get_reciprocal_vector() * TWO_PI / Base_Data.get_lattice_constant();
-        double delta_k_x = temp_v.row(0).norm() / 100;
-        double delta_k_y = temp_v.row(1).norm() / 100;
-        double delta_k_z = temp_v.row(2).norm() / 100;
-        double delta_k = std::max(std::max(delta_k_x, delta_k_y), delta_k_z);
+        std::map<int, double> dE[3];
         for (int a = 0; a < 3; ++a)
         {
-            partial_E += std::pow(dE[a][in] - dE[a][im], 2);
-        }
-        double a_con = std::sqrt(2);
-        partial_E = std::sqrt(partial_E) * delta_k * a_con;
-        double eta_smr = std::min(partial_E, 1.0);
-        eta_smr = std::max(eta_smr, 1e-4);
-        int interval = int(5 * eta_smr / domega);
-
-        for (int j = 0; j < 18; ++j)
-        {
-            for (int iomega = ind - interval; iomega <= ind+interval; ++iomega)
+            for (int i : n)
             {
-                if (iomega < 0 || iomega >= omega_num) continue;
-                double omega = start_omega + iomega * domega;
-                double I = (fn - fm) * I_nm(j, i);
-                scc(j, iomega) += I * std::exp(-std::pow((delta_e - omega) / eta_smr, 2) ) / eta_smr / SQRT_PI;
+                dE[a][i] = 0.0;
+            }
+
+            for (int i : m)
+            {
+                dE[a][i] = 0.0;
+            }
+
+            MatrixXcd H_a = xr_operation::get_partial_Hk(Base_Data, exp_ikR, a);
+            MatrixXcd S_a = xr_operation::get_partial_Sk(Base_Data, exp_ikR, a);
+            for (auto &it : dE[a])
+            {
+                it.second = linear_response::get_partial_eigenvalue(H_a, S_a, eigenvalues, eigenvectors, it.first);
+            }
+        }
+
+        for (int i = 0; i < total_pair; ++i)
+        {
+            int in = n[i];
+            int im = m[i];
+            double fn = 0;
+            double fm = 1;
+            double delta_e = eigenvalues(in) - eigenvalues(im);
+            int ind = int((delta_e - start_omega)/domega);
+
+            double partial_E = 0;
+            Matrix3d temp_v = Base_Data.get_reciprocal_vector() * TWO_PI / Base_Data.get_lattice_constant();
+            double delta_k_x = temp_v.row(0).norm() / 100;
+            double delta_k_y = temp_v.row(1).norm() / 100;
+            double delta_k_z = temp_v.row(2).norm() / 100;
+            double delta_k = std::max(std::max(delta_k_x, delta_k_y), delta_k_z);
+            for (int a = 0; a < 3; ++a)
+            {
+                partial_E += std::pow(dE[a][in] - dE[a][im], 2);
+            }
+            // double a_con = std::sqrt(2);
+            double a_con = eta;
+            partial_E = std::sqrt(partial_E) * delta_k * a_con;
+            double eta_smr = std::min(partial_E, 1.0);
+            eta_smr = std::max(eta_smr, 1e-4);
+            int interval = int(5 * eta_smr / domega);
+
+            for (int j = 0; j < 18; ++j)
+            {
+                for (int iomega = ind - interval; iomega <= ind+interval; ++iomega)
+                {
+                    if (iomega < 0 || iomega >= omega_num) continue;
+                    double omega = start_omega + iomega * domega;
+                    double I = (fn - fm) * I_nm(j, i);
+                    scc(j, iomega) += I * std::exp(-std::pow((delta_e - omega) / eta_smr, 2) ) / eta_smr / SQRT_PI;
+                }
             }
         }
     }

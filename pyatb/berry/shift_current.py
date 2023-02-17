@@ -44,12 +44,13 @@ class Shift_Current:
                 f.write('\n------------------------------------------------------')
                 f.write('\n\n')
 
-    def set_parameters(self, occ_band, omega, domega, eta, grid, method, **kwarg):
+    def set_parameters(self, occ_band, omega, domega, smearing_method, eta, grid, method, **kwarg):
         self.__occ_band = occ_band
         self.__start_omega = omega[0]
         self.__end_omega = omega[1]
         self.__domega = domega
         self.__omega_num = int((self.__end_omega - self.__start_omega) / domega ) + 1
+        self.__smearing_method = smearing_method
         self.__eta = eta
         self.__method = method
         
@@ -63,12 +64,13 @@ class Shift_Current:
         if RANK == 0:
             with open(RUNNING_LOG, 'a') as f:
                 f.write('\nParameter setting : \n')
-                f.write(' >> occ_band : %-d\n' % (self.__occ_band))
-                f.write(' >> omega    : %-8.4f %-8.4f\n' % (self.__start_omega, self.__end_omega))
-                f.write(' >> domega   : %-10.6f\n' % (self.__domega))
-                f.write(' >> eta      : %-10.6f\n' % (self.__eta))
-                f.write(' >> grid     : %d %d %d\n' % (grid[0], grid[1], grid[2]))
-                f.write(' >> method   : %d' %(self.__method))
+                f.write(' >> occ_band        : %-d\n' % (self.__occ_band))
+                f.write(' >> omega           : %-8.4f %-8.4f\n' % (self.__start_omega, self.__end_omega))
+                f.write(' >> domega          : %-10.6f\n' % (self.__domega))
+                f.write(' >> smearing_method : %-10.6f (0: no smearing, 1: Gauss smearing, 2: adaptive smearing)\n' % (self.__smearing_method))
+                f.write(' >> eta             : %-10.6f\n' % (self.__eta))
+                f.write(' >> grid            : %d %d %d\n' % (grid[0], grid[1], grid[2]))
+                f.write(' >> method          : %d' %(self.__method))
 
     def print_data(self):
         output_path = self.output_path
@@ -104,7 +106,7 @@ class Shift_Current:
 
             if kpoint_num:
                 shift_current_value = self.__tb_solver.get_shift_current(
-                    self.nspin, self.__omega_num, self.__domega, self.__start_omega, 
+                    self.nspin, self.__omega_num, self.__domega, self.__start_omega, self.__smearing_method, 
                     self.__eta, self.__occ_band, ik_process.k_direct_coor_local, total_kpoint_num, self.__method
                 )
 

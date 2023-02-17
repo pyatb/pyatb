@@ -248,6 +248,7 @@ INPUT = {
         'occ_band'                    : [int, 1, None],
         'omega'                       : [float, 2, None],
         'domega'                      : [float, 1, None],
+        'smearing_method'             : [int, 1, 1], # 0: no smearing, 1: Gauss smearing, 2: adaptive smearing
         'eta'                         : [float, 1, 0.01],  # unit is eV
         # 'k_start'                     : [float, 3, [0.0, 0.0, 0.0]],
         # 'k_vect1'                     : [float, 3, [1.0, 0.0, 0.0]],

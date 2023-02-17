@@ -87,9 +87,9 @@ class solver:
 
         return optical_conductivity, dielectric_function
 
-    def get_shift_current(self, nspin, omega_num, domega, start_omega, eta, occupiedNumber, k_direct_coor, total_kpoint_num, method=1):
+    def get_shift_current(self, nspin, omega_num, domega, start_omega, smearing_method, eta, occupiedNumber, k_direct_coor, total_kpoint_num, method=1):
         shift_current = np.zeros([18, omega_num], dtype=float)
-        self.tb_solver.get_shift_current(nspin, omega_num, domega, start_omega, eta, occupiedNumber, k_direct_coor, total_kpoint_num, method, shift_current)
+        self.tb_solver.get_shift_current(nspin, omega_num, domega, start_omega, smearing_method, eta, occupiedNumber, k_direct_coor, total_kpoint_num, method, shift_current)
 
         return shift_current
 
