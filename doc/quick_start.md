@@ -1,6 +1,6 @@
 - [1. Introduction](#1-introduction)
-  - [1.1 Methodology](#11-methodology)
-  - [1.2 Capabilities](#12-capabilities)
+  - [1.1 Capabilities](#11-capabilities)
+  - [1.2 Methodology](#12-methodology)
   - [1.3 Workflow](#13-workflow)
 - [2. Installation](#2-installation)
   - [2.1 Download](#21-download)
@@ -35,47 +35,77 @@
 
 # 1. Introduction
 
-PYATB, Python ab initio tight binding simuation package, a python package for computing electronic structures and related properties based on the ab initio tight binding Hamiltonian.
+![PYATB](PYATB.jpg)
 
-PYATB is an open-source software package under the GPLv3.0.
+PYATB (Python ab initio tight binding simulation package) is an open-source software package for computing electronic structures and related properties based on the ab initio tight binding Hamiltonian. 
 
-Typical applications include calculation of band structure, density of states, projected density of states, Fermi energy, Fermi surface, etc.
-
-PYATB can be used to calculate the energy band spectrum function obtained by projecting the supercell wave function on the relevant k points of the primitive cell through the band unfolding method, which can be directly compared with the ARPES result. 
-
-PYATB can also be used to calculate Wilson loop and Berry curvature, which can simply classify topological phase, and study the properties of topological non-trivial materials such as topological insulators and Weyl/Dirac semimetals. 
-
-Furthermore, PYATB provides calculations of optical properties of solid materials, including linear optical response and nonlinear optical response, such as optical conductivity, shift current, Berry curvature dipole, etc.
+The software is licensed under GPLv3.0.
 
 The PYATB Developer Group includes Lixin He, Gan jin, Hongsheng Pang, Yuyang Ji, Zujian Dai.
 
-## 1.1 Methodology
+## 1.1 Capabilities 
 
-PYATB works in the tight binding framework, and the tight binding parameters are obtained from first principles software based on the atomic orbital bases, such as [ABACUS](https://abacus.ustc.edu.cn/).
+PYATB provides three major modules: *Band module*, *Geometric module*, *Optical module*, each with its own set of functions:
 
-Note: ABACUS (Atomic-orbital Based Ab-initio Computation at UStc) is an open-source package based on density functional theory (DFT). For a detailed introduction, please refer to [https://abacus.ustc.edu.cn/](https://abacus.ustc.edu.cn/).
+- Band module
+  - Band structre
+    : Allows users to calculate the energy bands and wave functions using three different $\mathbf{k}$-point modes: k-point, k-line, and k-mesh.
+  - Band unfolding
+    : Calculates the spectra weight by unfolding the energy bands of a supercell into the Brillouin zone (BZ) of the primitive cell.
+  - Fermi energy
+    : Calculates the Fermi energy at a given temperature.
+  - Fermi surface
+    : Plots the Fermi surface.
+  - Find nodes
+    : Allows users to search for degenerate points of the energy bands in the BZ within a specified energy window. This function can be used to find the Weyl/Dirac points in Weyl/Dirac semimetals.
+  - DOS and PDOS
+    : Calculates the density of states (DOS) and partial density of states (PDOS) of particular orbitals.
+  - Fat band
+    : Provides the contribution of each atomic orbital to the electronic wave functions at each $\mathbf{k}$-point in the BZ.
+  - Spin texture
+    : Plots the spin polarization vector as a function of momentum in the BZ.
 
-The periodic system follows Bloch's theorem, and the Schrödinger equation satisfied by a single electron is $H |\Psi_{n\mathbf{k}}\rangle = E_{n\mathbf{k}} |\Psi_{n\mathbf{k}}\rangle$. We expand the wave function of a single electron in the numerical atomic orbitals,
+- Geometric module
+  - Wilson loop
+    : Enables users to calculate the $\mathbb{Z}_2$ number by tracking the Wannier centers along the Wilson loop.
+  - Electric polarization
+    : Evaluates the electric polarization in various directions for non-centrosymmetric materials based on the Berry phase theory.
+  - Berry curvature
+    : Computes the Berry curvature in the BZ.
+  - Anomalous Hall conductivity
+    : Calculates the anomalous Hall conductivity using Berry curvature.
+  - Chern number
+    : Calculates the Chern number of a system for any given $\mathbf{k}$-plane.
+  - Chirality
+    : Examines the chirality of Weyl points by calculating the Berry curvature on a sphere around the $\mathbf{k}$ point.
+
+- Optical module
+  - JDOS
+    : Calculates the joint density of states (JDOS), which characterizes both electronic states and optical transitions.
+  - Optical conductivity and dielectric function
+    : Calculates the frequency-dependent optical conductivity and dielectric function.
+  - Shift current
+    : Calculates the shift current conductivity tensor for the bulk photovoltaic effect.
+  - Berry curvature dipole
+    : Calculates the Berry curvature dipole which leads to the nonlinear anomalous Hall effects.
+
+## 1.2 Methodology
+
+PYATB is based on the ab initio tight binding model, where the parameters of the Hamiltonian are generated directly from the self-consistent calculations using first-principles software based on numerical atomic orbitals (NAO) bases, such as [ABACUS](https://abacus.ustc.edu.cn/).
+
+**NOTE**: ABACUS (Atomic-orbital Based Ab-initio Computation at UStc) is an open-source package based on density functional theory (DFT). For a detailed introduction, please refer to [https://abacus.ustc.edu.cn/](https://abacus.ustc.edu.cn/).
+
+In a periodic system, the Kohn–Sham equation at a given  $\mathbf{k}$ point can be written as,
+
+$$H |\Psi_{n\mathbf{k}}\rangle = E_{n\mathbf{k}} |\Psi_{n\mathbf{k}}\rangle.$$
+
+Here $\Psi_{n\mathbf{k}}$ is the Bloch wave function of the $n$-th band, and can be expressed under NAO as,
+
 $$
 |\Psi_{n\mathbf{k}}\rangle = \frac{1}{\sqrt{N}}\sum_{\mu}C_{n\mu}(\mathbf{k})\sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}|\mathbf{R}\mu\rangle,
 $$
 
-where $|\mathbf{R}\mu\rangle$ is the atomic orbital localized at the $\mathbf{R}$ unitcell, $C_{n\mu}(\mathbf{k})$ is the expansion coefficient.
-
-By definition, 
-$$
-\begin{aligned}
-    H_{\nu\mu}(\mathbf{k}) &= \sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}H_{\nu\mu}(\mathbf{R})\, , \\
-    S_{\nu\mu}(\mathbf{k}) &= \sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}S_{\nu\mu}(\mathbf{R})\, ,
-\end{aligned} $$
-
-where
-$$
-\begin{aligned}
-    H_{\nu\mu}(\mathbf{R}) &= \langle\mathbf{0}\nu|H|\mathbf{R}\mu\rangle\, , \\
-    S_{\nu\mu}(\mathbf{R}) &= \langle\mathbf{0}\nu|\mathbf{R}\mu\rangle\, .
-\end{aligned}
-$$
+where $|\mathbf{R}\mu\rangle \equiv \phi_{\mu}\left(\mathbf{r}-\tau_{\mu}-\mathbf{R}\right)$ is the $\mu$-th atomic orbital, in the $\mathbf{R}$-th unit cell, and $\tau_{\mu}$ denotes the center position of this orbital. The composite index $\mu = (\alpha, i, \zeta, l, m)$, where $\alpha$ is the element type, $i$ is the index of the atom of each element type, $\zeta$ is the multiplicity of the radial functions for the angular momentum $l$, and $m$ is the magnetic quantum number. The coefficient of the NAO is given by $C_{n\mu}(\mathbf{k})$.
 
 we can convert the Hamiltonian solution into a general eigenvalue solution problem
 
@@ -83,42 +113,43 @@ $$
 H(\mathbf{k})C_n(\mathbf{k}) = E_{n\mathbf{k}}S(\mathbf{k})C_n\, .
 $$
 
-When solving for the geometric properties of the bands, we also need the dipole matrix, namely:
+where $H(\mathbf{k})$, $S(\mathbf{k})$ and $C_{n}(\mathbf{k})$ are the Hamiltonian matrix, overlap matrix and eigenvectors of the $n$-th band, respectively.
+
+To obtain the $H(\mathbf{k})$ and $S(\mathbf{k})$, we first calculate tight binding Hamiltonian in real space via first-principles softwares based on NAOs, such as ABACUS,
+
 $$
 \begin{aligned}
-    A_{\nu\mu, \alpha}^{R}(\mathbf{k}) &= \sum_{\mathbf{R}} \mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}} r_{\nu\mu, \alpha}(\mathbf{R}) \, , \\
-    r_{\nu\mu, \alpha}(\mathbf{R}) &= \langle\mathbf{0}\nu|r_{\alpha}|\mathbf{R}\mu\rangle\, .
+    H_{\nu\mu}(\mathbf{R}) &= \langle\mathbf{0}\nu|H|\mathbf{R}\mu\rangle\, , \\
+    S_{\nu\mu}(\mathbf{R}) &= \langle\mathbf{0}\nu|\mathbf{R}\mu\rangle\, .
 \end{aligned}
 $$
 
-After obtaining the tight binding parameters $H_{\nu\mu}(\mathbf{R})$, $S_{\nu\mu}(\mathbf{R})$, and $r_{\nu\mu, \alpha}(\mathbf{R})$ from the first principles software, the electronic structure can be calculated using PYATB.
+Once we have the $H_{\nu\mu}(\mathbf{R}) $ and $S_{\nu\mu}(\mathbf{R})$, we can obtain the Hamiltonian matrix and the overlap matrix at arbitrary $\mathbf{k}$ points using the following relation,
 
-## 1.2 Capabilities
+$$
+\begin{aligned}
+    H_{\nu\mu}(\mathbf{k}) &= \sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}H_{\nu\mu}(\mathbf{R})\, , \\
+    S_{\nu\mu}(\mathbf{k}) &= \sum_{\mathbf{R}}\mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}}S_{\nu\mu}(\mathbf{R})\, ,
+\end{aligned}
+$$
 
-PYATB provides the following functionalities:
+When solving for the geometric properties of the bands, we also need the dipole matrix between the NAOs, namely:
 
-- related to energy band
-  1. [band structure](#51-band_structure)
-  2. [band unfolding](#52-bandunfolding)
-  3. [fat band](#53-fat_band)
-  4. [fermi energy](#54-fermi_energy)
-  5. [fermi surface](#55-fermi_surface)
-  6. [find nodes](#56-find_nodes)
-  7. [JDOS](#57-jdos)
-  8. [PDOS](#58-pdos)
-  9. [spin texture](#59-spin_texture)
+$$
+r_{\nu\mu, a}(\mathbf{R}) = \langle\mathbf{0}\nu|r_{a}|\mathbf{R}\mu\rangle \quad a = x, y, z.
+$$
 
-- related to band geometry
-  1. [AHC](#510-ahc)
-  2. [Berry curvature](#511-berry_curvature)
-  3. [Chern number](#512-chern_number)
-  4. [optical conductivity](#513-optical_conductivity)
-  5. [polarization](#514-polarization)
-  6. [Wilson loop](#515-wilson_loop)
+Then, we use $r_{\nu\mu, a}(\mathbf{R})$ to calculate the $\mathbf{k}$-dependent dipole matrix by Fourier transform,
+
+$$
+A_{\nu\mu, a}^{R}(\mathbf{k}) = \sum_{\mathbf{R}} \mathrm{e}^{i\mathbf{k}\cdot\mathbf{R}} r_{\nu\mu, a}(\mathbf{R}) .
+$$
+
+After obtaining the tight binding parameters $H_{\nu\mu}(\mathbf{R})$, $S_{\nu\mu}(\mathbf{R})$, and $r_{\nu\mu, a}(\mathbf{R})$ from the first principles software, the electronic structure can be calculated using PYATB.
 
 ## 1.3 Workflow
 
-The basic workflow of pyatb is as follows. First, you need to perform self-consistent calculations from ABAUCS to obtain $H_{\nu\mu}(\mathbf{R})$, $S_{\nu\mu}(\mathbf{R})$, and $r_{\nu\mu, \alpha}(\mathbf{R})$. In addition, some functions also require crystal structure information and atomic orbital data. After you have obtained these files, you can write an Input file to perform the corresponding function calculation of PYATB, or write a script based on the PYATB module to calculate.
+The fundamental workflow of PYATB involves several key steps. Firstly, it is essential to perform self-consistent calculations from ABAUCS to acquire critical tight binding parameters such as $H_{\nu\mu}(\mathbf{R})$, $S_{\nu\mu}(\mathbf{R})$, and $r_{\nu\mu, a}(\mathbf{R})$. Additionally, some of the functions may require crystal structure details and atomic orbital data. Once you have all the necessary files, you can either write an `Input` file to perform the corresponding function computation on PYATB, or write a script using the PYATB module to carry out the calculation.
 
 ![workflow](workflow.png)
 
@@ -126,7 +157,7 @@ The basic workflow of pyatb is as follows. First, you need to perform self-consi
 
 ## 2.1 Download
 
-The latest version of the PYATB package can be obtained from the github repository:
+The latest version of the PYATB package can be obtained from the GitHub repository:
 
 ```shell
 git clone https://github.com/jingan-181/pyatb.git
@@ -134,7 +165,7 @@ git clone https://github.com/jingan-181/pyatb.git
 
 ## 2.2 Prerequisites
 
-At present, PYATB is running in the Linux system, and the Win system and Mac system have not been tested. In order to use PYATB properly, you need to install the following prerequisites:
+At present, PYATB is running in the Linux system, and the Windows system and Mac system have not been tested. In order to use PYATB properly, you need to install the following prerequisites:
 
 - Python 3.7 or newer
 - NumPy
@@ -152,15 +183,17 @@ You can install PYATB with the following simple command:
 python setup.py install --record log
 ```
 
-In the `setup.py` file you need to modify the **CXX** and **LAPACK_DIR** variables according to your environment. **CXX** is used to specify the C++ compiler (e.g. icpc, note that it is not the mpi version) and **LAPACK_DIR** is used to specify the intel MKL path.
+To customize the `setup.py` file, you must make changes to the **CXX** and **LAPACK_DIR** variables in line with your environment. **CXX** denotes the C++ compiler you intend to use, for instance, icpc (note that it should not be the mpi version). Furthermore, **LAPACK_DIR** is used to specify the Intel MKL path.
 
-After completing the installation the executable `pyatb` and the corresponding module `pyatb` (which can be called by `import pyatb`) will be added to the Python environment.
+After completing the installation process, you can access the `pyatb` executable and corresponding module, which can be imported using the `import pyatb` command.
 
-The corresponding uninstall operation is to delete the files generated during Python installation. A simple uninstall command is as follows:
+To uninstall the software, you simply delete the files generated during the Python installation process. A straightforward way to do this is to execute the following uninstallation command:
 
 ```shell
 cat log | xargs rm -rf
 ```
+
+**NOTE**: Be sure to delete all files related to pyatb. Otherwise it will cause unnecessary impact on the next installation.
 
 # 3. Run
 
@@ -180,9 +213,9 @@ mpirun -n 6 pyatb
 
 ## 4.1 Input 
 
-The `Input` file describes the basic information of the system and the parameters required to calculate the function. For a complete list of the input parameters, please consult this [input list](#6-detailed-introduction-of-the-input-file).
+The `Input` file describes the basic information about the system and the parameters required to calculate the function. For a complete list of the input parameters, please consult this [input list](#6-detailed-introduction-of-the-input-file).
 
-The following is an example of an Input file:
+The following is an example of an `Input` file:
 
 ```txt {.line-numbers}
 INPUT_PARAMETERS
@@ -239,23 +272,23 @@ The LATTICE section is used to specify lattice information and has only three pa
 The FUNCTION section is the parameters required by each calculation function itself, and the parameters used by each function are different.
 
 **NOTE**:
-- The keyword of section must be capitalized, and the parameters in section must be lowercase.
+- The keyword of the section must be capitalized, and the parameters in the section must be lowercase.
 
 - Each parameter value is provided by specifying the name of the input variable and then putting the value after the name, separated by one or more blank characters(space or tab).
 
-- Any line starting with # or / will also be ignored. If you want to ignored a function section, add # in front of the section name of that function, then all parameters of that function will be ignored.
+- Any line starting with `#` or `/` will also be ignored. If you want to ignore a function section, add `#` in front of the section name of that function, then all parameters of that function will be ignored.
 
-- Case is mandatory, otherwise it will lead to reading errors, for example, `eV` cannot be written as `ev`, and `Bohr` cannot be written as `bohr`.
+- Case is mandatory. Otherwise it will lead to reading errors, for example, `eV` cannot be written as `ev`, and `Bohr` cannot be written as `bohr`.
 
 ## 4.2 HR, SR, rR
 
 HR, SR, and rR are important input files for PYATB and contain information about the tight binding model, which can be generated by ABACUS.
 
-In pyatb program, if only energy band related functions are used, only HR, SR need to be provided, rR is not required to be specified, only when calculating energy band geometry related properties, rR file must be specified.
+In the PYATB program, if only the *Band module* is used, it is enough to provide HR and SR, and specifying rR is not required. However, when the functions of the calculations are related to the *Geometric module* or *Optical module*, the rR file must be specified.
 
 ### 4.2.1 How to generate HR, SR, rR files using ABACUS
 
-Run the **scf** calculation of ABACUS normally, specify the parameters `out_mat_hs2` and `out_mat_r` in the `INPUT` file, and three files of sparse format `data-HR-sparse_SPIN0.csr`, `data-SR-sparse_ SPIN0.csr`, `data-rR-sparse.csr` (and `data-HR-sparse_SPIN1.csr` when `nspin` is 2), will be generate in OUT* folder.
+Run the **scf** calculation of ABACUS normally, specifies the parameters `out_mat_hs2` and `out_mat_r` in the `INPUT` file, and three files of sparse format `data-HR-sparse_SPIN0.csr`, `data-SR-sparse_ SPIN0.csr`, `data-rR-sparse.csr` (and `data-HR-sparse_SPIN1.csr` when `nspin` is 2), will be generated in OUT* folder.
 
 **NOTE**:
 - nspin=4 and nspin=1, nspin=2 output different files. nspin=4 files contain imaginary numbers, so the correct nspin parameter needs to be strictly specified when executing pyatb programs.
