@@ -239,7 +239,7 @@ class Band_Structure:
         else:
             with open(os.path.join(output_path, 'band_up.dat'), 'a+') as f:
                 np.savetxt(f, self.eig[0], fmt='%0.8f')
-            with open(os.path.join(output_path, 'band_up.dat'), 'a+') as f:
+            with open(os.path.join(output_path, 'band_dn.dat'), 'a+') as f:
                 np.savetxt(f, self.eig[1], fmt='%0.8f')
 
             if self.wf_collect:
