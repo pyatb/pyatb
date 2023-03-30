@@ -1,0 +1,42 @@
+INPUT_PARAMETERS
+{
+    nspin                     4
+    package                   ABACUS
+    fermi_energy              9.564418181126964
+    fermi_energy_unit         eV
+    HR_route                  data-HR-sparse_SPIN0.csr
+    SR_route                  data-SR-sparse_SPIN0.csr
+    rR_route                  data-rR-sparse.csr
+    HR_unit                   Ry
+    rR_unit                   Bohr
+    max_kpoint_num            28000
+}
+
+LATTICE
+{
+    lattice_constant          1.8897162
+    lattice_constant_unit     Bohr
+    lattice_vector
+    2.22    -3.84515    0.000
+    2.22     3.84515    0.000
+    0.00     0.00000    5.910
+
+}
+
+# FERMI_ENERGY
+{
+    temperature               0
+    electron_num              48
+    grid                      50 50 50
+    epsilon                   1e-4
+}
+
+BERRY_CURVATURE_DIPOLE
+{
+    omega                     9.464  10.064
+    domega                    0.001
+    integrate_mode            Grid
+    integrate_grid            100 100 100
+    adaptive_grid             20 20 20
+    adaptive_grid_threshold   20000
+}

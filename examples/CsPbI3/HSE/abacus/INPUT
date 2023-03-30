@@ -1,0 +1,33 @@
+INPUT_PARAMETERS
+
+# System variables
+suffix                CsPbI3
+ntype                 3
+calculation           scf
+init_chg              atomic
+dft_functional        hse
+
+# Plane wave related variables
+ecutwfc               100
+
+# Electronic structure
+basis_type            lcao
+ks_solver             genelpa
+nspin                 1
+smearing_method       gauss
+smearing_sigma        0.01
+mixing_type           pulay
+scf_nmax              200
+scf_thr               1e-8
+
+# Exact exchange
+exx_pca_threshold     0.0001
+exx_c_threshold       0.0001
+exx_dm_threshold      0.0001
+exx_cauchy_threshold  1e-07
+exx_ccp_rmesh_times   1.2
+
+# Variables related to output information
+out_chg               1
+out_mat_hs2           1
+out_mat_r             1

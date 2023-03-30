@@ -1,0 +1,54 @@
+INPUT_PARAMETERS
+{
+    nspin               1
+    package             ABACUS
+    fermi_energy        5.508975304340945
+    fermi_energy_unit   eV
+    HR_route            data-HR-sparse_SPIN0.csr
+    SR_route            data-SR-sparse_SPIN0.csr
+    rR_route            data-rR-sparse.csr
+    HR_unit             Ry
+    rR_unit             Bohr
+}
+
+LATTICE
+{
+    lattice_constant        1.8897261258369282
+    lattice_constant_unit   Bohr
+    lattice_vector
+	6.2894000000      0.0000000000      0.0000000000
+	0.0000000000      6.2894000000      0.0000000000
+	0.0000000000      0.0000000000      6.2894000000
+}
+
+BAND_STRUCTURE
+{
+    wf_collect                     0
+    kpoint_mode                    line
+    kpoint_num			           6
+    high_symmetry_kpoint
+    0.00000 0.00000 0.0000 20  # G
+    0.00000 0.50000 0.0000 20  # X
+    0.50000 0.50000 0.0000 25  # M
+    0.00000 0.00000 0.0000 30  # G
+    0.50000 0.50000 0.5000 25  # R
+    0.00000 0.50000 0.0000 1   # X
+}
+
+JDOS
+{
+    occ_band      37
+    omega         0.5  10
+    domega        0.01
+    eta           0.2
+    grid          30 30 30
+}
+
+OPTICAL_CONDUCTIVITY
+{
+    occ_band      37
+    omega         0.5  10   
+    domega        0.01
+    eta           0.2
+    grid          30 30 30
+}

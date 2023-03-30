@@ -66,28 +66,63 @@ class Chirality:
     def generate_k_sphere(self, k_vect_direct, radius, point_num):
         phi = np.sqrt(5) - 1
         point_list = np.zeros([point_num,3],dtype = float)
-        
+        point_list_cartesian = np.zeros([point_num,3],dtype = float)
+        k_vect_cartesian = self.__tb.direct_to_cartesian_kspace(k_vect_direct)
+        print(k_vect_direct,k_vect_cartesian)
+        #generate a spere in cartesian space
         for i in range(point_num):
+            
             z_i = ((2 * (i+1) - 1) / point_num - 1)
             x_i = np.sqrt(1 - z_i * z_i) * np.cos(2 * np.pi * (i+1) * phi)
             y_i = np.sqrt(1 - z_i * z_i) * np.sin(2 * np.pi * (i+1) * phi)
-            point_list[i] = k_vect_direct + np.array([x_i, y_i, z_i]) * radius
+            temp = k_vect_cartesian + np.array([x_i, y_i, z_i]) * radius
+            point_list_cartesian[i] = temp
+            point_list[i] = self.__tb.cartesian_to_direct_kspace(temp)
+        if RANK == 0:
+            output_path = self.output_path
+
+            with open(os.path.join(output_path, 'kpt_cartesian.dat'), 'w') as f:   
+                np.savetxt(f, point_list_cartesian, fmt='%0.8f')
+        
+            
         return point_list
 
     def cal_berry_curvature_project(self, point_list, k_vect_direct, radius):
+        
+        k_vect1 = np.array([1,0,0],dtype = float)
+        k_vect2 = np.array([0,1,0],dtype = float)
+        k_vect3 = np.array([0,0,1],dtype = float)
+        
+        v1 = self.__tb.direct_to_cartesian_kspace(k_vect1)
+        v2 = self.__tb.direct_to_cartesian_kspace(k_vect2)
+        v3 = self.__tb.direct_to_cartesian_kspace(k_vect3)
+        v1 = v1/np.linalg.norm(v1)
+        v2 = v2/np.linalg.norm(v2)
+        v3 = v3/np.linalg.norm(v3)
+        
+
+        
         k_direct_coor = point_list
         kpoint_num = k_direct_coor.shape[0]
         berry_curvature_project = np.zeros(kpoint_num, dtype=float)
+        berry_curvature_cartesian = np.zeros([kpoint_num,3],dtype = float)
 
         if kpoint_num:
             berry_curvature_values = self.__tb_solver.get_total_berry_curvature_fermi(k_direct_coor, self.fermi_energy, self.method)
+            
         
         for i in range(kpoint_num):
             point = k_direct_coor[i] - k_vect_direct
+            point = self.__tb.direct_to_cartesian_kspace(point)
             point = point / radius
-            berry_curvature_project[i] = berry_curvature_values[i] @ point
+            temp = np.zeros(3)
+            temp[0] = berry_curvature_values[i,:] @ v1
+            temp[1] = berry_curvature_values[i,:] @ v2
+            temp[2] = berry_curvature_values[i,:] @ v3
+            berry_curvature_cartesian[i,:] = temp
+            berry_curvature_project[i] = temp @ point
 
-        return berry_curvature_project
+        return berry_curvature_cartesian,berry_curvature_project
 
     def print_data(self, ans):
         output_path = self.output_path
@@ -112,13 +147,6 @@ class Chirality:
         k_vect2 = np.array([0,1,0],dtype = float)
         k_vect3 = np.array([0,0,1],dtype = float)
         
-        v1 = self.__tb.direct_to_cartesian_kspace(k_vect1)
-        v2 = self.__tb.direct_to_cartesian_kspace(k_vect2)
-        v3 = self.__tb.direct_to_cartesian_kspace(k_vect3)
-        s1 = np.linalg.norm(np.cross(v2, v3), ord=2)
-        s2 = np.linalg.norm(np.cross(v3, v1), ord=2)
-        s3 = np.linalg.norm(np.cross(v1, v2), ord=2)
-        s = s1 + s2 + s3
 
         point_list = self.generate_k_sphere(k_vect_direct, radius, point_num)
         k = kpoint_generator.array_generater(self.__max_kpoint_num, point_list)
@@ -127,14 +155,16 @@ class Chirality:
             time_start = time.time()
 
             ik_process = kpoint_generator.kpoints_in_different_process(SIZE, RANK, ik)
-            berry_curvature_project = self.cal_berry_curvature_project(ik_process.k_direct_coor_local, k_vect_direct, radius)
+            berry_curvature_cartesian, berry_curvature_project = self.cal_berry_curvature_project(ik_process.k_direct_coor_local, k_vect_direct, radius)
             tem_ans_list = COMM.reduce(berry_curvature_project, root=0, op=op_gather_numpy)
-            
+            tem_bc_list = COMM.reduce(berry_curvature_cartesian, root=0, op=op_gather_numpy)
             if RANK == 0:
                 if ans_list_all is None:
                     ans_list_all = tem_ans_list
+                    bc_list_all = tem_bc_list
                 else:
                     ans_list_all = np.r_[ans_list_all, tem_ans_list]
+                    bc_list_all = np.r_[bc_list_all,tem_bc_list]
 
             COMM.Barrier()
             time_end = time.time()
@@ -143,8 +173,13 @@ class Chirality:
                     f.write(' >> Calculated %10d k points, took %.6e s\n'%(ik.shape[0], time_end-time_start))
 
         if RANK == 0:
+            output_path = self.output_path
+            with open(os.path.join(output_path, 'bc_cartesian.dat'), 'w') as f:   
+                np.savetxt(f, bc_list_all, fmt='%0.8f')
+            with open(os.path.join(output_path, 'bc_cartesian_projected.dat'), 'w') as f:   
+                np.savetxt(f, ans_list_all, fmt='%0.8f')
             ans = np.sum(ans_list_all)
-            ans = ans/ point_num * 4 * radius * radius * s / 9 * np.pi
+            ans = ans/ point_num * 2 * radius * radius
             self.print_data(ans)
 
         COMM.Barrier()

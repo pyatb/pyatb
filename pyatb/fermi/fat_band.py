@@ -148,14 +148,16 @@ class Fat_Band:
             self.fatband = temp_fatband
             self.eig = tem_eig
             
-            self.print_data(self.eig, self.fatband)
+            if RANK == 0:
+                self.print_data(self.eig, self.fatband)
         # end k loop
 
-        if self.nspin != 2:
-            self.transform_xml('band.dat', 'pband.dat', 'fatband.xml', k_generator.total_kpoint_num, basis_num, band_num)
-        else:
-            self.transform_xml('band_up.dat', 'pband_up.dat', 'fatband_up.xml', k_generator.total_kpoint_num, basis_num, band_num)
-            self.transform_xml('band_dn.dat', 'pband_dn.dat', 'fatband_dn.xml', k_generator.total_kpoint_num, basis_num, band_num)
+        if RANK == 0:
+            if self.nspin != 2:
+                self.transform_xml('band.dat', 'pband.dat', 'fatband.xml', k_generator.total_kpoint_num, basis_num, band_num)
+            else:
+                self.transform_xml('band_up.dat', 'pband_up.dat', 'fatband_up.xml', k_generator.total_kpoint_num, basis_num, band_num)
+                self.transform_xml('band_dn.dat', 'pband_dn.dat', 'fatband_dn.xml', k_generator.total_kpoint_num, basis_num, band_num)
 
         COMM.Barrier()
 
@@ -209,10 +211,10 @@ class Fat_Band:
             f.write('</band_structure>\n')
 
             index = 0
+            atom_index = 0
             for it in self.__tb.stru_atom:
                 species = it.species
                 orbital_num = it.orbital_num
-                atom_index = 0
                 for ia in range(it.atom_num):
                     atom_index += 1
                     for l in range(len(orbital_num)):
@@ -269,12 +271,12 @@ pband = PBand(pbandfile, kptfile)
 # Variable `index`, `atom_index`, `species` can only use one of them.
 
 # index: extract PDOS from the lowest level index that is atomic orbital index. 
-# This variable comes from the \"index\" parameter in PDOS.xml. 
+# This variable comes from the \"index\" parameter in fatband.xml. 
 # Integer type
 # e.g. [index_1, index_2, index_3, ...]
 
 # atom_index: extract PDOS of each atom with same atom_index. 
-# This variable comes from the \"atom_index\" parameter in PDOS.xml. 
+# This variable comes from the \"atom_index\" parameter in fatband.xml. 
 # Integer type
 # e.g. plot PDOS of the same atom -> [atom_index_1, atom_index_2, atom_index_3, ...]
 # e.g. plot PDOS of the same atom specifying L (s:0, p:1, d:2, f:3) -> {{ atom_index_1: [s, p, d], atom_index_2: [s, p], ... }}
@@ -282,7 +284,7 @@ pband = PBand(pbandfile, kptfile)
 # -> {{ atom_index_1: {{ s: [m_0], p: [m_0, m_1] }}, atom_index_2: {{ s: [m_0], p: [m_0, m_1], ... }}
 
 # species: extract PDOS of each atom with same species.
-# This variable comes from the \"species\" parameter in PDOS.xml.
+# This variable comes from the \"species\" parameter in fatband.xml.
 # String type
 # e.g. plot PDOS of the same species -> [species_1, species_2, species_3, ...]
 # e.g. plot PDOS of the same species specifying L (s:0, p:1, d:2, f:3) -> {{ species_1: [s, p, d], species_2: [s, p], ... }}

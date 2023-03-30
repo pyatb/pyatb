@@ -213,11 +213,11 @@ from mpl_toolkits.mplot3d import Axes3D
 kpoints = np.loadtxt('{nodes_kpt_file}')[:, 0:3]
 
 fig = plt.figure()
-ax = fig.gca(projection='3d')
-plt.title('Nodes')
-plt.xlabel('$k_x$')
-plt.ylabel('$k_y$')
-plt.zlabel('$k_z$')
+ax = fig.add_subplot(projection='3d')
+ax.set_title('Nodes')
+ax.set_xlabel('$k_x$')
+ax.set_ylabel('$k_y$')
+ax.set_zlabel('$k_z$')
 fig_name = '{fig_name}'
 x = kpoints[:, 0]
 y = kpoints[:, 1]

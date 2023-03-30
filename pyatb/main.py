@@ -191,6 +191,8 @@ def main():
         berry_curvature_dipole_parameters = INPUT['BERRY_CURVATURE_DIPOLE']
         cal_berry_curvature_dipole = Berry_Curvature_Dipole(m_tb,**input_parameters, **berry_curvature_dipole_parameters)
         cal_berry_curvature_dipole.calculate_berry_curvature_dipole(**berry_curvature_dipole_parameters)
+        if RANK == 0:
+            cal_berry_curvature_dipole.print_plot_script()
 
     if function_switch['CHIRALITY']:
         chirality_parameters = INPUT['CHIRALITY']

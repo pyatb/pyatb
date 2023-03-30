@@ -56,7 +56,7 @@ class Berry_Curvature_Dipole:
         v2 = self.__tb.direct_to_cartesian_kspace(self.__k_vect2)
         v3 = self.__tb.direct_to_cartesian_kspace(self.__k_vect3)
         V = np.linalg.det(np.array([v1.T,v2.T,v3.T]))
-        c =  V /(2*np.pi)
+        c =  V /(2*np.pi)**3
         return c
     def set_parameters(
         self, 
@@ -103,7 +103,7 @@ class Berry_Curvature_Dipole:
         if RANK == 0:
             
             np.savetxt(os.path.join(self.output_path, 'kpoint_list'), kpoint_list1, fmt='%0.8f')
-            np.savetxt(os.path.join(self.output_path, 'bcd_step1.dat'), self.bcd_0*constant1*constant2, fmt='%0.8f')
+            #np.savetxt(os.path.join(self.output_path, 'bcd_step1.dat'), self.bcd_0*constant1*constant2, fmt='%0.8f')
         for i in range(kpoint_num1):
             k_generator = self.__set_k_mp(kpoint_list1[i,:]-delta/2,k_vect12,k_vect22,k_vect32,self.__adaptive_grid)
             bcd_total = np.zeros([self.__omega_num,9],dtype = float)
@@ -131,8 +131,62 @@ class Berry_Curvature_Dipole:
         return
     def print_data(self,data):
         output_path = self.output_path
-        np.savetxt(os.path.join(output_path, 'bcd_step2.dat'), data, fmt='%0.8f')
+        np.savetxt(os.path.join(output_path, 'bcd.dat'), data, fmt='%0.8f')
         return
+    def print_plot_script(self):
+        output_path = os.path.join(self.output_path, '')
+        with open(os.path.join(output_path, 'plot_bcd.py'), 'w') as f:
+            bcd_file = os.path.join(output_path, 'bcd.dat')
+            
+
+            plot_script = """import numpy as np
+import matplotlib.pyplot as plt
+direction = {{
+    'xx' : 1,
+    'xy' : 2,
+    'xz' : 3,
+    'yx' : 4,
+    'yy' : 5,
+    'yz' : 6,
+    'zx' : 7,
+    'zy' : 8,
+    'zz' : 9
+}}
+data = np.loadtxt('{bcd_file}')
+
+
+x = np.linspace({E_min},{E_max},{E_num})
+
+smearing = 1e-3
+def partial_f(smearing,E):
+    
+    temp = np.exp((E)/smearing)
+    ans = temp/((1+temp)**2 *smearing )
+    return ans
+    
+num = {E_num}
+data_smear = np.zeros([num,9],dtype = float)
+for i in range(num):
+    for j in range(num):
+        
+        data_smear[i,:] = data_smear[i,:]+data[j,:]*partial_f(smearing,(x[i]-x[j]))
+for key, value in direction.items():
+    figure = plt.figure()
+    plt.title('Berry Curvature Dipole')
+    plt.xlim(x[0], x[-1])
+    plt.xlabel('$\omega (eV)$')
+    plt.ylabel('$BCD_{{%s}} $'%(key))
+    
+    plt.plot(x, data_smear[:,value-1], color='b', linewidth=1, linestyle='-')
+    plt.legend()
+    plt.savefig('{output_path}' + 'bcd-%s.pdf'%(key))
+    plt.close('all')
+    
+    
+""".format(bcd_file=bcd_file, E_min=self.__start_omega, E_max=self.__end_omega, E_num = self.__omega_num, output_path=output_path)
+
+            f.write(plot_script)
+
     def get_bcd_pl(self,k_direct_coor):
         E_min = self.__start_omega
         E_max = self.__end_omega
@@ -169,21 +223,21 @@ class Berry_Curvature_Dipole:
                         C = E_in**2
                         if np.abs(E_in)>E_bar:
                             bc_nband[0] +=\
-                            (velocity_matrix[ik,1,nband,iband]*velocity_matrix[ik,2,iband,nband])*2j/C
+                            ((velocity_matrix[ik,1,nband,iband]*velocity_matrix[ik,2,iband,nband])*2j/C).real
                             bc_nband[1] += \
-                            (velocity_matrix[ik,2,nband,iband]*velocity_matrix[ik,0,iband,nband])*2j/C
+                            ((velocity_matrix[ik,2,nband,iband]*velocity_matrix[ik,0,iband,nband])*2j/C).real
                             bc_nband[2] += \
-                            (velocity_matrix[ik,0,nband,iband]*velocity_matrix[ik,1,iband,nband])*2j/C
+                            ((velocity_matrix[ik,0,nband,iband]*velocity_matrix[ik,1,iband,nband])*2j/C).real
                             
-                    bcd_pl[ik,n,0]+=velocity_matrix[ik,0,nband,nband]*bc_nband[0]
-                    bcd_pl[ik,n,1]+=velocity_matrix[ik,0,nband,nband]*bc_nband[1]
-                    bcd_pl[ik,n,2]+=velocity_matrix[ik,0,nband,nband]*bc_nband[2]
-                    bcd_pl[ik,n,3]+=velocity_matrix[ik,1,nband,nband]*bc_nband[0]
-                    bcd_pl[ik,n,4]+=velocity_matrix[ik,1,nband,nband]*bc_nband[1]
-                    bcd_pl[ik,n,5]+=velocity_matrix[ik,1,nband,nband]*bc_nband[2]
-                    bcd_pl[ik,n,6]+=velocity_matrix[ik,2,nband,nband]*bc_nband[0]
-                    bcd_pl[ik,n,7]+=velocity_matrix[ik,2,nband,nband]*bc_nband[1]
-                    bcd_pl[ik,n,8]+=velocity_matrix[ik,2,nband,nband]*bc_nband[2]
+                    bcd_pl[ik,n,0]+=(velocity_matrix[ik,0,nband,nband]*bc_nband[0]).real
+                    bcd_pl[ik,n,1]+=(velocity_matrix[ik,0,nband,nband]*bc_nband[1]).real
+                    bcd_pl[ik,n,2]+=(velocity_matrix[ik,0,nband,nband]*bc_nband[2]).real
+                    bcd_pl[ik,n,3]+=(velocity_matrix[ik,1,nband,nband]*bc_nband[0]).real
+                    bcd_pl[ik,n,4]+=(velocity_matrix[ik,1,nband,nband]*bc_nband[1]).real
+                    bcd_pl[ik,n,5]+=(velocity_matrix[ik,1,nband,nband]*bc_nband[2]).real
+                    bcd_pl[ik,n,6]+=(velocity_matrix[ik,2,nband,nband]*bc_nband[0]).real
+                    bcd_pl[ik,n,7]+=(velocity_matrix[ik,2,nband,nband]*bc_nband[1]).real
+                    bcd_pl[ik,n,8]+=(velocity_matrix[ik,2,nband,nband]*bc_nband[2]).real
                 else:
                     continue
                     
@@ -245,8 +299,8 @@ class Berry_Curvature_Dipole:
                 bcd_total_ = bcd_total_+bcd_temp_
         fermi_points_total = COMM.bcast(fermi_points_total, root=0)
         bcd_total =  COMM.bcast(bcd_total, root=0)
-        if RANK == 0:
-            np.savetxt(os.path.join(self.output_path, 'bcd_step0.dat'), bcd_total_, fmt='%0.8f')
+        #if RANK == 0:
+            #np.savetxt(os.path.join(self.output_path, 'bcd_step0.dat'), bcd_total_, fmt='%0.8f')
         return [bcd_total,fermi_points_total]
     def __set_k_mp(
         self,

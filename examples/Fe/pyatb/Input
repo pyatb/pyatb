@@ -1,0 +1,49 @@
+INPUT_PARAMETERS
+{
+    nspin               4
+    package             ABACUS
+    fermi_energy        17.71231891464643
+    fermi_energy_unit   eV
+    HR_route            data-HR-sparse_SPIN0.csr
+    SR_route            data-SR-sparse_SPIN0.csr
+    rR_route            data-rR-sparse.csr
+    HR_unit             Ry
+    rR_unit             Bohr
+}
+
+LATTICE
+{
+    lattice_constant        1.0
+    lattice_constant_unit   Bohr
+    lattice_vector
+     2.71175  2.71175 2.71175
+    -2.71175  2.71175 2.71175
+    -2.71175 -2.71175 2.71175
+}
+
+BERRY_CURVATURE
+{
+    method                  0
+    kpoint_mode             line
+    kpoint_num              10
+    high_symmetry_kpoint
+    0.0   0.0    0.0   100 # G
+    0.5  -0.5   -0.5   100 # H
+    0.75  0.25  -0.25  100 # P
+    0.5   0.0   -0.5   100 # N
+    0.0   0.0    0.0   100 # G
+    0.5   0.5    0.5   100 # H
+    0.5   0.0    0.0   100 # N
+    0.0   0.0    0.0   100 # G
+    0.75  0.25  -0.25  100 # P
+    0.5   0.0    0.0   1   # N
+}
+
+AHC
+{
+    integrate_mode          Grid
+    integrate_grid          100 100 100
+    adaptive_grid           20 20 20
+    adaptive_grid_threshold 100  
+}
+

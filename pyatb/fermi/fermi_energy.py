@@ -149,6 +149,8 @@ class Fermi_Energy:
         return sum_ans
 
     def __newton_interpolation(self, guess_fermi_energy, epsilon, temperature, electron_num):
+        max_step = 100
+        cal_vbm = True
         if RANK == 0:
             with open(RUNNING_LOG, 'a') as f:
                 f.write('\nEnter newton interpolation module ==> \n')
@@ -159,8 +161,10 @@ class Fermi_Energy:
         ans = 0
         f_start = self.__elecnum_integrate(start, temperature, electron_num)
         f_end = self.__elecnum_integrate(end, temperature, electron_num)
+        
+        temp = None
 
-        for i in range(10):
+        for i in range(max_step):
             if f_start == f_end:
                 mid = (start+end)/2
             else:
@@ -179,6 +183,48 @@ class Fermi_Energy:
                 f_start = f_mid
             step = step + 1
             ans = mid
+            
+            if f_end<0:
+                temp = end
+            elif f_mid<0:
+                temp = mid
+            elif f_start<0:
+                temp = start
+
+        if RANK == 0:
+            with open(os.path.join(self.output_path, "fermi_energy.dat"), 'w') as f:
+                print('fermi energy is %f .' %(ans), file=f)
+                print('Newton interpolation %d steps.' %(step), file=f)
+                
+               
+        if cal_vbm:
+            step = 0 
+            if RANK == 0:
+                with open(os.path.join(self.output_path, "fermi_energy.dat"), 'a') as f:
+                    print('Start calculating valence band maximum.', file=f)
+            if temp is None:
+                temp = ans-0.1
+                f_temp = self.__elecnum_integrate(temp, temperature, electron_num)
+                while f_temp>=0:
+                    temp = temp-0.1
+                    f_temp = self.__elecnum_integrate(temp, temperature, electron_num)
+            start = temp
+            end = ans
+            for i in range(max_step):
+                mid = (start+end)/2
+                if abs(start - end) < epsilon:
+                    ans = mid
+                    break
+                f_mid = self.__elecnum_integrate(mid, temperature, electron_num)
+                if abs(f_mid)<epsilon:
+                    end = mid
+                else:
+                    start = mid
+                step = step+1
+            if RANK == 0:
+                with open(os.path.join(self.output_path, "fermi_energy.dat"), 'a') as f:
+                    print('valence band maximum is %f.'%(ans), file=f)
+                    print('Median interpolation %d steps.' %(step), file=f)
 
         return ans
 
@@ -230,5 +276,5 @@ class Fermi_Energy:
         return fermi_energy
 
     def print_data(self, fermi_energy_values):
-        with open(os.path.join(self.output_path, "fermi_energy.dat"), 'w') as f:
+        with open(os.path.join(self.output_path, "fermi_energy.dat"), 'a') as f:
             print('fermi energy is', fermi_energy_values, file=f)

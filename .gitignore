@@ -159,3 +159,9 @@ log
 *.pbs
 
 OUT*/
+
+data-HR-sparse_SPIN0.csr
+
+data-SR-sparse_SPIN0.csr
+
+data-rR-sparse.csr

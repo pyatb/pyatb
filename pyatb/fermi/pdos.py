@@ -205,10 +205,10 @@ class PDOS:
             f.write('</energy_values>\n')
 
             index = 0
+            atom_index = 0
             for it in self.__tb.stru_atom:
                 species = it.species
                 orbital_num = it.orbital_num
-                atom_index = 0
                 for ia in range(it.atom_num):
                     atom_index += 1
                     for l in range(len(orbital_num)):
