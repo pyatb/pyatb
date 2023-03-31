@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'PYATB'
+project = 'PYATB v1.0.0'
 copyright = '2023, PYATB'
 author = 'PYATB'
 

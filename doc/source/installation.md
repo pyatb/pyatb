@@ -5,7 +5,7 @@
 The latest version of the PYATB package can be obtained from the GitHub repository:
 
 ```shell
-git clone https://github.com/jingan-181/pyatb.git
+git clone https://github.com/pyatb/pyatb.git
 ```
 
 ## Prerequisites
