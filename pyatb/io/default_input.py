@@ -23,6 +23,7 @@ function_switch = {
 
     # berry
     'AHC'                     : False,
+    'AEC'                     : False,
     'BERRY_CURVATURE'         : False,
     'BERRY_CURVATURE_DIPOLE'  : False,
     'CHERN_NUMBER'            : False,
@@ -41,6 +42,7 @@ block_can_be_empty = []
 # these block function require rR matrix
 need_rR_matrix = [
     'AHC',
+    'AEC',
     'BERRY_CURVATURE',
     'BERRY_CURVATURE_DIPOLE',
     'CHERN_NUMBER',
@@ -206,6 +208,19 @@ INPUT = {
         # 'k_vect2'                     : [float, 3, [0.0, 1.0, 0.0]],
         # 'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
         'integrate_mode'              : [str, 1, None]
+    },
+
+    'AEC' : 
+    {
+        'method'                      : [int, 1, 0],
+        'fermi_range'                 : [float, 2, [-1.0, 1.0]],
+        'de'                          : [float, 1, 0.01],
+        'eta'                         : [float, 1, 0.01],  # unit is eV
+        # 'k_start'                     : [float, 3, [0.0, 0.0, 0.0]],
+        # 'k_vect1'                     : [float, 3, [1.0, 0.0, 0.0]],
+        # 'k_vect2'                     : [float, 3, [0.0, 1.0, 0.0]],
+        # 'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
+        'integrate_grid'              : [int, 3, [4, 4, 4]]
     },
 
     'OPTICAL_CONDUCTIVITY' : 

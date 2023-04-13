@@ -161,6 +161,12 @@ def main():
         fermi_energy = input_parameters['fermi_energy']
         cal_AHC.calculate_ahc(fermi_energy=fermi_energy, **ahc_parameters)
 
+    if function_switch['AEC']:
+        aec_parameters = INPUT['AEC']
+        cal_AEC = AEC(m_tb)
+        fermi_energy = input_parameters['fermi_energy']
+        cal_AEC.calculate_aec(fermi_energy=fermi_energy, **aec_parameters)
+
     if function_switch['OPTICAL_CONDUCTIVITY']:
         optical_conductivity_parameters = INPUT['OPTICAL_CONDUCTIVITY']
         cal_OC = Optical_Conductivity(m_tb)
