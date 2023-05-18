@@ -15,12 +15,12 @@ Currently, PYATB is only supported on Linux systems and has not been tested on W
 - Python 3.7 or newer
 - C++ compiler
 - Intel MKL 
-- pybind11
-- Eigen3
-- NumPy
-- SciPy
-- mpi4py
-- Matplotlib
+- [pybind11](https://pybind11.readthedocs.io/en/stable/index.html)
+- [Eigen3](https://eigen.tuxfamily.org/index.php?title=Main_Page)
+- [NumPy](https://numpy.org/)
+- [SciPy](https://scipy.org/)
+- [mpi4py](https://mpi4py.readthedocs.io/en/stable/mpi4py.html)
+- [Matplotlib](https://matplotlib.org/)
 
 
 ## Install
@@ -44,7 +44,7 @@ Currently, PYATB is only supported on Linux systems and has not been tested on W
 
    - To set the MKL library, you can modify the variable "mkl_library_dir" and "mkl_include_dir" in the `siteconfig.py`.
 
-   - To set the Eigen library, you can modify the variable "eigen_include_dir" in the `siteconfig.py`
+   - To set the Eigen library, you can modify the variable "eigen_include_dir" in the `siteconfig.py`. Eigen is a C++ template library for linear algebra. You can find and download it on the official website [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page).
 
 3. After completing the above preparatory work, you can install PYATB with the following command:
 
@@ -74,3 +74,10 @@ export LD_PRELOAD=/opt/intel/oneapi/mkl/2022.0.2/lib/intel64/libmkl_def.so.2:\
 ```
 
 Note that you need to replace the MKL path with your own environment. For `libiomp5.so`, its location may sometimes be in the directory where the intel compiler is located.
+
+Another solution is to use the MKL library in the Anaconda virtual environment. If you cannot find it, you can install the MKL library and its include files using the following commands:
+
+```shell
+conda install -c conda-forge mkl
+conda install -c conda-forge mkl-include
+```
