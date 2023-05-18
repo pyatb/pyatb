@@ -1,76 +1,81 @@
 import os
+from pathlib import Path
+from glob import glob
 from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
+import pybind11
+from pybind11.setup_helpers import Pybind11Extension
 
-# Parameters that need to be modified
-CXX = "icpc"
-LAPACK_DIR = "/opt/intel/compilers_and_libraries_2018.1.163/linux/mkl"
+compiler = 'icpc'
+mkl_include_dir = None
+mkl_library_dir = None
+eigen_include_dir = None
 
+include_dirs = []
+library_dirs = []
+libraries = ['mkl_intel_lp64', 'mkl_intel_thread', 'mkl_core', 'iomp5', 'm', 'dl', 'pthread']
+runtime_library_dirs = []
 
-# Generally do not need to modify
-os.environ["CXX"] = CXX
-os.environ["CC"] = CXX
-os.environ['CFLAGS'] = "-O2 -std=c++11 -fPIC -Wall -shared"
-LAPACK_INCLUDE_DIR = LAPACK_DIR + "/include"
-LAPACK_LIB_DIR = LAPACK_DIR + "/lib/intel64"
-LAPACK_LIB = "-L" + LAPACK_LIB_DIR + " -Wl,--start-group -lmkl_intel_lp64 -lmkl_intel_thread -lmkl_core -Wl,--end-group -Wl,-rpath=" + LAPACK_LIB_DIR
-MY_INCLUDE = "cpp/include"
-sources_dir = "cpp/src/core"
-sources = [
-    "band_structure_solver.cpp",
-    "bandunfolding_solver.cpp",
-    "base_data.cpp",
-    "berry_connection_solver.cpp",
-    "berry_curvature_solver.cpp",
-    "berry_phase_solver.cpp",
-    "cell_atom.cpp",
-    "linear_response.cpp",
-    "math_integral.cpp",
-    "math_sphbes.cpp",
-    "optical_conductivity_solver.cpp",
-    "shift_current_solver.cpp",
-    "tools.cpp",
-    "velocity_solver.cpp",
-    "xr_operation.cpp"
+temp_path = Path('siteconfig.py').expanduser()
+exec(temp_path.read_text())
+
+include_dirs.append(mkl_include_dir)
+include_dirs.append(eigen_include_dir)
+include_dirs += [
+    os.path.join("src", "cpp", "core"),
+    os.path.join("src", "cpp", "interface_python"),
 ]
 
-for i, s in enumerate(sources):
-    sources[i] = os.path.join(sources_dir, s)
+library_dirs.append(mkl_library_dir)
+runtime_library_dirs.append(mkl_library_dir)
 
-include_dirs = [sources_dir, MY_INCLUDE]
 extra_compile_args = []
-if CXX == "g++":
-    extra_compile_args += ["-fopenmp"]
-else:
-    extra_compile_args += ["-qopenmp"]
+extra_link_args = []
 
-extra_link_args = extra_compile_args + [LAPACK_LIB]
+if compiler == 'g++':
+    extra_compile_args += ['-fopenmp']
+elif compiler == 'icpc':
+    extra_compile_args += ['-qopenmp']
+
+sources = sorted(glob("src/cpp/core/*.cpp")) + sorted(glob("src/cpp/interface_python/*.cpp"))
+
 define_macros = []
 undef_macros = []
 
-extension = Extension('pyatb.interface_python',
-                      include_dirs=include_dirs,
-                      sources=["cpp/src/interface_python/interface_python.cpp"] + sources,
-                      extra_compile_args=extra_compile_args,
-                      extra_link_args=extra_link_args,
-                      define_macros=define_macros,
-                      undef_macros=undef_macros)
+os.environ["CXX"] = compiler
+os.environ["CC"] = compiler
+os.environ['CFLAGS'] = "-O2 -std=c++11 -fPIC -Wall -shared"
 
-setup(name='pyatb',
-      version="1.0.0",
-      cmdclass={'build_ext': build_ext},
-      setup_requires=['numpy', 'setuptools>=18.0'],
-      license='GPL v3.0',
-      description='This is the pyatb module.',
-      long_description='None',
-      author='Gan Jin & Hongsheng Pang',
-      author_email='jingan@mail.ustc.edu.com',
-      url='None',
-      packages=find_packages(),
-      py_modules=[],
-      install_requires=['numpy', 'scipy', 'mpi4py', 'matplotlib'],
-      ext_modules=[extension],
-      entry_points={'console_scripts': ['pyatb = pyatb.main:main']})
+ext_modules = [
+    Pybind11Extension(
+        name="pyatb.interface_python",
+        sources=sources,
+        include_dirs=include_dirs,
+        define_macros=define_macros,
+        undef_macros=undef_macros,
+        library_dirs=library_dirs,
+        libraries=libraries,
+        runtime_library_dirs=runtime_library_dirs,
+        extra_compile_args=extra_compile_args,
+        extra_link_args=extra_link_args,
+        language = "c++",
+    ),
+]
 
-
-
+setup(
+    name='pyatb',
+    version="1.0.0",
+    cmdclass={'build_ext': build_ext},
+    setup_requires=['numpy', 'pybind11', 'setuptools>=18.0'],
+    license='GPL v3.0',
+    description='This is the pyatb module.',
+    long_description='None',
+    author='PYATB Developer',
+    author_email='jingan@mail.ustc.edu.com',
+    url='https://github.com/pyatb/pyatb',
+    packages=find_packages('src'),
+    package_dir={'': 'src'},
+    install_requires=['numpy', 'scipy', 'matplotlib'],
+    ext_modules=ext_modules,
+    entry_points={'console_scripts': ['pyatb = pyatb.main:main']}
+)
