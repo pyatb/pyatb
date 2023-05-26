@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brief introduction of the input files &mdash; PYATB v1.0.0  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Functions" href="functions/index.html" />
+    <link rel="prev" title="Run" href="run.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PYATB v1.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run.html">Run</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Brief introduction of the input files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#input">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hr-sr-rr">HR, SR, rR</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-generate-hr-sr-rr-files-using-abacus">How to generate HR, SR, rR files using ABACUS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#other-file">Other file</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="functions/index.html">Functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keywords</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="input/index.html">Detailed Introduction of the Input Files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PYATB v1.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Brief introduction of the input files</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/input_files.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="brief-introduction-of-the-input-files">
+<h1>Brief introduction of the input files<a class="headerlink" href="#brief-introduction-of-the-input-files" title="Permalink to this heading">¶</a></h1>
+<section id="input">
+<h2>Input<a class="headerlink" href="#input" title="Permalink to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file describes the basic information about the system and the parameters required to calculate the function. For a complete list of the input parameters, please consult this <a class="reference internal" href="input/input_keywords.html"><span class="std std-doc">input list</span></a>.</p>
+<p>The following is an example of a <code class="docutils literal notranslate"><span class="pre">Input</span></code> file:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INPUT_PARAMETERS</span>
+<span class="p">{</span>
+    <span class="n">nspin</span>                          <span class="mi">4</span>
+    <span class="n">package</span>                        <span class="n">ABACUS</span>
+    <span class="n">fermi_energy</span>                   <span class="mf">9.481194886038594</span>
+    <span class="n">fermi_energy_unit</span>              <span class="n">eV</span>
+    <span class="n">HR_route</span>                       <span class="n">data</span><span class="o">-</span><span class="n">HR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">SR_route</span>                       <span class="n">data</span><span class="o">-</span><span class="n">SR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">rR_route</span>                       <span class="n">new</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="n">rR</span><span class="o">-</span><span class="n">tr_SPIN4</span>
+    <span class="n">HR_unit</span>                        <span class="n">Ry</span>
+    <span class="n">rR_unit</span>                        <span class="n">Bohr</span>
+    <span class="n">max_kpoint_num</span>                 <span class="mi">8000</span>
+<span class="p">}</span>
+
+<span class="n">LATTICE</span>
+<span class="p">{</span>
+    <span class="n">lattice_constant</span>               <span class="mf">1.8897162</span>
+    <span class="n">lattice_constant_unit</span>          <span class="n">Bohr</span>
+    <span class="n">lattice_vector</span>
+    <span class="o">-</span><span class="mf">2.069</span>  <span class="o">-</span><span class="mf">3.583614</span>  <span class="mf">0.000000</span>
+     <span class="mf">2.069</span>  <span class="o">-</span><span class="mf">3.583614</span>  <span class="mf">0.000000</span>
+     <span class="mf">0.000</span>   <span class="mf">2.389075</span>  <span class="mf">9.546667</span>
+<span class="p">}</span>
+
+<span class="n">BAND_STRUCTURE</span>
+<span class="p">{</span>
+    <span class="n">wf_collect</span>                     <span class="mi">0</span>
+    <span class="n">kpoint_mode</span>                    <span class="n">line</span>
+    <span class="n">kpoint_num</span>                     <span class="mi">5</span>
+    <span class="n">high_symmetry_kpoint</span>
+    <span class="mf">0.00000</span> <span class="mf">0.00000</span> <span class="mf">0.0000</span> <span class="mi">100</span>  <span class="c1"># G</span>
+    <span class="mf">0.00000</span> <span class="mf">0.00000</span> <span class="mf">0.5000</span> <span class="mi">100</span>  <span class="c1"># Z</span>
+    <span class="mf">0.50000</span> <span class="mf">0.50000</span> <span class="mf">0.0000</span> <span class="mi">100</span>  <span class="c1"># F</span>
+    <span class="mf">0.00000</span> <span class="mf">0.00000</span> <span class="mf">0.0000</span> <span class="mi">100</span>  <span class="c1"># G</span>
+    <span class="mf">0.50000</span> <span class="mf">0.00000</span> <span class="mf">0.0000</span> <span class="mi">1</span>    <span class="c1"># L</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file consists of three main sections (<strong>INPUT_PARAMETERS</strong>, <strong>LATTICE</strong>, <strong>FUNCTION</strong>), each of which is represented by the <code class="docutils literal notranslate"><span class="pre">keyword</span> <span class="pre">+</span> <span class="pre">{}</span></code>, namely:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">KEYWORD</span>
+<span class="p">{</span>
+    <span class="n">parameter</span>  <span class="n">xx</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <strong>INPUT_PARAMETERS</strong> section is utilized to specify public parameters and indicate the HR, SR, and rR files required for the calculation.</p>
+<p>The <strong>LATTICE</strong> section outlines lattice information and includes three parameters: lattice_constant, lattice_constant_unit, and lattice_vector.</p>
+<p>The <strong>FUNCTION</strong> section lists the parameters necessary for each calculation function. These parameters differ depending on the specific function being used.</p>
+<p><strong>NOTE</strong>:</p>
+<ul class="simple">
+<li><p>The keyword of the section must be capitalized, and the parameters in the section must be lowercase.</p></li>
+<li><p>Each parameter value is provided by specifying the name of the input variable and then putting the value after the name, separated by one or more blank characters(space or tab).</p></li>
+<li><p>Any line starting with <code class="docutils literal notranslate"><span class="pre">#</span></code> or <code class="docutils literal notranslate"><span class="pre">//</span></code> will be ignored. To ignore a function section, add <code class="docutils literal notranslate"><span class="pre">#</span></code> in front of the section name. This will cause all parameters within that function section to be ignored.</p></li>
+<li><p>Proper case is required to avoid reading errors. For example, <code class="docutils literal notranslate"><span class="pre">eV</span></code> must not be written as <code class="docutils literal notranslate"><span class="pre">ev</span></code>, and <code class="docutils literal notranslate"><span class="pre">Bohr</span></code> must not be written as <code class="docutils literal notranslate"><span class="pre">bohr</span></code>.</p></li>
+</ul>
+</section>
+<section id="hr-sr-rr">
+<h2>HR, SR, rR<a class="headerlink" href="#hr-sr-rr" title="Permalink to this heading">¶</a></h2>
+<p>HR, SR, and rR are important input files for PYATB and contain information about the tight binding model, which can be generated by ABACUS.</p>
+<p>In the PYATB program, if only the <em>Bands module</em> is used, it is enough to provide HR and SR, and specifying rR is not required. However, when the functions of the calculations are related to the <em>Geometric module</em> or <em>Optical module</em>, the rR file must be specified.</p>
+<section id="how-to-generate-hr-sr-rr-files-using-abacus">
+<h3>How to generate HR, SR, rR files using ABACUS<a class="headerlink" href="#how-to-generate-hr-sr-rr-files-using-abacus" title="Permalink to this heading">¶</a></h3>
+<p>Run the <strong>scf</strong> calculation of ABACUS normally, specifies the parameters <code class="docutils literal notranslate"><span class="pre">out_mat_hs2</span></code> and <code class="docutils literal notranslate"><span class="pre">out_mat_r</span></code> in the <code class="docutils literal notranslate"><span class="pre">INPUT</span></code> file, and three files of sparse format <code class="docutils literal notranslate"><span class="pre">data-HR-sparse_SPIN0.csr</span></code>, <code class="docutils literal notranslate"><span class="pre">data-SR-sparse_</span> <span class="pre">SPIN0.csr</span></code>, <code class="docutils literal notranslate"><span class="pre">data-rR-sparse.csr</span></code> (and <code class="docutils literal notranslate"><span class="pre">data-HR-sparse_SPIN1.csr</span></code> when <code class="docutils literal notranslate"><span class="pre">nspin</span></code> is 2), will be generated in OUT* folder.</p>
+<p><strong>NOTE</strong>:</p>
+<ul class="simple">
+<li><p>nspin=4 and nspin=1, nspin=2 output different files. nspin=4 files contain imaginary numbers, so the correct nspin parameter needs to be strictly specified when executing pyatb programs.</p></li>
+</ul>
+</section>
+</section>
+<section id="other-file">
+<h2>Other file<a class="headerlink" href="#other-file" title="Permalink to this heading">¶</a></h2>
+<p>For the calculation of some functions, structure files and NAOs (numerical atomic orbital bases) files are also required.</p>
+<ul>
+<li><p>The structure file</p>
+<p>This file describes the structural information about the system, e.g., lattice constant, lattice vectors, and positions of the atoms within a unit cell. The structure file format of ABACUS is currently used.</p>
+</li>
+<li><p>The NAOs files</p>
+<p>This file describes the numerical atomic orbitals used to expand the Hamiltonian. The NAOs file format of ABACUS is currently used.</p>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="run.html" class="btn btn-neutral float-left" title="Run" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="functions/index.html" class="btn btn-neutral float-right" title="Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, PYATB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

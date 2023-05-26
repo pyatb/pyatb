@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SHIFT_CURRENT &mdash; PYATB v1.0.0  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="BERRY_CURVATURE_DIPOLE" href="berry_curvature_dipole.html" />
+    <link rel="prev" title="OPTICAL_CONDUCTIVITY" href="optical_conductivity.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            PYATB v1.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run.html">Run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_files.html">Brief introduction of the input files</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="band_structure.html">BAND_STRUCTURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bandunfolding.html">BANDUNFOLDING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fermi_energy.html">FERMI_ENERGY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fermi_surface.html">FERMI_SURFACE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="find_nodes.html">FIND_NODES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdos.html">PDOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fat_band.html">FAT_BAND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spin_texture.html">SPIN_TEXTURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wilson_loop.html">WILSON_LOOP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polarization.html">POLARIZATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="berry_curvature.html">BERRY_CURVATURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ahc.html">AHC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chern_number.html">CHERN_NUMBER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chirality.html">CHIRALITY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdos.html">JDOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_conductivity.html">OPTICAL_CONDUCTIVITY</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SHIFT_CURRENT</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="berry_curvature_dipole.html">BERRY_CURVATURE_DIPOLE</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keywords</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../input/index.html">Detailed Introduction of the Input Files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PYATB v1.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Functions</a></li>
+      <li class="breadcrumb-item active">SHIFT_CURRENT</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/functions/shift_current.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="shift-current">
+<h1>SHIFT_CURRENT<a class="headerlink" href="#shift-current" title="Permalink to this heading">¶</a></h1>
+<section id="introduction">
+<h2>introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>The shift current is an intrinsic contribution to the bulk photovoltaic effect (BPVE). It describes the photocurrent generated by light illumination on homogeneous non-centrosymmetric crystals. The shift current is a second-order optical response. It can be expressed as a DC current, generated by a monochromatic photoelectric field <span class="math notranslate nohighlight">\(\mathbf{E}(t) = \mathbf{E}(\omega)\mathrm{e}^{i\omega t} + \mathbf{E}(-\omega)\mathrm{e}^{-i\omega t}\)</span>, where</p>
+<div class="math notranslate nohighlight">
+\[
+J^{a} = 2 \sigma^{abc}(0; \omega, -\omega) E_{b}(\omega) E_{c}(-\omega).
+\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(a, b, c = x, y, z\)</span>, and <span class="math notranslate nohighlight">\(\sigma^{abc}(0; \omega, -\omega)\)</span> is the shift current tensor,</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma^{abc}(0 ; \omega,-\omega) =	\frac{\pi e^3}{\hbar^2} \int \frac{d \mathbf{k}}{8 \pi^3} \sum_{n, m} f_{nm} \mathrm{Im}\left[ I_{mn}^{abc} + I_{mn}^{acb} \right] \delta\left(\omega_{m n}-\omega\right)
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(I_{mn}^{abc} = r_{mn}^{b} r_{nm;a}^{c}\)</span>, <span class="math notranslate nohighlight">\(r_{nm}^a\)</span> is the inter-band dipole matrix, and <span class="math notranslate nohighlight">\(r_{nm; a}^b\)</span> is the generalized derivative of the dipole matrix.</p>
+<p>Detailed descriptions can be found in <a class="reference external" href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.61.5337">Second-order optical response in semiconductors</a>.</p>
+</section>
+<section id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<p>Here, we provide an example of calculating the shift current conductivity of the monolayer WS<span class="math notranslate nohighlight">\(_2\)</span> (refer to folder <code class="docutils literal notranslate"><span class="pre">examples/WS2</span></code>).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INPUT_PARAMETERS</span>
+<span class="p">{</span>
+    <span class="n">nspin</span>                   <span class="mi">1</span>
+    <span class="n">package</span>                 <span class="n">ABACUS</span>
+    <span class="n">fermi_energy</span>            <span class="mf">0.3484302262859574</span>
+    <span class="n">fermi_energy_unit</span>       <span class="n">eV</span>
+    <span class="n">HR_route</span>                <span class="n">data</span><span class="o">-</span><span class="n">HR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">SR_route</span>                <span class="n">data</span><span class="o">-</span><span class="n">SR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">rR_route</span>                <span class="n">data</span><span class="o">-</span><span class="n">rR</span><span class="o">-</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">HR_unit</span>                 <span class="n">Ry</span>
+    <span class="n">rR_unit</span>                 <span class="n">Bohr</span>
+<span class="p">}</span>
+
+<span class="n">LATTICE</span>
+<span class="p">{</span>
+    <span class="n">lattice_constant</span>        <span class="mf">1.8897162</span>
+    <span class="n">lattice_constant_unit</span>   <span class="n">Bohr</span>
+    <span class="n">lattice_vector</span>
+    <span class="mf">3.183820900165</span>   <span class="mf">0.0</span>              <span class="mf">0.0</span>            
+   <span class="o">-</span><span class="mf">1.591910450082</span>   <span class="mf">2.757269780643</span>   <span class="mf">0.0</span>            
+    <span class="mf">0.0</span>              <span class="mf">0.0</span>              <span class="mf">20.086904001384</span>
+<span class="p">}</span>
+
+<span class="n">SHIFT_CURRENT</span>
+<span class="p">{</span>
+    <span class="n">occ_band</span>                <span class="mi">13</span>
+    <span class="n">omega</span>                   <span class="mi">0</span>   <span class="mi">4</span>
+    <span class="n">domega</span>                  <span class="mf">0.01</span>
+    <span class="n">smearing_method</span>         <span class="mi">1</span>
+    <span class="n">eta</span>                     <span class="mf">0.1</span>
+    <span class="n">grid</span>                    <span class="mi">1000</span> <span class="mi">1000</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">occ_band</span></code>: Used to specify the occupied energy band of an insulator or semiconductor. Currently this function can only calculate insulators or semiconductors.</p>
+<p><code class="docutils literal notranslate"><span class="pre">omega</span></code>: Specifies the photon energy, the unit is eV.</p>
+<p><code class="docutils literal notranslate"><span class="pre">domega</span></code>: Specifies the energy interval of the omega.</p>
+<p><code class="docutils literal notranslate"><span class="pre">eta</span></code>: Specify the parameters of Gaussian smearing.</p>
+<p><code class="docutils literal notranslate"><span class="pre">grid</span></code>: Specifies the uniform k-point grid used to calculate the shift current.</p>
+<p>Upon completion of the task, two essential files are generated in the <code class="docutils literal notranslate"><span class="pre">Out/Shift_Current</span></code> folder. These files include <code class="docutils literal notranslate"><span class="pre">shift_current.dat</span></code> and <code class="docutils literal notranslate"><span class="pre">plot_shift_current.py</span></code>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="optical_conductivity.html" class="btn btn-neutral float-left" title="OPTICAL_CONDUCTIVITY" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="berry_curvature_dipole.html" class="btn btn-neutral float-right" title="BERRY_CURVATURE_DIPOLE" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, PYATB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

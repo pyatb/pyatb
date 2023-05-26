@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BERRY_CURVATURE_DIPOLE &mdash; PYATB v1.0.0  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Detailed Introduction of the Input Files" href="../input/index.html" />
+    <link rel="prev" title="SHIFT_CURRENT" href="shift_current.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            PYATB v1.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run.html">Run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_files.html">Brief introduction of the input files</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="band_structure.html">BAND_STRUCTURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bandunfolding.html">BANDUNFOLDING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fermi_energy.html">FERMI_ENERGY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fermi_surface.html">FERMI_SURFACE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="find_nodes.html">FIND_NODES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdos.html">PDOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fat_band.html">FAT_BAND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spin_texture.html">SPIN_TEXTURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wilson_loop.html">WILSON_LOOP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polarization.html">POLARIZATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="berry_curvature.html">BERRY_CURVATURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ahc.html">AHC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chern_number.html">CHERN_NUMBER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chirality.html">CHIRALITY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdos.html">JDOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_conductivity.html">OPTICAL_CONDUCTIVITY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shift_current.html">SHIFT_CURRENT</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">BERRY_CURVATURE_DIPOLE</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keywords</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../input/index.html">Detailed Introduction of the Input Files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PYATB v1.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Functions</a></li>
+      <li class="breadcrumb-item active">BERRY_CURVATURE_DIPOLE</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/functions/berry_curvature_dipole.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="berry-curvature-dipole">
+<h1>BERRY_CURVATURE_DIPOLE<a class="headerlink" href="#berry-curvature-dipole" title="Permalink to this heading">¶</a></h1>
+<section id="introduction">
+<h2>introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>In a system with time-reversal symmetry, the Berry curvature is an odd function of <span class="math notranslate nohighlight">\(\mathbf{k}\)</span>, i.e., <span class="math notranslate nohighlight">\(\Omega_{a}(\mathbf{k})=-\Omega_{a}(-\mathbf{k})\)</span>. As a result, the integration of the Berry curvature over the BZ is zero. However, if the system lacks a inversion symmetry, a higher-order nonlinear AHC can arise. More specifically, <span class="math notranslate nohighlight">\(j_a^0=\chi_{abc} E_b (\omega) E_c(-\omega)\)</span> and <span class="math notranslate nohighlight">\(j_a^{2 \omega}=\chi_{abc} E_b (\omega)E_c(\omega)\)</span>, describe a rectified current and the second harmonic, respectively, whereas <span class="math notranslate nohighlight">\(\omega\)</span> is the driving frequency. The coefficient <span class="math notranslate nohighlight">\(\chi_{abc}\)</span> is given by</p>
+<div class="math notranslate nohighlight">
+\[
+\chi_{abc}=-\varepsilon_{a d c} \frac{e^3 \tau}{2(1+i \omega \tau)} D_{bd} .
+\]</div>
+<p>where</p>
+<div class="math notranslate nohighlight">
+\[
+D_{ab}=\int_{k} f_{0}\left(\frac{\partial \Omega_{b}}{\partial k_{a}} \right)
+\]</div>
+<p>is called the Berry curvature dipole.</p>
+<p>In PYATB, the Berry curvature dipole at a given temperature <span class="math notranslate nohighlight">\(T\)</span> and chemical potential <span class="math notranslate nohighlight">\(\mu\)</span> is calculated using the following formula:</p>
+<div class="math notranslate nohighlight">
+\[
+D_{a b}(\mu, T) = -\int \frac{\partial f_{0}(E,\mu, T)}{\partial E} D_{a b}(E) dE .
+\]</div>
+</section>
+<section id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<p>Here, we provide an example of calculating the Berry curvature dipole of the trigonal Te (refer to folder <code class="docutils literal notranslate"><span class="pre">examples/Te</span></code>).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INPUT_PARAMETERS</span>
+<span class="p">{</span>
+    <span class="n">nspin</span>                     <span class="mi">4</span>
+    <span class="n">package</span>                   <span class="n">ABACUS</span>
+    <span class="n">fermi_energy</span>              <span class="mf">9.574476774876963</span>
+    <span class="n">fermi_energy_unit</span>         <span class="n">eV</span>
+    <span class="n">HR_route</span>                  <span class="n">data</span><span class="o">-</span><span class="n">HR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">SR_route</span>                  <span class="n">data</span><span class="o">-</span><span class="n">SR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">rR_route</span>                  <span class="n">data</span><span class="o">-</span><span class="n">rR</span><span class="o">-</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">HR_unit</span>                   <span class="n">Ry</span>
+    <span class="n">rR_unit</span>                   <span class="n">Bohr</span>
+    <span class="n">max_kpoint_num</span>            <span class="mi">28000</span>
+<span class="p">}</span>
+
+<span class="n">LATTICE</span>
+<span class="p">{</span>
+    <span class="n">lattice_constant</span>          <span class="mf">1.8897162</span>
+    <span class="n">lattice_constant_unit</span>     <span class="n">Bohr</span>
+    <span class="n">lattice_vector</span>
+    <span class="mf">2.22</span>    <span class="o">-</span><span class="mf">3.84515</span>    <span class="mf">0.000</span>
+    <span class="mf">2.22</span>     <span class="mf">3.84515</span>    <span class="mf">0.000</span>
+    <span class="mf">0.00</span>     <span class="mf">0.00000</span>    <span class="mf">5.910</span>
+
+<span class="p">}</span>
+
+<span class="n">BERRY_CURVATURE_DIPOLE</span>
+<span class="p">{</span>
+    <span class="n">omega</span>                     <span class="mf">9.474</span>  <span class="mf">10.074</span>
+    <span class="n">domega</span>                    <span class="mf">0.001</span>
+    <span class="n">integrate_mode</span>            <span class="n">Grid</span>
+    <span class="n">integrate_grid</span>            <span class="mi">400</span> <span class="mi">400</span> <span class="mi">400</span>
+    <span class="n">adaptive_grid</span>             <span class="mi">20</span> <span class="mi">20</span> <span class="mi">20</span>
+    <span class="n">adaptive_grid_threshold</span>   <span class="mi">20000</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">omega</span></code>: To set the energy range for the Berry curvature dipole, you can adjust it based on the Fermi energy level. the unit is eV.</p>
+<p><code class="docutils literal notranslate"><span class="pre">domega</span></code>: Specifies the energy interval of the omega.</p>
+<p>For k-point integration, please refer to the [Setting of integration] section.</p>
+<p>Once the task has been finished, three crucial files are produced in the <code class="docutils literal notranslate"><span class="pre">Out/Berry_Curvature_Dipole</span></code> directory. These files consist of <code class="docutils literal notranslate"><span class="pre">bcd_step2.dat</span></code>, <code class="docutils literal notranslate"><span class="pre">kpoint_list</span></code>, and <code class="docutils literal notranslate"><span class="pre">plot_bcd.py</span></code>. The first file stores the Berry curvature dipole’s magnitude, while the second file records the refined k-point coordinates. The third file contains the script used for generating the visualization of the dipole.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="shift_current.html" class="btn btn-neutral float-left" title="SHIFT_CURRENT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../input/index.html" class="btn btn-neutral float-right" title="Detailed Introduction of the Input Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, PYATB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AHC &mdash; PYATB v1.0.0  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CHERN_NUMBER" href="chern_number.html" />
+    <link rel="prev" title="BERRY_CURVATURE" href="berry_curvature.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            PYATB v1.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run.html">Run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_files.html">Brief introduction of the input files</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="band_structure.html">BAND_STRUCTURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bandunfolding.html">BANDUNFOLDING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fermi_energy.html">FERMI_ENERGY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fermi_surface.html">FERMI_SURFACE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="find_nodes.html">FIND_NODES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdos.html">PDOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fat_band.html">FAT_BAND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spin_texture.html">SPIN_TEXTURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wilson_loop.html">WILSON_LOOP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polarization.html">POLARIZATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="berry_curvature.html">BERRY_CURVATURE</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">AHC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">example</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="chern_number.html">CHERN_NUMBER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chirality.html">CHIRALITY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdos.html">JDOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_conductivity.html">OPTICAL_CONDUCTIVITY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shift_current.html">SHIFT_CURRENT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="berry_curvature_dipole.html">BERRY_CURVATURE_DIPOLE</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keywords</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../input/index.html">Detailed Introduction of the Input Files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PYATB v1.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Functions</a></li>
+      <li class="breadcrumb-item active">AHC</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/functions/ahc.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="ahc">
+<h1>AHC<a class="headerlink" href="#ahc" title="Permalink to this heading">¶</a></h1>
+<section id="introduction">
+<h2>introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<p>The dc anomalous Hall conductivity (AHC) is simply given as the Brillouin zone integral of the Berry curvature of occupying energy bands,</p>
+<div class="math notranslate nohighlight">
+\[
+\sigma_{xy} = -\frac{e^2}{\hbar} \sum_{n}^{occ} \int_{\text{BZ}} \frac{d\mathbf{k}}{(2\pi)^3} f_n(\mathbf{k})\Omega_{n, z}(\mathbf{k}).
+\]</div>
+</section>
+<section id="example">
+<h2>example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<p>An example (refer to folder <code class="docutils literal notranslate"><span class="pre">example/Fe</span></code>) of calculating the AHC of the fcc-Fe is given here.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INPUT_PARAMETERS</span>
+<span class="p">{</span>
+    <span class="n">nspin</span>               <span class="mi">4</span>
+    <span class="n">package</span>             <span class="n">ABACUS</span>
+    <span class="n">fermi_energy</span>        <span class="mf">18.18839115931923</span>
+    <span class="n">fermi_energy_unit</span>   <span class="n">eV</span>
+    <span class="n">HR_route</span>            <span class="n">data</span><span class="o">-</span><span class="n">HR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">SR_route</span>            <span class="n">data</span><span class="o">-</span><span class="n">SR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">rR_route</span>            <span class="n">data</span><span class="o">-</span><span class="n">rR</span><span class="o">-</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">HR_unit</span>             <span class="n">Ry</span>
+    <span class="n">rR_unit</span>             <span class="n">Bohr</span>
+<span class="p">}</span>
+
+<span class="n">LATTICE</span>
+<span class="p">{</span>
+    <span class="n">lattice_constant</span>        <span class="mf">5.4235</span>
+    <span class="n">lattice_constant_unit</span>   <span class="n">Bohr</span>
+    <span class="n">lattice_vector</span>
+     <span class="mf">0.5</span>  <span class="mf">0.5</span>  <span class="mf">0.5</span>
+    <span class="o">-</span><span class="mf">0.5</span>  <span class="mf">0.5</span>  <span class="mf">0.5</span>
+    <span class="o">-</span><span class="mf">0.5</span> <span class="o">-</span><span class="mf">0.5</span>  <span class="mf">0.5</span>
+<span class="p">}</span>
+
+<span class="n">AHC</span>
+<span class="p">{</span>
+    <span class="n">integrate_mode</span>          <span class="n">Grid</span>
+    <span class="n">integrate_grid</span>          <span class="mi">100</span> <span class="mi">100</span> <span class="mi">100</span>
+    <span class="n">adaptive_grid</span>           <span class="mi">20</span> <span class="mi">20</span> <span class="mi">20</span>
+    <span class="n">adaptive_grid_threshold</span> <span class="mi">100</span>  
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">integrate_mode</span></code>: Specifies the mode of integration, which can be grid integration and adaptive integration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">integrate_grid</span></code>: Specifies a uniform grid for grid integration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">adaptive_grid</span></code>: Specifies the grid for adaptive densification.</p>
+<p><code class="docutils literal notranslate"><span class="pre">adaptive_grid_threshold</span></code>: Specifies the cut-off value of adaptive densification, the unit is <span class="math notranslate nohighlight">\(\AA^2\)</span>.</p>
+<p>Once the calculation is complete, the resulting file <code class="docutils literal notranslate"><span class="pre">ahc.dat</span></code> will be generated in the <code class="docutils literal notranslate"><span class="pre">Out/AHC</span></code> directory.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="berry_curvature.html" class="btn btn-neutral float-left" title="BERRY_CURVATURE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="chern_number.html" class="btn btn-neutral float-right" title="CHERN_NUMBER" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, PYATB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Installation &mdash; PYATB v1.0.0  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Run" href="run.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PYATB v1.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#related-to-the-intel-mkl-library">Related to the Intel MKL library</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="run.html">Run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="input_files.html">Brief introduction of the input files</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="functions/index.html">Functions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keywords</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="input/index.html">Detailed Introduction of the Input Files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PYATB v1.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Installation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/installation.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h1>
+<section id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this heading">¶</a></h2>
+<p>The latest version of the PYATB package can be obtained from the GitHub repository:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>git clone https://github.com/pyatb/pyatb.git
+</pre></div>
+</div>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this heading">¶</a></h2>
+<p>Currently, PYATB is only supported on Linux systems and has not been tested on Windows or Mac systems. To use PYATB, the following prerequisites must be installed:</p>
+<ul class="simple">
+<li><p>Python 3.7 or newer</p></li>
+<li><p>C++ compiler</p></li>
+<li><p>Intel MKL</p></li>
+<li><p><a class="reference external" href="https://pybind11.readthedocs.io/en/stable/index.html">pybind11</a></p></li>
+<li><p><a class="reference external" href="https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen3</a></p></li>
+<li><p><a class="reference external" href="https://numpy.org/">NumPy</a></p></li>
+<li><p><a class="reference external" href="https://scipy.org/">SciPy</a></p></li>
+<li><p><a class="reference external" href="https://mpi4py.readthedocs.io/en/stable/mpi4py.html">mpi4py</a></p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/">Matplotlib</a></p></li>
+</ul>
+</section>
+<section id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic">
+<li><p>Before installing PYATB, you need to install the <a class="reference external" href="https://pybind11.readthedocs.io/en/stable/index.html">pybind11</a> module and <a class="reference external" href="https://mpi4py.readthedocs.io/en/stable/mpi4py.html">mpi4py</a> module:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install pybind11
+</pre></div>
+</div>
+<p>and</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install mpi4py
+</pre></div>
+</div>
+</li>
+<li><p>You can set the addresses of the C++ compiler (non-MPI version), MKL library, and Eigen library through the <code class="docutils literal notranslate"><span class="pre">siteconfig.py</span></code> file, and modify the relevant variables to point to the correct paths for your system.</p>
+<ul class="simple">
+<li><p>To set the C++ compiler, you can modify the variable “compiler” in the <code class="docutils literal notranslate"><span class="pre">siteconfig.py</span></code>. For example, you can set <code class="docutils literal notranslate"><span class="pre">compiler</span> <span class="pre">=</span> <span class="pre">'icpc'</span></code>.</p></li>
+<li><p>To set the MKL library, you can modify the variable “mkl_library_dir” and “mkl_include_dir” in the <code class="docutils literal notranslate"><span class="pre">siteconfig.py</span></code>.</p></li>
+<li><p>To set the Eigen library, you can modify the variable “eigen_include_dir” in the <code class="docutils literal notranslate"><span class="pre">siteconfig.py</span></code>. Eigen is a C++ template library for linear algebra. You can find and download it on the official website <a class="reference external" href="https://eigen.tuxfamily.org/index.php?title=Main_Page">Eigen</a>.</p></li>
+</ul>
+</li>
+<li><p>After completing the above preparatory work, you can install PYATB with the following command:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install ./
+</pre></div>
+</div>
+</li>
+<li><p>After completing the installation process, you can access the <code class="docutils literal notranslate"><span class="pre">pyatb</span></code> executable and corresponding module, which can be imported using the <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">pyatb</span></code> command.</p></li>
+</ol>
+</section>
+<section id="related-to-the-intel-mkl-library">
+<h2>Related to the Intel MKL library<a class="headerlink" href="#related-to-the-intel-mkl-library" title="Permalink to this heading">¶</a></h2>
+<p>If you encounter the following problem when running pyatb using the intel oneapi MKL library under Anaconda:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>undefined symbol: mkl_sparse_optimize_bsr_trsm_i8
+</pre></div>
+</div>
+<p>This problem may be caused by a conflict between the mkl library in Anaconda and the mkl library in intel oneapi. You can solve it by using the following method:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span> <span class="nv">LD_PRELOAD</span><span class="o">=</span>/opt/intel/oneapi/mkl/2022.0.2/lib/intel64/libmkl_def.so.2:<span class="se">\</span>
+/opt/intel/oneapi/mkl/2022.0.2/lib/intel64/libmkl_avx2.so.2:<span class="se">\</span>
+/opt/intel/oneapi/mkl/2022.0.2/lib/intel64/libmkl_core.so:<span class="se">\</span>
+/opt/intel/oneapi/mkl/2022.0.2/lib/intel64/libmkl_intel_lp64.so:<span class="se">\</span>
+/opt/intel/oneapi/mkl/2022.0.2/lib/intel64/libmkl_intel_thread.so:<span class="se">\</span>
+/opt/intel/oneapi/compiler/2022.0.2/linux/compiler/lib/intel64_lin/libiomp5.so
+</pre></div>
+</div>
+<p>Note that you need to replace the MKL path with your own environment. For <code class="docutils literal notranslate"><span class="pre">libiomp5.so</span></code>, its location may sometimes be in the directory where the intel compiler is located.</p>
+<p>Another solution is to use the MKL library in the Anaconda virtual environment. If you cannot find it, you can install the MKL library and its include files using the following commands:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>conda install -c conda-forge mkl
+conda install -c conda-forge mkl-include
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="introduction.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="run.html" class="btn btn-neutral float-right" title="Run" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, PYATB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
