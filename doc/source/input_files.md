@@ -82,6 +82,70 @@ Run the **scf** calculation of ABACUS normally, specifies the parameters `out_ma
 **NOTE**:
 - nspin=4 and nspin=1, nspin=2 output different files. nspin=4 files contain imaginary numbers, so the correct nspin parameter needs to be strictly specified when executing pyatb programs.
 
+### Format description of HR, SR, rR
+
+We use the file `data-HR-sparse_SPIN0.csr` as an example to explain the format of HR. This file contains a series of $H(R)$ matrices, where each R corresponds to an $H(R)$ matrix. The specific format of the file is as follows:
+
+1. The dimension of the $H(R)$ matrix is recorded on the first line, for example, `Matrix Dimension of H(R): 270`, indicating that each $H(R)$ matrix is a 270*270 matrix.
+2. The number of R is recorded on the second line, for example, `Matrix number of H(R): 97`, indicating that there are a total of 97 $H(R)$ matrices.
+3. Starting from the third line, every 4 lines form a group, recording the sparse matrix of $H(R)$. Following the example above, the file still has 4*97 lines left, divided into 97 groups.
+    - The first line of each group contains 4 integers. The first three numbers represent the `(x, y, z)` fractional coordinates of R, and the last number represents the number of non-zero elements in the sparse matrix.
+    - The second to fourth lines of each group record the `data`, `indices`, and `indptr` information of the sparse matrix in `csr` format.
+
+The sparse matrix `csr` format is explained below, with reference to `Wikipedia`. Please refer to [Sparse matrix](https://en.wikipedia.org/wiki/Sparse_matrix).
+
+We will use the following matrix as an example:
+
+$$
+\left[
+    \begin{array}{cccc}
+        4 & 2 & 0 & 0\\
+        0 & 3 & 0 & 0\\
+        0 & 4 & 5 & 0\\
+        0 & 0 & 0 & 0\\
+    \end{array}
+\right]
+$$
+
+The sparse matrix in `csr` format has three sets of data, corresponding to three lines in the output file. The first line contains the non-zero element `data`, the second line contains the column indices of the non-zero elements `indices`, and the third line contains the row offset `indptr`.
+
+Note that our counting starts from 0.
+
+First, the first row of the matrix is `4 2 0 0`, which has 2 non-zero elements `4 2`, with corresponding column indices `0 1`. The second row of the matrix is `0 3 0 0`, which has 1 non-zero element `3`, with corresponding column index `1`. The third row of the matrix has 2 non-zero elements `4 5`, with corresponding column indices `1 2`. The fourth row is all zeros and has no non-zero elements.
+
+Therefore, we have:
+
+```python
+data = [4, 2, 3, 4, 5]  # non-zero elements
+indices = [0, 1, 1, 1, 2]  # column indices of each non-zero element
+
+'''
+The number of non-zero elements in each row from the first to 
+the fourth row is 2, 1, 2, 0, respectively;
+the corresponding offset values are 0, 2, 3, 5, 5. 
+These values are used to record the starting offset of each 
+row's first element in the data array, and can also be used 
+for the indices array. The number of non-zero elements in 
+each row can be obtained by subtracting the previous offset value 
+from the current offset value, i.e., 2-0=2, 3-2=1, 5-3=2, 5-5=0.
+'''
+
+# the dimension of this array must be the number of rows of the matrix plus 1.
+indptr = [0, 2, 3, 5, 5]  
+```
+
+**NOTE**:
+- When the `npsin` parameter in the PYATB `Input` file is set to `1` or `2`, the HR matrix read is purely real. When `nspin` is set to `4`, the HR matrix read is complex, with matrix elements in the format of `(real part, imaginary part)`. 
+
+The file format for the SR matrix is identical to that of the HR matrix. The rR matrix format is slightly different because it includes the $r_x$, $r_y$, and $r_z$ directions. We use `data-rR-sparse.csr` as an example to illustrate the rR file format.
+
+1. The first line is `Matrix Dimension of r(R): 270`.
+2. The second line is `Matrix number of r(R): 97`.
+3. The third line consists of three numbers, representing the fractional coordinates `(x, y, z)` of R.
+4. Starting from the fourth line, every 4 lines form a group, with a total of three groups, recording the $r_x(R)$, $r_y(R)$, and $r_z(R)$ matrices respectively. After that, the loop is performed for different R.
+    - The first line of each group is an integer, recording the number of non-zero elements in the sparse matrix.
+    - The second to fourth lines of each group are in the `csr` format of the sparse matrix, recording the `data`, `indices`, and `indptr` information respectively. 
+
 ## Other file
 
 For the calculation of some functions, structure files and NAOs (numerical atomic orbital bases) files are also required.

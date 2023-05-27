@@ -16,6 +16,8 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -51,6 +53,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#input">Input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#hr-sr-rr">HR, SR, rR</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#how-to-generate-hr-sr-rr-files-using-abacus">How to generate HR, SR, rR files using ABACUS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#format-description-of-hr-sr-rr">Format description of HR, SR, rR</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#other-file">Other file</a></li>
@@ -163,6 +166,71 @@
 <ul class="simple">
 <li><p>nspin=4 and nspin=1, nspin=2 output different files. nspin=4 files contain imaginary numbers, so the correct nspin parameter needs to be strictly specified when executing pyatb programs.</p></li>
 </ul>
+</section>
+<section id="format-description-of-hr-sr-rr">
+<h3>Format description of HR, SR, rR<a class="headerlink" href="#format-description-of-hr-sr-rr" title="Permalink to this heading">¶</a></h3>
+<p>We use the file <code class="docutils literal notranslate"><span class="pre">data-HR-sparse_SPIN0.csr</span></code> as an example to explain the format of HR. This file contains a series of <span class="math notranslate nohighlight">\(H(R)\)</span> matrices, where each R corresponds to an <span class="math notranslate nohighlight">\(H(R)\)</span> matrix. The specific format of the file is as follows:</p>
+<ol class="arabic simple">
+<li><p>The dimension of the <span class="math notranslate nohighlight">\(H(R)\)</span> matrix is recorded on the first line, for example, <code class="docutils literal notranslate"><span class="pre">Matrix</span> <span class="pre">Dimension</span> <span class="pre">of</span> <span class="pre">H(R):</span> <span class="pre">270</span></code>, indicating that each <span class="math notranslate nohighlight">\(H(R)\)</span> matrix is a 270*270 matrix.</p></li>
+<li><p>The number of R is recorded on the second line, for example, <code class="docutils literal notranslate"><span class="pre">Matrix</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">H(R):</span> <span class="pre">97</span></code>, indicating that there are a total of 97 <span class="math notranslate nohighlight">\(H(R)\)</span> matrices.</p></li>
+<li><p>Starting from the third line, every 4 lines form a group, recording the sparse matrix of <span class="math notranslate nohighlight">\(H(R)\)</span>. Following the example above, the file still has 4*97 lines left, divided into 97 groups.</p>
+<ul class="simple">
+<li><p>The first line of each group contains 4 integers. The first three numbers represent the <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> fractional coordinates of R, and the last number represents the number of non-zero elements in the sparse matrix.</p></li>
+<li><p>The second to fourth lines of each group record the <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">indices</span></code>, and <code class="docutils literal notranslate"><span class="pre">indptr</span></code> information of the sparse matrix in <code class="docutils literal notranslate"><span class="pre">csr</span></code> format.</p></li>
+</ul>
+</li>
+</ol>
+<p>The sparse matrix <code class="docutils literal notranslate"><span class="pre">csr</span></code> format is explained below, with reference to <code class="docutils literal notranslate"><span class="pre">Wikipedia</span></code>. Please refer to <a class="reference external" href="https://en.wikipedia.org/wiki/Sparse_matrix">Sparse matrix</a>.</p>
+<p>We will use the following matrix as an example:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\left[
+    \begin{array}{cccc}
+        4 &amp; 2 &amp; 0 &amp; 0\\
+        0 &amp; 3 &amp; 0 &amp; 0\\
+        0 &amp; 4 &amp; 5 &amp; 0\\
+        0 &amp; 0 &amp; 0 &amp; 0\\
+    \end{array}
+\right]
+\end{split}\]</div>
+<p>The sparse matrix in <code class="docutils literal notranslate"><span class="pre">csr</span></code> format has three sets of data, corresponding to three lines in the output file. The first line contains the non-zero element <code class="docutils literal notranslate"><span class="pre">data</span></code>, the second line contains the column indices of the non-zero elements <code class="docutils literal notranslate"><span class="pre">indices</span></code>, and the third line contains the row offset <code class="docutils literal notranslate"><span class="pre">indptr</span></code>.</p>
+<p>Note that our counting starts from 0.</p>
+<p>First, the first row of the matrix is <code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">2</span> <span class="pre">0</span> <span class="pre">0</span></code>, which has 2 non-zero elements <code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">2</span></code>, with corresponding column indices <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">1</span></code>. The second row of the matrix is <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">3</span> <span class="pre">0</span> <span class="pre">0</span></code>, which has 1 non-zero element <code class="docutils literal notranslate"><span class="pre">3</span></code>, with corresponding column index <code class="docutils literal notranslate"><span class="pre">1</span></code>. The third row of the matrix has 2 non-zero elements <code class="docutils literal notranslate"><span class="pre">4</span> <span class="pre">5</span></code>, with corresponding column indices <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">2</span></code>. The fourth row is all zeros and has no non-zero elements.</p>
+<p>Therefore, we have:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>  <span class="c1"># non-zero elements</span>
+<span class="n">indices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>  <span class="c1"># column indices of each non-zero element</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">The number of non-zero elements in each row from the first to </span>
+<span class="sd">the fourth row is 2, 1, 2, 0, respectively;</span>
+<span class="sd">the corresponding offset values are 0, 2, 3, 5, 5. </span>
+<span class="sd">These values are used to record the starting offset of each </span>
+<span class="sd">row&#39;s first element in the data array, and can also be used </span>
+<span class="sd">for the indices array. The number of non-zero elements in </span>
+<span class="sd">each row can be obtained by subtracting the previous offset value </span>
+<span class="sd">from the current offset value, i.e., 2-0=2, 3-2=1, 5-3=2, 5-5=0.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1"># the dimension of this array must be the number of rows of the matrix plus 1.</span>
+<span class="n">indptr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>  
+</pre></div>
+</div>
+<p><strong>NOTE</strong>:</p>
+<ul class="simple">
+<li><p>When the <code class="docutils literal notranslate"><span class="pre">npsin</span></code> parameter in the PYATB <code class="docutils literal notranslate"><span class="pre">Input</span></code> file is set to <code class="docutils literal notranslate"><span class="pre">1</span></code> or <code class="docutils literal notranslate"><span class="pre">2</span></code>, the HR matrix read is purely real. When <code class="docutils literal notranslate"><span class="pre">nspin</span></code> is set to <code class="docutils literal notranslate"><span class="pre">4</span></code>, the HR matrix read is complex, with matrix elements in the format of <code class="docutils literal notranslate"><span class="pre">(real</span> <span class="pre">part,</span> <span class="pre">imaginary</span> <span class="pre">part)</span></code>.</p></li>
+</ul>
+<p>The file format for the SR matrix is identical to that of the HR matrix. The rR matrix format is slightly different because it includes the <span class="math notranslate nohighlight">\(r_x\)</span>, <span class="math notranslate nohighlight">\(r_y\)</span>, and <span class="math notranslate nohighlight">\(r_z\)</span> directions. We use <code class="docutils literal notranslate"><span class="pre">data-rR-sparse.csr</span></code> as an example to illustrate the rR file format.</p>
+<ol class="arabic simple">
+<li><p>The first line is <code class="docutils literal notranslate"><span class="pre">Matrix</span> <span class="pre">Dimension</span> <span class="pre">of</span> <span class="pre">r(R):</span> <span class="pre">270</span></code>.</p></li>
+<li><p>The second line is <code class="docutils literal notranslate"><span class="pre">Matrix</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">r(R):</span> <span class="pre">97</span></code>.</p></li>
+<li><p>The third line consists of three numbers, representing the fractional coordinates <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> of R.</p></li>
+<li><p>Starting from the fourth line, every 4 lines form a group, with a total of three groups, recording the <span class="math notranslate nohighlight">\(r_x(R)\)</span>, <span class="math notranslate nohighlight">\(r_y(R)\)</span>, and <span class="math notranslate nohighlight">\(r_z(R)\)</span> matrices respectively. After that, the loop is performed for different R.</p>
+<ul class="simple">
+<li><p>The first line of each group is an integer, recording the number of non-zero elements in the sparse matrix.</p></li>
+<li><p>The second to fourth lines of each group are in the <code class="docutils literal notranslate"><span class="pre">csr</span></code> format of the sparse matrix, recording the <code class="docutils literal notranslate"><span class="pre">data</span></code>, <code class="docutils literal notranslate"><span class="pre">indices</span></code>, and <code class="docutils literal notranslate"><span class="pre">indptr</span></code> information respectively.</p></li>
+</ul>
+</li>
+</ol>
 </section>
 </section>
 <section id="other-file">
