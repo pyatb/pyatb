@@ -36,7 +36,7 @@ setup(
     name='pyatb',
     version="1.0.0",
     cmdclass={'build_ext': build_ext},
-    setup_requires=['pybind11', 'setuptools>=18.0'],
+    setup_requires=["setuptools>=42", "wheel", "pybind11~=2.6.1"],
     license='GPL v3.0',
     description='This is the pyatb module.',
     long_description='None',
