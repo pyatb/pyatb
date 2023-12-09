@@ -7,7 +7,7 @@ try:
 except:
     from setuptools import Extension as Pybind11Extension
 
-libraries = ['lapack', 'blas']
+libraries = ['openblas']
 
 include_dirs = [
     os.path.join("src", "cpp", "core"),
