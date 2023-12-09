@@ -2,7 +2,6 @@
 #define USE_EIGEN_H
 
 
-#define EIGEN_USE_MKL_ALL
 #include <Eigen/Eigen>
 #include <complex>
 
