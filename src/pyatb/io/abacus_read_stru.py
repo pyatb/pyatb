@@ -86,7 +86,7 @@ def read_stru(stru_filename='STRU'):
         temp_orb = raw_file[NUMERICAL_ORBITAL_index+i+1]
         stru_atom[i].set_numerical_orb(temp_orb)
 
-    A = float(raw_file[LATTICE_CONSTANT_index+1])
+    A = float(raw_file[LATTICE_CONSTANT_index+1]) / Ang_to_Bohr
     V = np.zeros((3, 3), dtype=float)
     for i in range(3):
         temp_v = raw_file[LATTICE_VECTORS_index+i+1].split()
@@ -114,9 +114,9 @@ def read_stru(stru_filename='STRU'):
             atom_postion_car[ia, 2] = float(temp_positon[2])
         count += atom_num
         if is_car:
-            stru_atom[i].set_positions_car(atom_postion_car)
+            stru_atom[i].set_positions_car(atom_postion_car * A)
         else:
-            stru_atom[i].set_positions_car(atom_postion_car @ V)
+            stru_atom[i].set_positions_car(atom_postion_car @ V * A)
 
     # print('atom_type_num = ', atom_type_num)
 

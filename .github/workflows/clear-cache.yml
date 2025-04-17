@@ -1,0 +1,12 @@
+name: Clear Cache
+on: 
+  workflow_dispatch:
+
+jobs:
+  clearCache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear cache
+        run: |
+          echo "Clearing cache..."
+          rm -rf ~/.npm ~/.cache ~/.yarn_cache ~/.gradle ~/.m2

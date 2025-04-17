@@ -341,19 +341,10 @@ MatrixXcd linear_response::get_D(
         {
             double delta_e = eigenvalues(row) - eigenvalues(col);
 
-            // test
-            // double inv_delta_e = delta_e / (delta_e * delta_e + 0.04 * 0.04);
-            // test
-
             if (std::abs(delta_e) > degenerate_threshold)
             {
                 D(row, col) = -1.0 * ( H_alpha_bar(row, col) - eigenvalues(col) * S_alpha_bar(row, col) ) / delta_e;
                 D(col, row) = ( H_alpha_bar(col, row) - eigenvalues(row) * S_alpha_bar(col, row) ) / delta_e;
-
-                // test
-                // D(row, col) = -1.0 * ( H_alpha_bar(row, col) - eigenvalues(col) * S_alpha_bar(row, col) ) * inv_delta_e;
-                // D(col, row) = ( H_alpha_bar(col, row) - eigenvalues(row) * S_alpha_bar(col, row) ) * inv_delta_e;
-                // test
             }
         }
     }
@@ -387,9 +378,12 @@ MatrixXcd linear_response::get_D_degenerate(
 
             if (std::abs(delta_e) > degenerate_threshold)
             {
-                D(row, col) = -1.0 * ( H_alpha_bar(row, col) - eigenvalues(col) * S_alpha_bar(row, col) ) * inv_delta_e;
-                D(col, row) = ( H_alpha_bar(col, row) - eigenvalues(row) * S_alpha_bar(col, row) ) * inv_delta_e;
+                inv_delta_e = 1.0 / delta_e;
             }
+
+            D(row, col) = -1.0 * ( H_alpha_bar(row, col) - eigenvalues(col) * S_alpha_bar(row, col) ) * inv_delta_e;
+            D(col, row) = ( H_alpha_bar(col, row) - eigenvalues(row) * S_alpha_bar(col, row) ) * inv_delta_e;
+            
         }
     }
 

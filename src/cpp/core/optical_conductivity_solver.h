@@ -41,13 +41,13 @@ private:
 
     MatrixXcd KK_triangularFunction_simpson_ik(
         const VectorXd &eigenvalues_ik, 
-        const array<MatrixXcd, 3> &velocity_ik, 
+        const std::array<MatrixXcd, 3> &velocity_ik, 
         const int &occupied_num
     );
 
     void LorentianFunction_ik(
         const VectorXd &eigenvalues_ik, 
-        const array<MatrixXcd, 3> &velocity_ik, 
+        const std::array<MatrixXcd, 3> &velocity_ik, 
         const int &occupied_num,
         MatrixXcd &optical_conductivity_ik,
         MatrixXcd &dielectric_function_ik

@@ -1,0 +1,37 @@
+INPUT_PARAMETERS
+pseudo_dir          ./
+ntype              2
+nspin              1
+gamma_only           0
+calculation         scf
+symmetry             0
+scf_thr            1e-8
+suffix   hse
+
+ecutwfc             100
+#noncolin             1
+#lspinorb             1
+
+#Parameters (LCAO)
+basis_type         lcao
+
+mixing_beta           0.7
+mixing_gg0            3
+mixing_ndim          15
+
+
+dft_functional  hse
+exx_separate_loop 0
+exx_pca_threshold 1e-4
+exx_c_threshold 1e-4
+exx_dm_threshold 1e-4
+exx_schwarz_threshold 1e-5
+exx_cauchy_threshold 1e-7
+exx_ccp_rmesh_times 1.5
+
+#init_chg   file
+out_mat_hs2 1
+out_mat_r 1
+out_chg  1
+
+out_band   0

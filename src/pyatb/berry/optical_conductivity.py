@@ -169,16 +169,115 @@ class Optical_Conductivity:
             return None
 
     def print_plot_script(self):
-        output_path = os.path.join(self.output_path, '')
-        with open(os.path.join(output_path, 'plot_optical.py'), 'w') as f:
-            oc_real_file = os.path.join(output_path, 'optical_conductivity_real_part.dat')
-            oc_imag_file = os.path.join(output_path, 'optical_conductivity_imag_part.dat')
-
-            df_real_file = os.path.join(output_path, 'dielectric_function_real_part.dat')
-            df_imag_file = os.path.join(output_path, 'dielectric_function_imag_part.dat')
-
-            plot_script = """import numpy as np
+        output_path = self.output_path
+        script_path = os.path.join(output_path, 'plot_optical.py')
+        with open(script_path, 'w') as f:
+            plot_script = f"""
+import os
+import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# work_path = '{output_path}'
+work_path = os.getcwd()
+
+# constants
+direction = {{
+    'xx' : 1,
+    'xy' : 2,
+    'xz' : 3,
+    'yx' : 4,
+    'yy' : 5,
+    'yz' : 6,
+    'zx' : 7,
+    'zy' : 8,
+    'zz' : 9
+}}
+
+# Optical conductivity data and dielectric function data
+oc_real_part = np.loadtxt(os.path.join(work_path, 'optical_conductivity_real_part.dat'))
+oc_imag_part = np.loadtxt(os.path.join(work_path, 'optical_conductivity_imag_part.dat'))
+df_real_part = np.loadtxt(os.path.join(work_path, 'dielectric_function_real_part.dat'))
+df_imag_part = np.loadtxt(os.path.join(work_path, 'dielectric_function_imag_part.dat'))
+
+# plot
+mysize=10
+# mpl.rcParams['font.family'] = 'sans-serif'
+# mpl.rcParams['font.sans-serif'] = 'Arial'
+mpl.rcParams['font.size'] = mysize
+
+def set_fig(fig, ax, bwidth=1.0, width=1, mysize=10):
+    ax.spines['top'].set_linewidth(bwidth)
+    ax.spines['right'].set_linewidth(bwidth)
+    ax.spines['left'].set_linewidth(bwidth)
+    ax.spines['bottom'].set_linewidth(bwidth)
+    ax.tick_params(length=5, width=width, labelsize=mysize)
+
+x = oc_real_part[:, 0]
+
+for key, value in direction.items():
+    fig, ax = plt.subplots(1, 1, tight_layout=True)
+    set_fig(fig, ax)
+
+    real = oc_real_part[:, value]
+    imag = oc_imag_part[:, value]
+    ax.plot(x, real, label='real part', color='b', linewidth=1, linestyle='-')
+    ax.plot(x, imag, label='imag part', color='r', linewidth=1, linestyle='-')
+
+    ax.set_title('Optical conductivity', fontsize=12)
+    ax.set_xlim(x[0], x[-1])
+    ax.set_xlabel('$\hbar \omega$ (eV)', fontsize=12)
+    ax.set_ylabel('$\sigma_{{%s}}$ (S/m)'%(key), fontsize=12)
+    ax.legend()
+
+    plt.savefig(os.path.join(work_path, 'oc-%s.pdf'%(key)))
+    plt.close('all')
+
+for key, value in direction.items():
+    fig, ax = plt.subplots(1, 1, tight_layout=True)
+    set_fig(fig, ax)
+
+    real = df_real_part[:, value]
+    imag = df_imag_part[:, value]
+    ax.plot(x, real, label='real part', color='b', linewidth=1, linestyle='-')
+    ax.plot(x, imag, label='imag part', color='r', linewidth=1, linestyle='-')
+
+    ax.set_title('Dielectric function', fontsize=12)
+    ax.set_xlim(x[0], x[-1])
+    ax.set_xlabel('$\hbar \omega$ (eV)', fontsize=12)
+    ax.set_ylabel('$\epsilon_{{%s}}$'%(key), fontsize=12)
+    ax.legend()
+
+    plt.savefig(os.path.join(work_path, 'df-%s.pdf'%(key)))
+    plt.close('all')
+
+"""
+            f.write(plot_script)
+
+        try:
+            import subprocess
+            import sys
+            script_directory = os.path.dirname(script_path)
+            result = subprocess.run([sys.executable, script_path], cwd=script_directory, capture_output=True, text=True)
+        except ImportError:
+            print('ImportError: Optical conductivity Plot requires matplotlib package!')
+            return None
+            
+        script_path = os.path.join(output_path, 'plot_absorption.py')
+        with open(script_path, 'w') as f:
+            plot_script = f"""
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# work_path = '{output_path}'
+work_path = os.getcwd()
+
+# constants
+c = 299792458
+hbar = 1.05457182e-34
+eV = 1.60217662e-19
 
 direction = {{
     'xx' : 1,
@@ -192,53 +291,55 @@ direction = {{
     'zz' : 9
 }}
 
-oc_real_part = np.loadtxt('{oc_real_file}')
-oc_imag_part = np.loadtxt('{oc_imag_file}')
-df_real_part = np.loadtxt('{df_real_file}')
-df_imag_part = np.loadtxt('{df_imag_file}')
+# Dielectric function data
+dielec_r = np.loadtxt(os.path.join(work_path, 'dielectric_function_real_part.dat'))
+dielec_i = np.loadtxt(os.path.join(work_path, 'dielectric_function_imag_part.dat'))
 
-x = oc_real_part[:, 0]
+need_plot = ["xx", "yy", "zz"]
 
-for key, value in direction.items():
-    figure = plt.figure()
-    plt.title('Optical conductivity')
-    plt.xlim(x[0], x[-1])
-    plt.xlabel('$\omega (eV)$')
-    plt.ylabel('$\sigma_{{%s}} (S/m)$'%(key))
-    real = oc_real_part[:, value]
-    imag = oc_imag_part[:, value]
-    plt.plot(x, real, label='real part', color='b', linewidth=1, linestyle='-')
-    plt.plot(x, imag, label='imag part', color='r', linewidth=1, linestyle='-')
+# plot
+mysize=10
+# mpl.rcParams['font.family'] = 'sans-serif'
+# mpl.rcParams['font.sans-serif'] = 'Arial'
+mpl.rcParams['font.size'] = mysize
 
-    plt.legend()
-    plt.savefig('{output_path}' + 'oc-%s.pdf'%(key))
-    plt.close('all')
+def set_fig(fig, ax, bwidth=1.0, width=1, mysize=10):
+    ax.spines['top'].set_linewidth(bwidth)
+    ax.spines['right'].set_linewidth(bwidth)
+    ax.spines['left'].set_linewidth(bwidth)
+    ax.spines['bottom'].set_linewidth(bwidth)
+    ax.tick_params(length=5, width=width, labelsize=mysize)
 
-for key, value in direction.items():
-    figure = plt.figure()
-    plt.title('dielectric function')
-    plt.xlim(x[0], x[-1])
-    plt.xlabel('$\omega (eV)$')
-    plt.ylabel('$\epsilon_{{%s}}$'%(key))
-    real = df_real_part[:, value]
-    imag = df_imag_part[:, value]
-    plt.plot(x, real, label='real part', color='b', linewidth=1, linestyle='-')
-    plt.plot(x, imag, label='imag part', color='r', linewidth=1, linestyle='-')
+fig, ax = plt.subplots(1, 3, figsize=(12, 4), tight_layout=True)
+for i in range(3):
+    set_fig(fig, ax[i])
 
-    plt.legend()
-    plt.savefig('{output_path}' + 'df-%s.pdf'%(key))
-    plt.close('all')
+for index, i in enumerate(need_plot):
+    omega = dielec_r[:, 0] # eV
+    dielec_xx_r = dielec_r[:, direction[i]]
+    dielec_xx_i = dielec_i[:, direction[i]]
 
-""".format(oc_real_file=oc_real_file, oc_imag_file=oc_imag_file, df_real_file=df_real_file, df_imag_file=df_imag_file, output_path=output_path)
+    # unit is cm^{{-1}}
+    absorp_xx =  np.sqrt(2) * omega * eV / hbar / c * np.sqrt(np.sqrt(dielec_xx_r**2 + dielec_xx_i**2) - dielec_xx_r) / 100
 
+    ax[index].plot(omega, absorp_xx / 1e5)
+    ax[index].set_xlim(omega[0], omega[-1])
+    ax[index].set_xlabel("$\hbar \omega$ (eV)", fontsize=12)
+    ax[index].set_ylabel(f'$\\\\alpha^{{{{{{i}}}}}}$' + ' ($\\\\times 10^5$ cm$^{{-1}}$)', fontsize=12)
+
+plt.savefig('absorption.png', dpi=600)
+
+"""
             f.write(plot_script)
 
-            try:
-                import matplotlib
-                exec(plot_script)
-            except ImportError:
-                print('ImportError: Band Structure Plot requires matplotlib package!')
-                return None
+        try:
+            import subprocess
+            import sys
+            script_directory = os.path.dirname(script_path)
+            result = subprocess.run([sys.executable, script_path], cwd=script_directory, capture_output=True, text=True)
+        except ImportError:
+            print('ImportError: Absorption Plot requires matplotlib package!')
+            return None  
 
     def calculate_optical_conductivity(self, **kwarg):
         '''

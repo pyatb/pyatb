@@ -1,7 +1,7 @@
 '''
 Date: 2021-12-29 10:27:01
 LastEditors: jiyuyang
-LastEditTime: 2022-08-02 11:36:22
+LastEditTime: 2024-12-05 11:34:17
 Mail: jiyuyang@mail.ustc.edu.cn, 1041176461@qq.com
 '''
 
@@ -156,14 +156,14 @@ class Band:
         band_vbm = e_T[band_vbm_index]
         evbm = np.max(band_vbm)
         k_vbm_index = np.where(band_vbm == evbm)[1]
-        vb = Band(band_vbm_index, band_vbm-evbm, evbm-evbm, k_vbm_index)
+        vb = Band(band_vbm_index, band_vbm, evbm, k_vbm_index)
 
         # conduct band
         band_cbm_index = np.where(num_gt_Ef != 0)[0]
         band_cbm = e_T[band_cbm_index]
         ecbm = np.min(band_cbm)
         k_cbm_index = np.where(band_cbm == ecbm)[1]
-        cb = Band(band_cbm_index, band_cbm-evbm, ecbm-evbm, k_cbm_index)
+        cb = Band(band_cbm_index, band_cbm, ecbm, k_cbm_index)
 
         return vb, cb
 
@@ -793,7 +793,7 @@ class PBand(Band):
                             energy_range: Sequence[float] = [],
                             shift: bool = False,
                             keyname: str = '',
-                            colors: list = [],
+                            colors:  list = [],  # 将默认值改为 None,
                             scale_width_factor: int = 5,
                             **kwargs):
         """Plot parsed projected bands data of different contributions
@@ -845,9 +845,34 @@ class PBand(Band):
                         whole_data_parsed.append(wei[elem][ang])
 
         if len(colors) == 0:
+            # 如果 colors 为空，使用默认 colormap 生成颜色
             cmap = plt.cm.get_cmap("tab10")
-            colors = [cmap(c)
-                      for c in np.linspace(0, 1, len(whole_label_parsed))]
+            colors = [cmap(c) for c in np.linspace(0, 1, len(whole_label_parsed))]
+
+        elif len(colors) == len(whole_label_parsed) and all(isinstance(c, str) for c in colors):
+            # 如果 colors 列表的长度与标签数量一致，并且每个元素是字符串（假设是颜色名或 Hex 值）
+            colors = [c for c in colors]
+
+        elif len(colors) == 1 and isinstance(colors[0], str):
+            # 如果 colors 是一个包含 colormap 关键词的单一字符串
+            try:
+                cmap = plt.cm.get_cmap(colors[0])  # 获取指定的 colormap
+                generated_colors = [cmap(c) for c in np.linspace(0, 1, len(whole_label_parsed))]
+                if len(generated_colors) != len(whole_label_parsed):
+                    raise ValueError(f"生成的颜色数量 {len(generated_colors)} 与标签数量 {len(whole_label_parsed)} 不相等。")
+                colors = generated_colors
+            except ValueError:
+                # 如果获取 colormap 失败，使用默认颜色
+                print(f"'{colors[0]}' 不是有效的 colormap 关键词，使用默认的颜色配置。 确保使用列表形式传递颜色 colors=['Accent']")
+                cmap = plt.cm.get_cmap("tab10")
+                colors = [cmap(c) for c in np.linspace(0, 1, len(whole_label_parsed))]
+
+        bandplot = BandPlot(
+            fig, ax, color=colors, label=whole_label_parsed, point_to_line=True, **kwargs)
+
+        norm = Normalize(vmin=0, vmax=1)
+        cmaps = [bandplot._color_to_alpha_cmap(c) for c in colors]
+        swidth = np.array(whole_data_parsed) * scale_width_factor
 
         bandplot = BandPlot(
             fig, ax, color=colors, label=whole_label_parsed, point_to_line=True, **kwargs)

@@ -1,108 +1,88 @@
 # Full List of INPUT Keywords
 
 - [INPUT_PARAMETERS](#input_parameters)
-
   [nspin](#nspin-input_nspin) | [package](#package-input_package) | [fermi_energy](#fermi_energy-input_fermi_energy) | [fermi_energy_unit](#fermi_energy_unit-input_fermi_energy_unit) | [HR_route](#hr_route-input_hr_route) | [SR_route](#sr_route-input_sr_route) | [rR_route](#rr_route-input_rr_route) | [binary](#binary-input_binary) | [HR_unit](#hr_unit-input_hr_unit) | [rR_unit](#rr_unit-input_rr_unit) | [max_kpoint_num](#max_kpoint_num-input_max_kpoint_num) | [sparse_format](#sparse_format-input_sparse_format)
 
 - [LATTICE](#lattice)
-
   [lattice_constant](#lattice_constant-lattice_lattice_constant) | [lattice_constant_unit](#lattice_constant_unit-lattice_lattice_constant_unit) | [lattice_vector](#lattice_vector-lattice_lattice_vector)
 
 - [BAND_STRUCTURE](#band_structure)
-
   [wf_collect](#wf_collect-bandstructure_wf_collect) | [kpoint_mode](#kpoint_mode-bandstructure_kpoint_mode)
 
 - [BANDUNFOLDING](#bandunfolding)
-
   [stru_file](#stru_file-bandunfolding_stru_file) | [ecut](#ecut-bandunfolding_ecut) | [band_range](#band_range-bandunfolding_band_range) | [m_matrix](#m_matrix-bandunfolding_m_matrix) | [kpoint_mode](#kpoint_mode-bandunfolding_kpoint_mode)
 
 - [FERMI_ENERGY](#fermi_energy)
-
   [temperature](#temperature-fermienergy_temperature) | [electron_num](#electron_num-fermienergy_electron_num) | [grid](#grid-fermienergy_grid) | [epsilon](#epsilon-fermienergy_epsilon) | 
 
 - [FERMI_SURFACE](#fermi_surface)
-
   [bar](#bar-fermisurface_bar)  | [nbands](#nbands-fermisurface_nbands) | [kpoint_mode](#kpoint_mode-fermisurface_kpoint_mode)
 
 - [FIND_NODES](#find_nodes)
-
   [energy_range](#energy_range-findnodes_energy_range) | [k_start](#k_start-findnodes_k_start) | [k_vect1](#k_vect1-findnodes_k_vect1) | [k_vect2](#k_vect2-findnodes_k_vect2) | [k_vect3](#k_vect3-findnodes_k_vect3) | [initial_grid](#initial_grid-findnodes_initial_grid) | [initial_threshold](#initial_threshold-findnodes_initial_threshold) | [adaptive_grid](#adaptive_grid-findnodes_adaptive_grid)[adaptive_threshold](#adaptive_threshold-findnodes_adaptive_threshold) | [kpoint_mode](#kpoint_mode-findnodes_kpoint_mode)
 
 - [PDOS](#pdos)
-
   [stru_file](#stru_file-pdos_stru_file) | [e_range](#e_range-pdos_e_range) | [de](#de-pdos_de) | [sigma](#sigma-pdos_sigma) | [kpoint_mode](#kpoint_mode-pdos_kpoint_mode)
 
 - [FAT_BAND](#fat_band)
-
   [band_range](#band_range-fatband_band_range) | [stru_file](#stru_file-fatband_stru_file) | [kpoint_mode](#kpoint_mode-fatband_kpoint_mode)
 
 - [SPIN_TEXTURE](#spin_texture)
-
   [nband](#nband-spintexture_nband) | [kpoint_mode](#kpoint_mode-spintexture_kpoint_mode)
 
 - [WILSON_LOOP](#wilson_loop)
-
   [occ_band](#occ_band-wilsonloop_occ_band) | [k_start](#k_start-wilsonloop_k_start) | [k_vect1](#k_vect1-wilsonloop_k_vect1) | [k_vect2](#k_vect2-wilsonloop_k_vect2) | [nk1](#nk1-wilsonloop_nk1) | [nk2](#nk2-wilsonloop_nk2)
 
 - [POLARIZATION](#polarization)
-
   [occ_band](#occ_band-polarization_occ_band) | [nk1](#nk1-polarization_nk1) | [nk2](#nk2-polarization_nk2) | [nk3](#nk3-polarization_nk3) | [atom_type](#atom_type-polarization_atom_type) | [stru_file](#stru_file-polarization_stru_file) | [valence_e](#valence_e-polarization_valence_e)
 
 - [BERRY_CURVATURE](#berry_curvature)
-
   [method](#method-berrycurvature_method)  | [occ_band](#occ_band-berrycurvature_occ_band) | [kpoint_mode](#kpoint_mode-berrycurvature_kpoint_mode)
 
 - [AHC](#ahc)
-
   [method](#method-ahc_method) | [integrate_mode](#integrate_mode-ahc_integrate_mode)
 
 - [CHERN_NUMBER](#chern_number)
-
   [method](#method-chernnumber_method) | [occ_band](#occ_band-chernnumber_occ_band) | [k_start](#k_start-chernnumber_k_start) | [k_vect1](#k_vect1-chernnumber_k_vect1) | [k_vect2](#k_vect2-chernnumber_k_vect2) | [integrate_mode](#integrate_mode-chernnumber_integrate_mode)
 
 - [CHIRALITY](#chirality)
-
   [method](#method-chirality_method) | [k_vect](#k_vect-chirality_k_vect) | [radius](#radius-chirality_radius) | [point_num](#point_num-chirality_point_num)
 
 - [JDOS](#jdos)
-
   [occ_band](#occ_band-jdos_occ_band) | [omega](#omega-jdos_omega) | [domega](#domega-jdos_domega) | [eta](#eta-jdos_eta) | [grid](#grid-jdos_grid)
 
 - [OPTICAL_CONDUCTIVITY](#optical_conductivity)
-
   [occ_band](#occ_band-opticalconductivity_occ_band) | [omega](#omega-opticalconductivity_omega) | [domega](#domega-opticalconductivity_domega) | [eta](#eta-opticalconductivity_eta) | [grid](#grid-opticalconductivity_grid)
 
 - [SHIFT_CURRENT](#shift_current)
-
   [occ_band](#occ_band-shiftcurrent_occ_band) | [omega](#omega-shiftcurrent_omega) | [domega](#domega-shiftcurrent_domega) | [smearing_method](#smearing_method-shiftcurrent_smearing_method) | [eta](#eta-shiftcurrent_eta) | [grid](#grid-shiftcurrent_grid) | [method](#method-shiftcurrent_method)
 
 - [BERRY_CURVATURE_DIPOLE](#berry_curvature_dipole)
-
   [omega](#omega-berrycurvaturedipole_omega) | [domega](#domega-berrycurvaturedipole_domega) | [integrate_mode](#integrate_mode-berrycurvaturedipole_integrate_mode)
 
+- [SHG](#SHG)
+  [omega](#omega-shg_omega) | [domega](#domega-shg_domega) | [grid](#grid-shg_grid)| [method](#grid-shg_method)
+  
+- [POCKELS](#Pockels)
+  [omega1](#omega1-pockels_omega1) |[omega](#omega-pockels_omega) | [domega](#domega-pockels_domega) | [grid](#grid-pockels_grid)
 
 [Setting of k points](#setting-of-k-points)
 
 - [When kpoint_mode is 'mp'](#when-kpoint_mode-is-mp)
-
   [mp_grid](#mp_grid) | [k_start](#k_start) | [k_vect1](#k_vect1) | [k_vect2](#k_vect2) | [k_vect3](#k_vect3)
 
 - [When kpoint_mode is 'line'](#when-kpoint_mode-is-line)
-
   [kpoint_num](#kpoint_num) | [high_symmetry_kpoint](#high_symmetry_kpoint)
 
 - [When kpoint_mode is 'direct'](#when-kpoint_mode-is-direct)
-
   [kpoint_num](#kpoint_num-1) | [kpoint_direct_coor](#kpoint_direct_coor)
 
 [Setting of integration](#setting-of-integration)
 
 - [When integrate_mode is 'Grid'](#when-integrate_mode-is-grid)
-
   [integrate_grid](#integrate_grid) | [adaptive_grid](#adaptive_grid) | [adaptive_grid_threshold](#adaptive_grid_threshold)
 
 - [When integrate_mode is 'Adaptive'](#when-integrate_mode-is-adaptive)
-
   [relative_error](#relative_error) | [absolute_error](#absolute_error) | [initial_grid](#initial_grid)
 
 ## INPUT_PARAMETERS
@@ -151,7 +131,7 @@
 - **Type**: String
 - **Description**: Path to the rR matrix file.
 - **Default**: No default value
-  
+
 ### binary {#input_binary}
 
 - **Type**: Boolean
@@ -181,7 +161,6 @@
 - **Type**: Boolean
 - **Description**: Whether HR, SR, rR matrices are stored in memory is sparse storage.
 - **Default**: 0
-
 
 ## LATTICE
 
@@ -249,7 +228,6 @@
 - **Description**: Used to set the k point of unitcell. See [Setting of k points](#setting-of-k-points)
 - **Default**: No default value
 
-
 ## FERMI_ENERGY
 
 ### temperature {#fermienergy_temperature}
@@ -276,7 +254,6 @@
 - **Description**: Newton interpolation parameters, absolute accuracy.
 - **Default**: 0.001
 
-
 ## FERMI_SURFACE
 
 ### bar {#fermisurface_bar}
@@ -297,7 +274,6 @@
 - **Description**: Used to set the k point. See [Setting of k points](#setting-of-k-points)
 - **Default**: No default value
 
-
 ## FIND_NODES
 
 ### energy_range {#findnodes_energy_range}
@@ -311,7 +287,7 @@
 - **Type**: Real
 - **Description**: The origin point coordinates used to describe a Brillouin zone plane.
 - **Default**: 0.0 0.0 0.0
-  
+
 ### k_vect1 {#findnodes_k_vect1}
 
 - **Type**: Real
@@ -360,7 +336,6 @@
 - **Description**: Used to set the k point. See [Setting of k points](#setting-of-k-points)
 - **Default**: No default value
 
-
 ## PDOS
 
 ### stru_file {#pdos_stru_file}
@@ -393,7 +368,6 @@
 - **Description**: Used to set the k point. See [Setting of k points](#setting-of-k-points)
 - **Default**: No default value
 
-
 ## FAT_BAND
 
 ### band_range {#fatband_band_range}
@@ -414,7 +388,6 @@
 - **Description**: Used to set the k point of unitcell. See [Setting of k points](#setting-of-k-points)
 - **Default**: No default value
 
-
 ## SPIN_TEXTURE
 
 ### nband {#spintexture_nband}
@@ -429,7 +402,6 @@
 - **Description**: Used to set the k point. See [Setting of k points](#setting-of-k-points)
 - **Default**: No default value
 
-
 ## WILSON_LOOP
 
 ### occ_band {#wilsonloop_occ_band}
@@ -443,7 +415,7 @@
 - **Type**: Real
 - **Description**: The origin point coordinates used to describe a Brillouin zone plane.
 - **Default**: 0.0 0.0 0.0
-  
+
 ### k_vect1 {#wilsonloop_k_vect1}
 
 - **Type**: Real
@@ -467,7 +439,6 @@
 - **Type**: Integer
 - **Description**: k_vect2 is divided into nk2 k-points.
 - **Default**: 100
-
 
 ## POLARIZATION
 
@@ -513,7 +484,6 @@
 - **Description**: The number of valence electrons per element.
 - **Default**: No default value
 
-
 ## BERRY_CURVATURE
 
 ### method {#berrycurvature_method}
@@ -534,7 +504,6 @@
 - **Description**: Used to set the k point. See [Setting of k points](#setting-of-k-points)
 - **Default**: No default value
 
-
 ## AHC
 
 ### method {#ahc_method}
@@ -548,7 +517,6 @@
 - **Type**: String
 - **Description**: Used for integration settings. See [Setting of integration](#setting-of-integration).
 - **Default**: No default value
-
 
 ## CHERN_NUMBER
 
@@ -569,7 +537,7 @@
 - **Type**: Real
 - **Description**: The origin point coordinates used to describe a Brillouin zone plane.
 - **Default**: 0.0 0.0 0.0
-  
+
 ### k_vect1 {#chernnumber_k_vect1}
 
 - **Type**: Real
@@ -614,7 +582,6 @@
 - **Description**: The number of k-points that are uniformly sampled on a spherical surface.
 - **Default**: No default value
 
-
 ## JDOS
 
 ### occ_band {#jdos_occ_band}
@@ -647,7 +614,6 @@
 - **Description**: The grid for integration. There are 3 parameters in total.
 - **Default**: No default value
 
-
 ## OPTICAL_CONDUCTIVITY
 
 ### occ_band {#opticalconductivity_occ_band}
@@ -679,7 +645,6 @@
 - **Type**: Integer
 - **Description**: The grid for integration. There are 3 parameters in total.
 - **Default**: No default value
-
 
 ## SHIFT_CURRENT
 
@@ -725,7 +690,6 @@
 - **Description**: Specify the method to calculate the shift current. `0` represents calculation using the Sternheimer equation, `1` represents the first order partial derivative calculation.
 - **Default**: 1
 
-
 ## BERRY_CURVATURE_DIPOLE
 
 ### omega {#berrycurvaturedipole_omega}
@@ -745,6 +709,61 @@
 - **Type**: String
 - **Description**: Used for integration settings. See [Setting of integration](#setting-of-integration).Since the integration is of a tensor, only 'Grid'integrate_mode is available.
 - **Default**: No default value
+  
+  
+
+## SHG
+
+### omega {#shg_omega}
+
+* **Type**: Real
+* **Description**: The range of $\omega$. There are two parameters, indicating the starting point and the ending point. Unit is eV.
+* **Default**: No default value
+
+### domega {#shg_domega}
+
+* **Type**: Real
+* **Description**: The energy interval of $\omega$.
+* **Default**: No default value
+
+### grid {#shg_grid}
+
+* **Type**: Integer
+* **Description**: The grid for integration. There are 3 parameters in total.
+* **Default**: No default value
+
+### method {#shg_method}
+
+* **Type**: Integer
+* **Description**: Specify the method to calculate the SHG. `0` represents calculation using the inter- and intra-band formula, `1` represents the velocity matrices formula.
+* **Default**: 0
+
+## POCKELS
+
+### omega1 {#pockels_omega1}
+
+* **Type**: Real
+* **Description**: The frequency of external electric field, normally a rather small number. Unit is eV.
+* **Default**: 0
+
+### omega {#pockels_omega}
+
+* **Type**: Real
+* **Description**: The range of $\omega$. There are two parameters, indicating the starting point and the ending point. Unit is eV.
+* **Default**: No default value
+
+### domega {#pockels_domega}
+
+* **Type**: Real
+* **Description**: The energy interval of $\omega$.
+* **Default**: No default value
+
+### grid {#pockels_grid}
+
+* **Type**: Integer
+* **Description**: The grid for integration. There are 3 parameters in total.
+* **Default**: No default value
+
 
 
 # Setting of k points
@@ -776,7 +795,7 @@ As long as the kpoint_mode parameter exists in FUNCTIONS, the following setting 
 - **Type**: Real
 - **Description**: Expanded vector of the Brillouin zone.
 - **Default**: 0.0 1.0 0.0
- 
+
 ### k_vect3
 
 - **Type**: Real
@@ -790,7 +809,6 @@ As long as the kpoint_mode parameter exists in FUNCTIONS, the following setting 
 - **Type**: Integer
 - **Description**: The number of high symmetry points.
 - **Default**: No default value
-
 
 ### high_symmetry_kpoint
 
@@ -811,7 +829,6 @@ As long as the kpoint_mode parameter exists in FUNCTIONS, the following setting 
 - **Type**: Real
 - **Description**: Fractional coordinates of the k point.
 - **Default**: No default value
-
 
 # Setting of integration
 

@@ -156,47 +156,47 @@ class CPGE:
         
         for ik in range(kpoint_num):
             
-            for nband in range(matrix_dim-1):
-                E1 = eigenvalues[ik,nband]
-                E2 = eigenvalues[ik,nband+1]
-                n = int((E2-E1)/delta_E)
-                if E1<=self.fermi_energy and \
+            for nband in range(matrix_dim):
+                for mband in range(matrix_dim):
+                    E1 = eigenvalues[ik,nband]
+                    E2 = eigenvalues[ik,mband]
+                    n = int((E2-E1-E_min)/delta_E)
+                    if E1<=self.fermi_energy and \
                     E2>=self.fermi_energy and \
-                    E_min<=np.abs(E2-E1) and \
-                    np.abs(E2-E1)<=E_max and\
+                    n>=0 and\
                     n <= (E_num-1):
-                
-                    cpge[ik,n,0]+=(velocity_matrix[ik,0,nband,nband]-velocity_matrix[ik,0,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,2,nband,nband+1]*velocity_matrix[ik,1,nband+1,nband]).imag)\
+                        
+                        cpge[ik,n,0]+=(velocity_matrix[ik,0,nband,nband]-velocity_matrix[ik,0,mband,mband])*\
+                    2*((velocity_matrix[ik,2,nband,mband]*velocity_matrix[ik,1,mband,nband]).imag)\
                     /(E1-E2)**2
-                    cpge[ik,n,1]+=(velocity_matrix[ik,0,nband,nband]-velocity_matrix[ik,0,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,0,nband,nband+1]*velocity_matrix[ik,2,nband+1,nband]).imag)\
+                        cpge[ik,n,1]+=(velocity_matrix[ik,0,nband,nband]-velocity_matrix[ik,0,mband,mband])*\
+                    2*((velocity_matrix[ik,0,nband,mband]*velocity_matrix[ik,2,mband,nband]).imag)\
                     /(E1-E2)**2
-                    cpge[ik,n,2]+=(velocity_matrix[ik,0,nband,nband]-velocity_matrix[ik,0,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,1,nband,nband+1]*velocity_matrix[ik,0,nband+1,nband]).imag)\
-                    /(E1-E2)**2
-                    
-                    cpge[ik,n,3]+=(velocity_matrix[ik,1,nband,nband]-velocity_matrix[ik,1,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,2,nband,nband+1]*velocity_matrix[ik,1,nband+1,nband]).imag)\
-                    /(E1-E2)**2
-                    cpge[ik,n,4]+=(velocity_matrix[ik,1,nband,nband]-velocity_matrix[ik,1,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,0,nband,nband+1]*velocity_matrix[ik,2,nband+1,nband]).imag)\
-                    /(E1-E2)**2
-                    cpge[ik,n,5]+=(velocity_matrix[ik,1,nband,nband]-velocity_matrix[ik,1,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,1,nband,nband+1]*velocity_matrix[ik,0,nband+1,nband]).imag)\
+                        cpge[ik,n,2]+=(velocity_matrix[ik,0,nband,nband]-velocity_matrix[ik,0,mband,mband])*\
+                    2*((velocity_matrix[ik,1,nband,mband]*velocity_matrix[ik,0,mband,nband]).imag)\
                     /(E1-E2)**2
                     
-                    cpge[ik,n,6]+=(velocity_matrix[ik,2,nband,nband]-velocity_matrix[ik,2,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,2,nband,nband+1]*velocity_matrix[ik,1,nband+1,nband]).imag)\
+                        cpge[ik,n,3]+=(velocity_matrix[ik,1,nband,nband]-velocity_matrix[ik,1,mband,mband])*\
+                    2*((velocity_matrix[ik,2,nband,mband]*velocity_matrix[ik,1,mband,nband]).imag)\
                     /(E1-E2)**2
-                    cpge[ik,n,7]+=(velocity_matrix[ik,2,nband,nband]-velocity_matrix[ik,2,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,0,nband,nband+1]*velocity_matrix[ik,2,nband+1,nband]).imag)\
+                        cpge[ik,n,4]+=(velocity_matrix[ik,1,nband,nband]-velocity_matrix[ik,1,mband,mband])*\
+                    2*((velocity_matrix[ik,0,nband,mband]*velocity_matrix[ik,2,mband,nband]).imag)\
                     /(E1-E2)**2
-                    cpge[ik,n,8]+=(velocity_matrix[ik,2,nband,nband]-velocity_matrix[ik,2,nband+1,nband+1])*\
-                    2*((velocity_matrix[ik,1,nband,nband+1]*velocity_matrix[ik,0,nband+1,nband]).imag)\
+                        cpge[ik,n,5]+=(velocity_matrix[ik,1,nband,nband]-velocity_matrix[ik,1,mband,mband])*\
+                    2*((velocity_matrix[ik,1,nband,mband]*velocity_matrix[ik,0,mband,nband]).imag)\
                     /(E1-E2)**2
-                else:
-                    continue
+                    
+                        cpge[ik,n,6]+=(velocity_matrix[ik,2,nband,nband]-velocity_matrix[ik,2,mband,mband])*\
+                    2*((velocity_matrix[ik,2,nband,mband]*velocity_matrix[ik,1,mband,nband]).imag)\
+                    /(E1-E2)**2
+                        cpge[ik,n,7]+=(velocity_matrix[ik,2,nband,nband]-velocity_matrix[ik,2,mband,mband])*\
+                    2*((velocity_matrix[ik,0,nband,mband]*velocity_matrix[ik,2,mband,nband]).imag)\
+                    /(E1-E2)**2
+                        cpge[ik,n,8]+=(velocity_matrix[ik,2,nband,nband]-velocity_matrix[ik,2,mband,mband])*\
+                    2*((velocity_matrix[ik,1,nband,mband]*velocity_matrix[ik,0,mband,nband]).imag)\
+                    /(E1-E2)**2
+                    else:
+                        continue
                     
         #####################################
         

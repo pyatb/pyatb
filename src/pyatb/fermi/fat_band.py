@@ -99,11 +99,13 @@ class Fat_Band:
         else:
             k_generator = self.__k_generator
 
-        min_band = band_range[0] - 1
-        if min_band < 0:
-            min_band = 0
+        # min_band = band_range[0] - 1
+        # if min_band < 0:
+        #     min_band = 0
+
+        min_band = band_range[0]
         max_band = band_range[1]
-        band_num = max_band - min_band
+        band_num = max_band - min_band + 1
         basis_num = self.__tb.basis_num
 
         # start k loop
@@ -116,10 +118,10 @@ class Fat_Band:
                 tem_eig = np.zeros([kpoint_num, band_num], dtype=float)
 
                 if kpoint_num:
-                    eigenvectors, eigenvalues = self.__tb_solver[0].diago_H(ik_process.k_direct_coor_local)
+                    eigenvectors, eigenvalues = self.__tb_solver[0].diago_H_range(ik_process.k_direct_coor_local, min_band, max_band)
                     Sk = self.__tb_solver[0].get_Sk(ik_process.k_direct_coor_local)
-                    tem_eig = eigenvalues[:, min_band:max_band]
-                    eigenvectors = eigenvectors[:, :, min_band:max_band]
+                    tem_eig = eigenvalues
+                    # eigenvectors = eigenvectors[:, :, min_band:max_band]
 
                     for single_k in range(kpoint_num):
                         temp_fatband[single_k] = ((eigenvectors[single_k].T.conjugate() @ Sk[single_k]).T * eigenvectors[single_k]).real
@@ -134,10 +136,10 @@ class Fat_Band:
                 spin_loop = 2
                 for ispin in range(spin_loop):
                     if kpoint_num:
-                        eigenvectors, eigenvalues = self.__tb_solver[ispin].diago_H(ik_process.k_direct_coor_local)
+                        eigenvectors, eigenvalues = self.__tb_solver[ispin].diago_H_range(ik_process.k_direct_coor_local, min_band, max_band)
                         Sk = self.__tb_solver[ispin].get_Sk(ik_process.k_direct_coor_local)
-                        tem_eig[ispin] = eigenvalues[:, min_band:max_band]
-                        eigenvectors = eigenvectors[:, :, min_band:max_band]
+                        tem_eig[ispin] = eigenvalues
+                        # eigenvectors = eigenvectors[:, :, min_band:max_band]
 
                         for single_k in range(kpoint_num):
                             temp_fatband[ispin][single_k] = ((eigenvectors[single_k].T.conjugate() @ Sk[single_k]).T * eigenvectors[single_k]).real
@@ -294,14 +296,18 @@ pband = PBand(pbandfile, kptfile)
 # index = [1, 2, 3, 4]
 atom_index = {{1: {{1: [0, 1, 2]}}}}
 # species = {{"Ag": [2], "Cl": [1], "In": [0]}}
+# species = {{"Ag":[0, 1, 2], "Cl": [0, 1, 2], "In":[0, 1, 2]}}  # plot PDOS of s, p, d orbitals of Ag, Cl, In
+# species = {{"Ag":{{0:[0], 1:[0, 1, 2], 2:[0, 1, 2, 3, 4]}}}}     # plot PDOS of s,   pz, py, px,   dz2, dxz, dyz, dxy, dx2-y2 orbitals of Ag
 energy_range = [-5, 5]
-fig, ax = plt.subplots(sharex=True, figsize=(6.4, 4.8))
+fig, ax = plt.subplots(sharex=True, figsize=(6.4, 4.8), tight_layout=True)
 
-# 1. write different contributions to files
-# pband.write(atom_index=atom_index)
+# 1. write different contributions to files that can be used for plotting in other ways
+pband.write(atom_index=atom_index)
 
 # 2. plot different contributions in single picture
-pband.plot_contributions(fig, ax, atom_index=atom_index, efermi=efermi, energy_range=energy_range)
+# set colors=['r', 'g', 'b', 'c', 'm', 'y', 'k', 'w'] to specify colors of orbitals , notice the length of colors should be equal to the number of orbitals 
+# you can also set colors = ['viridis'] to use colormap to specify colors of orbitals, notice the type should be a list but not a string
+pband.plot_contributions(fig, ax, atom_index=atom_index, efermi=efermi, energy_range=energy_range, colors=[])
 
 # 3. plot different contributions to different pictures with colobar denoting weightes
 # pband.plot(fig, ax, atom_index=atom_index, efermi=efermi, energy_range=energy_range)

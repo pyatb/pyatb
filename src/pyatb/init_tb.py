@@ -1,6 +1,7 @@
 import numpy as np
 from pyatb.tb import tb
 from pyatb.io.abacus_read_xr import abacus_readHR, abacus_readSR, abacus_readrR
+from pyatb.io.wannier90_read_tb import wannier90_readHR, wannier90_readTB
 
 
 def init_tb(
@@ -16,6 +17,8 @@ def init_tb(
     need_rR = False,
     rR_route = 'data-rR-sparse.csr',
     rR_unit = 'Angstrom',
+    w90_TB_route = None,
+    w90_TB_has_r = False,
     **kwarg
 ):
     m_tb = tb(nspin, lattice_constant, lattice_vector, max_kpoint_num)
@@ -34,6 +37,14 @@ def init_tb(
 
         if need_rR:
             rR = abacus_readrR(rR_route, rR_unit)
+    elif package == 'WANNIER90':
+        if nspin == 2:
+            raise ValueError('WANNIER90 only for nspin = 1 or 4 !')
+
+        if w90_TB_has_r:
+            HR, SR, *rR = wannier90_readTB(w90_TB_route)
+        else:
+            HR, SR = wannier90_readHR(w90_TB_route)
 
     if nspin != 2:
         m_tb.set_solver_HSR(HR, SR, isSparse)

@@ -1,4 +1,3 @@
-from itertools import count
 import numpy as np
 
 class kpoints_in_different_process:

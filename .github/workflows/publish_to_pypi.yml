@@ -1,0 +1,112 @@
+name: build with_hash
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build_wheels:
+    name: build wheels
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: 38
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 39
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 310
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 311
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 312
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Generate Short Commit Hash
+        id: get_commit_hash
+        run: |
+          echo "HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Install Build Tools
+        run: |
+          python -m pip install build cibuildwheel
+
+      - name: Build Source Distribution (sdist)
+        run: |
+          python -m build --sdist --outdir dist/
+
+      - name: Build Wheels
+        env:
+          CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform_id }}
+          CIBW_ARCHS: all
+          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.manylinux_image }}
+          CIBW_BEFORE_ALL_LINUX: yum install -y openblas-devel lapack lapack-devel
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: HASH=${{ env.HASH }}
+        run: |
+          python -m cibuildwheel . --output-dir dist
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheels-python${{ matrix.python }}-${{ env.HASH }}
+          path: |
+            dist/*.whl
+          overwrite: false
+  
+  upload_pypi:
+    name: Upload to PyPI
+    needs: [build_wheels]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all wheels
+        uses: actions/download-artifact@v4
+        with:
+          pattern: wheels-python*
+          path: dist
+          merge-multiple: true
+
+      - name: Determine PyPI repository
+        id: set-repo
+        run: |
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "REPO_URL=https://upload.pypi.org/legacy/" >> $GITHUB_OUTPUT
+            echo "TOKEN_NAME=PYPI_API_TOKEN" >> $GITHUB_OUTPUT
+          else
+            echo "REPO_URL=https://test.pypi.org/legacy/" >> $GITHUB_OUTPUT
+            echo "TOKEN_NAME=TEST_PYPI_API_TOKEN" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to PyPI or TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets[steps.set-repo.outputs.TOKEN_NAME] }}
+          repository-url: ${{ steps.set-repo.outputs.REPO_URL }}
+          skip-existing: true
+          verbose: true

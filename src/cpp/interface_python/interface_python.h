@@ -90,6 +90,91 @@ public:
         py::array_t<std::complex<double>> &Sk
     );
 
+    void get_rk(
+        const MatrixXd &k_direct_coor, 
+        py::array_t<std::complex<double>> &rk
+    );
+
+    void get_partial_Hk(
+        const MatrixXd &k_direct_coor, 
+        py::array_t<std::complex<double>> &partial_Hk
+    );
+
+    void get_partial_Sk(
+        const MatrixXd &k_direct_coor, 
+        py::array_t<std::complex<double>> &partial_Sk
+    );
+
+    void get_surface_Hk00_and_Hk01(
+        const int &direction, 
+        const int &coupling_layers,
+        const MatrixXd &k_direct_coor, 
+        py::array_t<std::complex<double>> &Hk00,
+        py::array_t<std::complex<double>> &Hk01
+    );
+
+    void get_surface_Sk00_and_Sk01(
+        const int &direction, 
+        const int &coupling_layers,
+        const MatrixXd &k_direct_coor, 
+        py::array_t<std::complex<double>> &Sk00,
+        py::array_t<std::complex<double>> &Sk01
+    );
+
+    void get_surface_G00(
+        const std::complex<double> &omega,
+        const MatrixXcd &Hk00,
+        const MatrixXcd &Hk01,
+        const MatrixXcd &Sk00,
+        const MatrixXcd &Sk01,
+        py::array_t<std::complex<double>> &G00_top,
+        py::array_t<std::complex<double>> &G00_bottom,
+        py::array_t<std::complex<double>> &G00_bulk
+    );
+
+    void get_surface_spectral_fun_by_green(
+        const int &direction, 
+        const int &coupling_layers,
+        const int &omega_num,
+        const double &domega,
+        const double &start_omega,
+        const double &eta,
+        const int &iter_max,
+        const double &converged_eps,
+        const MatrixXd &k_direct_coor, 
+        py::array_t<double> &spectral_fun
+    );
+
+    void get_surface_spectral_fun_by_green_top_bottom_bulk(
+        const int &direction, 
+        const int &coupling_layers,
+        const int &omega_num,
+        const double &domega,
+        const double &start_omega,
+        const double &eta,
+        const int &iter_max,
+        const double &converged_eps,
+        const MatrixXd &k_direct_coor, 
+        py::array_t<double> &spectral_fun_top,
+        py::array_t<double> &spectral_fun_bottom,
+        py::array_t<double> &spectral_fun_bulk
+    );
+
+    void get_surface_spectral_fun_by_Tmatrix(
+        const int &direction, 
+        const int &coupling_layers,
+        const int &calculate_layer,
+        const int &omega_num,
+        const double &domega,
+        const double &start_omega,
+        const double &eta,
+        const int &iter_max,
+        const double &converged_eps,
+        const MatrixXd &k_direct_coor, 
+        py::array_t<double> &spect_matrix_l,  // [ik, layer_index, omega_index]
+        py::array_t<double> &spect_matrix_r   // [ik, layer_index, omega_index]
+    );
+
     // void get_HSk_surface(
     //     int direction,
     //     int coupling_layers,
@@ -106,8 +191,23 @@ public:
         py::array_t<double> &eigenvalues
     );
 
+    void diago_H_range(
+        const MatrixXd &k_direct_coor,
+        const int &lower_band_index, // counting from 1.
+        const int &upper_band_index, // counting from 1, upper_band_index >= lower_band_index
+        py::array_t<std::complex<double>> &eigenvectors,
+        py::array_t<double> &eigenvalues
+    );
+
     void diago_H_eigenvaluesOnly(
         const MatrixXd &k_direct_coor,
+        py::array_t<double> &eigenvalues
+    );
+
+    void diago_H_eigenvaluesOnly_range(
+        const MatrixXd &k_direct_coor,
+        const int &lower_band_index, // counting from 1.
+        const int &upper_band_index, // counting from 1, upper_band_index >= lower_band_index
         py::array_t<double> &eigenvalues
     );
 
@@ -179,7 +279,47 @@ public:
         const int &method,
         py::array_t<double> shift_current
     );
+    
+    void get_second_harmonic(
+    const int &method,
+    const double &eta,
+    const int &omega_num,
+    const double &domega,
+    const double &start_omega,
+    const float &fermi_energy,
+    const int &total_kpoint_num,
+    const MatrixXd &k_direct_coor,
+        py::array_t<std::complex<double>> &second_harmonic
+    );
+    
+    
+    void get_pockels(
+    const int &omega_num,
+    const double &domega,
+    const double &start_omega,
+    const double &fermi_energy,
+    const double &omega1,
+    const int &total_kpoint_num,
+    const MatrixXd &k_direct_coor,
+        py::array_t<std::complex<double>> &pockels
+    );
+    
+    void get_second_order_static(
+    const float &fermi_energy,
+    const int &total_kpoint_num,
+    const MatrixXd &k_direct_coor,
+        py::array_t<std::complex<double>> &second_order_static
+    );
 
+    void get_bcd(
+    const int &omega_num,
+    const double &domega,
+    const double &start_omega,
+    const int &total_kpoint_num,
+    const MatrixXd &k_direct_coor,
+        py::array_t<double> &bcd
+    );
+    
     void get_velocity_matrix(
         const MatrixXd &k_direct_coor,
         py::array_t<double> &eigenvalues,
@@ -195,6 +335,36 @@ public:
         const int &nspin,
         py::array_t<double> &P,
         py::array_t<double> &E
+    );
+
+    void get_bandunfolding_spin_texture(
+        const Matrix3d &M_matrix,
+        const MatrixXd &kvect_direct,
+        const double &ecut,
+        const int &min_bandindex,
+        const int &max_bandindex,
+        const int &nspin,
+        py::array_t<double> &P,
+        py::array_t<double> &P_sx,
+        py::array_t<double> &P_sy,
+        py::array_t<double> &P_sz,
+        py::array_t<double> &E
+    );
+
+    void get_rnm_drnm_k(
+        const MatrixXd &k_direct_coor,
+        py::array_t<std::complex<double>> &r_nm,
+        py::array_t<std::complex<double>> &dr_nm
+    );
+
+    void get_velocity_basis_k(
+        const MatrixXd &k_direct_coor,
+        py::array_t<std::complex<double>> &velocity_basis_k
+    );
+
+    void get_inner_product_twoPoints(
+        const MatrixXd &k_direct_coor_start_and_end,  // tow k-points
+        py::array_t<std::complex<double>> &inner_product
     );
 
 private:

@@ -28,6 +28,21 @@ public:
         MatrixXd &E
     );
 
+    // only for nspin == 4
+    void output_spectral_weight_of_spin_texture(
+        base_data &Base_Data, 
+        const MatrixXd &unitcell_kvect_direct, 
+        const double &ecut,
+        const int &min_bandindex,
+        const int &max_bandindex,
+        const int &nspin,
+        MatrixXd &P,
+        MatrixXd &P_sx,
+        MatrixXd &P_sy,
+        MatrixXd &P_sz,
+        MatrixXd &E
+    );
+
 private:
     MatrixXd generate_GVectors_pw(const double &ecut);
 

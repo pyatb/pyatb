@@ -206,7 +206,7 @@ def check():
     for key in need_rR_matrix:
         bool_need_rR = bool_need_rR or function_switch[key]
 
-    if INPUT['INPUT_PARAMETERS']['rR_route'] == []:
+    if INPUT['INPUT_PARAMETERS']['package'] == 'ABACUS' and INPUT['INPUT_PARAMETERS']['rR_route'] == []:
         if bool_need_rR:
             raise KeyError('you have to set up rR_route parameters in INPUT_PARAMETERS block')
 

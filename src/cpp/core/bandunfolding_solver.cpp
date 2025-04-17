@@ -58,13 +58,17 @@ void bandunfolding_solver::output_spectral_weight(
     } 
 
     MatrixXcd temp_eigenvector;
+    MatrixXcd temp_eigenvector_up;
+    MatrixXcd temp_eigenvector_dn;
     if (nspin != 4)
     {
         temp_eigenvector.setZero(orbital_num, select_band_num);
     }
     else
     {
-        temp_eigenvector.setZero(orbital_num, select_band_num);
+        // temp_eigenvector.setZero(orbital_num, select_band_num);
+        temp_eigenvector_up.setZero(orbital_num, select_band_num);
+        temp_eigenvector_dn.setZero(orbital_num, select_band_num);
     }
 
     P.setZero(kpoint_num, select_band_num);
@@ -74,20 +78,28 @@ void bandunfolding_solver::output_spectral_weight(
     {
         VectorXd eigenvalues;
         MatrixXcd eigenvectors;
-        band_structure_solver::get_eigenvalues_eigenvectors_1k(Base_Data, exp_ikR.row(ik), eigenvalues, eigenvectors);
+        // band_structure_solver::get_eigenvalues_eigenvectors_1k(Base_Data, exp_ikR.row(ik), eigenvalues, eigenvectors);
+        band_structure_solver::get_eigenvalues_eigenvectors_range_1k(Base_Data, exp_ikR.row(ik), min_bandindex, max_bandindex, eigenvalues, eigenvectors);
         
-        temp_eigenvector.setZero();
         if (nspin != 4)
         {
-            temp_eigenvector = eigenvectors.block(0, min_bandindex, orbital_num, select_band_num);
+            temp_eigenvector.setZero();
+            // temp_eigenvector = eigenvectors.block(0, min_bandindex, orbital_num, select_band_num);
+            temp_eigenvector = eigenvectors;
         }
         else
         {
-             for (int iw = 0; iw < orbital_num; ++iw)
+            temp_eigenvector_up.setZero();
+            temp_eigenvector_dn.setZero();
+
+            for (int iw = 0; iw < orbital_num; ++iw)
             {
-                for (int ib = min_bandindex; ib <= max_bandindex; ++ib)
+                // for (int ib = min_bandindex; ib <= max_bandindex; ++ib)
+                for (int ib = 0; ib < select_band_num; ++ib)
                 {
-                    temp_eigenvector(iw, ib-min_bandindex) = eigenvectors(iw*2, ib) + eigenvectors(iw*2+1, ib);
+                    // temp_eigenvector(iw, ib-min_bandindex) = eigenvectors(iw*2, ib) + eigenvectors(iw*2+1, ib);
+                    temp_eigenvector_up(iw, ib) = eigenvectors(iw*2, ib);
+                    temp_eigenvector_dn(iw, ib) = eigenvectors(iw*2+1, ib);
                 }
             }
         }
@@ -103,16 +115,139 @@ void bandunfolding_solver::output_spectral_weight(
                 count += temp_size;
             }
 
-            MatrixXcd D = psi_k.transpose() * temp_eigenvector;
+            if (nspin != 4)
+            {
+                MatrixXcd D = psi_k.transpose() * temp_eigenvector;
+
+                for (int ib = 0; ib < select_band_num; ++ib)
+                {
+                    for(int ig = 0; ig < num_g; ig++)
+                    {
+                        P(unit_k, ib) += norm(D(ig, ib));
+                    }
+
+                    // E(unit_k, ib) = eigenvalues(ib+min_bandindex);
+                    E(unit_k, ib) = eigenvalues(ib);
+                }
+            }
+            else
+            {
+                MatrixXcd D_up = psi_k.transpose() * temp_eigenvector_up;
+                MatrixXcd D_dn = psi_k.transpose() * temp_eigenvector_dn;
+
+                for (int ib = 0; ib < select_band_num; ++ib)
+                {
+                    for(int ig = 0; ig < num_g; ig++)
+                    {
+                        P(unit_k, ib) += norm(D_up(ig, ib)) + norm(D_dn(ig, ib));
+                    }
+
+                    // E(unit_k, ib) = eigenvalues(ib+min_bandindex);
+                    E(unit_k, ib) = eigenvalues(ib);
+                }
+            }
+
+        }
+
+    }
+
+}
+
+// only for nspin == 4
+void bandunfolding_solver::output_spectral_weight_of_spin_texture(
+    base_data &Base_Data, 
+    const MatrixXd &unitcell_kvect_direct, 
+    const double &ecut,
+    const int &min_bandindex,
+    const int &max_bandindex,
+    const int &nspin,
+    MatrixXd &P,
+    MatrixXd &P_sx,
+    MatrixXd &P_sy,
+    MatrixXd &P_sz,
+    MatrixXd &E
+)
+{
+    if (nspin != 4) return;
+
+    int kpoint_num = unitcell_kvect_direct.rows();
+    std::vector<int> unit2super_tag;             
+    std::vector<std::vector<int>> super2unit_tag;
+    MatrixXd supercell_kvec_d;
+    generate_supercell_kpoint(unitcell_kvect_direct, unit2super_tag, super2unit_tag, supercell_kvec_d);
+    MatrixXd unitcell_kvect_car = unitcell_kvect_direct * unitcell_g;
+
+    MatrixXd g_dir = generate_GVectors_pw(ecut);
+    MatrixXd g_car = g_dir * unitcell_g;
+    int num_g = g_dir.rows();
+
+    int atom_type = Base_Data.atom.size();
+    int basis_num = Base_Data.get_basis_num();
+
+    int supercell_kpoint_num = supercell_kvec_d.rows();
+    MatrixXcd exp_ikR = Base_Data.get_exp_ikR(supercell_kvec_d);
+    int select_band_num = max_bandindex - min_bandindex + 1;
+
+    int orbital_num = basis_num / 2;
+
+    MatrixXcd temp_eigenvector_up;
+    MatrixXcd temp_eigenvector_dn;        
+    temp_eigenvector_up.setZero(orbital_num, select_band_num);
+    temp_eigenvector_dn.setZero(orbital_num, select_band_num);
+
+    P.setZero(kpoint_num, select_band_num);
+    P_sx.setZero(kpoint_num, select_band_num);
+    P_sy.setZero(kpoint_num, select_band_num);
+    P_sz.setZero(kpoint_num, select_band_num);
+    E.setZero(kpoint_num, select_band_num);
+
+    for (int ik = 0; ik < supercell_kpoint_num; ++ik)
+    {
+        VectorXd eigenvalues;
+        MatrixXcd eigenvectors;
+        // band_structure_solver::get_eigenvalues_eigenvectors_1k(Base_Data, exp_ikR.row(ik), eigenvalues, eigenvectors);
+        band_structure_solver::get_eigenvalues_eigenvectors_range_1k(Base_Data, exp_ikR.row(ik), min_bandindex, max_bandindex, eigenvalues, eigenvectors);
+        
+        temp_eigenvector_up.setZero();
+        temp_eigenvector_dn.setZero();
+
+        for (int iw = 0; iw < orbital_num; ++iw)
+        {
+            // for (int ib = min_bandindex; ib <= max_bandindex; ++ib)
+            for (int ib = 0; ib < select_band_num; ++ib)
+            {
+                temp_eigenvector_up(iw, ib) = eigenvectors(iw*2, ib);
+                temp_eigenvector_dn(iw, ib) = eigenvectors(iw*2+1, ib);
+            }
+        }
+
+        for (auto &unit_k : super2unit_tag[ik])
+        {
+            MatrixXcd psi_k(orbital_num, num_g);
+            int count = 0;
+            for (auto &i_atom : Base_Data.atom)
+            {
+                int temp_size = i_atom.nw * i_atom.na;
+                psi_k.block(count, 0, temp_size, num_g) = i_atom.produce_local_basis_in_pw(unitcell_kvect_car.row(unit_k), g_car);
+                count += temp_size;
+            }
+
+            MatrixXcd D_up = psi_k.transpose() * temp_eigenvector_up;
+            MatrixXcd D_dn = psi_k.transpose() * temp_eigenvector_dn;
 
             for (int ib = 0; ib < select_band_num; ++ib)
             {
                 for(int ig = 0; ig < num_g; ig++)
                 {
-                    P(unit_k, ib) += norm(D(ig, ib));
+                    std::complex<double> temp = conj(D_up(ig, ib)) * D_dn(ig, ib);
+                    std::complex<double> I_temp = -IMAG_UNIT * temp;
+                    P(unit_k, ib) += norm(D_up(ig, ib)) + norm(D_dn(ig, ib));
+                    P_sx(unit_k, ib) += (temp + conj(temp)).real();
+                    P_sy(unit_k, ib) += (I_temp + conj(I_temp)).real();
+                    P_sz(unit_k, ib) += norm(D_up(ig, ib)) - norm(D_dn(ig, ib));
                 }
 
-                E(unit_k, ib) = eigenvalues(ib+min_bandindex);
+                E(unit_k, ib) = eigenvalues(ib);
             }
 
         }

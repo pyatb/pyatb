@@ -108,6 +108,25 @@ public:
         std::vector<MatrixXcd> &Xk01
     );
 
+    static void Fourier_R_to_k_SurfaceState_bulk_Xk_1k(
+        base_data &Base_Data,
+        const int &direction,
+        const VectorXd &k_direct_coor,
+        const int &coupling_layers,
+        std::vector<VectorXcd> &bulk_Xk,
+        const MatrixXcd &XR_upperTriangleOfDenseMatrix
+    );
+
+    static void SurfaceState_Xk_1k(
+        base_data &Base_Data,
+        const int &direction,
+        const VectorXd &k_direct_coor,
+        const int &coupling_layers,
+        const char &X,
+        MatrixXcd &Xk00,
+        MatrixXcd &Xk01
+    );
+
 };
 
 

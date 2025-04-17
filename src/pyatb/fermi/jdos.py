@@ -155,6 +155,60 @@ class JDOS:
             return self.jdos
         else:
             return None
+        
+    def print_plot_script(self):
+        output_path = self.output_path
+        script_path = os.path.join(output_path, 'plot_jdos.py')
+        with open(script_path, 'w') as f:
+            plot_script = None
+            plot_script = f"""
+import os
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+
+# work_path = '{output_path}'
+work_path = os.getcwd()
+
+jdos_data = np.loadtxt(os.path.join(work_path, 'JDOS.dat'))
+
+# plot
+mysize=10
+# mpl.rcParams['font.family'] = 'sans-serif'
+# mpl.rcParams['font.sans-serif'] = 'Arial'
+mpl.rcParams['font.size'] = mysize
+
+def set_fig(fig, ax, bwidth=1.0, width=1, mysize=10):
+    ax.spines['top'].set_linewidth(bwidth)
+    ax.spines['right'].set_linewidth(bwidth)
+    ax.spines['left'].set_linewidth(bwidth)
+    ax.spines['bottom'].set_linewidth(bwidth)
+    ax.tick_params(length=5, width=width, labelsize=mysize)
+
+fig, ax = plt.subplots(1, 1, tight_layout=True)
+set_fig(fig, ax)
+
+x, y = np.split(jdos_data, (1,), axis=1)
+ax.plot(x, y)
+
+ax.set_title('JDOS', fontsize=12)
+ax.set_xlim(x[0], x[-1])
+ax.set_xlabel("$\hbar \omega$ (eV)", fontsize=12)
+ax.set_ylabel("JDOS (st./eV)", fontsize=12)
+plt.savefig(os.path.join(work_path, 'jdos.pdf'))
+plt.close('all')
+
+"""
+            f.write(plot_script)
+
+        try:
+            import subprocess
+            import sys
+            script_directory = os.path.dirname(script_path)
+            result = subprocess.run([sys.executable, script_path], cwd=script_directory, capture_output=True, text=True)
+        except ImportError:
+            print('ImportError: JDOS Plot requires matplotlib package!')
+            return None
 
     def calculate_jdos(self, **kwarg):
         COMM.Barrier()

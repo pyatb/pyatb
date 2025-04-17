@@ -127,32 +127,66 @@ class Wilson_Loop:
 
     def print_plot_script(self):
         output_path = self.output_path
-        with open(os.path.join(output_path, 'plot_wl.py'), 'w') as f:
-            data_file = os.path.join(output_path, 'wilson_loop.dat')
-            fig_name = os.path.join(output_path, 'wl.pdf')
-
+        k_start = self.__k_start
+        k_vect1 = self.__k_vect1
+        k_vect2 = self.__k_vect2
+        script_path = os.path.join(output_path, 'plot_wl.py')
+        with open(script_path, 'w') as f:
             plot_script = None
-            plot_script = """import numpy as np
+            plot_script = f"""
+import os
+import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
-phase_data = np.loadtxt('{data_file}')
+# work_path = '{output_path}'
+work_path = os.getcwd()
+
+k_start = np.array([{k_start[0]}, {k_start[1]}, {k_start[2]}], dtype=float)
+k_vect1 = np.array([{k_vect1[0]}, {k_vect1[1]}, {k_vect1[2]}], dtype=float)
+k_vect2 = np.array([{k_vect2[0]}, {k_vect2[1]}, {k_vect2[2]}], dtype=float)
+
+phase_data = np.loadtxt(os.path.join(work_path, 'wilson_loop.dat'))
+
+# plot
+mysize=10
+# mpl.rcParams['font.family'] = 'sans-serif'
+# mpl.rcParams['font.sans-serif'] = 'Arial'
+mpl.rcParams['font.size'] = mysize
+
+def set_fig(fig, ax, bwidth=1.0, width=1, mysize=10):
+    ax.spines['top'].set_linewidth(bwidth)
+    ax.spines['right'].set_linewidth(bwidth)
+    ax.spines['left'].set_linewidth(bwidth)
+    ax.spines['bottom'].set_linewidth(bwidth)
+    ax.tick_params(length=5, width=width, labelsize=mysize)
+
+fig, ax = plt.subplots(1, 1, tight_layout=True)
+set_fig(fig, ax)
+
 x, y = np.split(phase_data, (1,), axis=1)
-plt.title('Wilson Loop')
-plt.xlim(x[0], x[-1])
-plt.ylim(0, 1)
-plt.plot(x, y, 'bo', ms=1)
-plt.savefig('{fig_name}')
-plt.close('all')
-""".format(data_file=data_file, fig_name=fig_name)
+ax.plot(x, y, 'bo', ms=1)
 
+ax.set_title('Wilson Loop', fontsize=12)
+ax.set_xlim(x[0], x[-1])
+ax.set_xticklabels([])
+ax.set_xlabel("k_vect2", fontsize=12)
+ax.set_ylim(0, 1)
+ax.set_ylabel("k_vect1 Berry phase (2$\pi$)", fontsize=12)
+plt.savefig(os.path.join(work_path, 'wl.pdf'))
+plt.close('all')
+
+"""
             f.write(plot_script)
 
-            try:
-                import matplotlib
-                exec(plot_script)
-            except ImportError:
-                print('ImportError: Band Structure Plot requires matplotlib package!')
-                return None
+        try:
+            import subprocess
+            import sys
+            script_directory = os.path.dirname(script_path)
+            result = subprocess.run([sys.executable, script_path], cwd=script_directory, capture_output=True, text=True)
+        except ImportError:
+            print('ImportError: Wilson loop Plot requires matplotlib package!')
+            return None
 
     def calculate_wilson_loop(self, **kwarg):
         COMM.Barrier()

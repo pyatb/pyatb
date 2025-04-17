@@ -11,7 +11,8 @@ function_switch = {
     # fermi
     'BAND_STRUCTURE'          : False,
     'BANDUNFOLDING'           : False,
-    'FAT_BAND'                 : False,
+    'BANDUNFOLDING_SPIN_TEXTURE'           : False,
+    'FAT_BAND'                : False,
     'FERMI_ENERGY'            : False,
     'FERMI_SURFACE'           : False,
     'FIND_NODES'              : False,
@@ -23,17 +24,21 @@ function_switch = {
 
     # berry
     'AHC'                     : False,
-    'AEC'                     : False,
+    'ANC'                     : False,
     'BERRY_CURVATURE'         : False,
     'BERRY_CURVATURE_DIPOLE'  : False,
     'CHERN_NUMBER'            : False,
     'CHIRALITY'               : False,
     'OPTICAL_CONDUCTIVITY'    : False,
+    'ORBITAL_MAGNETIZATION'   : False,
     'POLARIZATION'            : False,
     'SHIFT_CURRENT'           : False,
     'WILSON_LOOP'             : False,
-    'CPGE'                 :False,
-    'DRUDE_WEIGHT'           :False
+    'CPGE'                    : False,
+    'DRUDE_WEIGHT'            : False,
+    'BOLTZ_TRANSPORT'         : False,
+    'SHG'                     : False,
+    'POCKELS'                 : False
 }
 
 # these block name all have default parameters
@@ -42,17 +47,21 @@ block_can_be_empty = []
 # these block function require rR matrix
 need_rR_matrix = [
     'AHC',
-    'AEC',
+    'ANC',
     'BERRY_CURVATURE',
     'BERRY_CURVATURE_DIPOLE',
     'CHERN_NUMBER',
     'CHIRALITY',
     'OPTICAL_CONDUCTIVITY',
+    'ORBITAL_MAGNETIZATION',
     'POLARIZATION',
     'SHIFT_CURRENT',
     'WILSON_LOOP',
     'CPGE',
-    'DRUDE_WEIGHT'
+    'DRUDE_WEIGHT',
+    'BOLTZ_TRANSPORT',
+    'SHG',
+    'POCKELS'
 ]
 
 # Some function needs this dictionary that saves k point information from the Input file
@@ -71,6 +80,7 @@ kpoint_mode = {
         'kpoint_num'                  : [int, 1, None],
         'high_symmetry_kpoint'        : [float, None, 4, None],
       # 'kpoint_num_in_line'          : [int, None, None]
+        'kpoint_label'                : [str, None, None]
     },
 
     'direct' : 
@@ -114,6 +124,24 @@ integrate_mode = {
     }
 }
 
+package = {
+    'ABACUS' :
+    {
+        'HR_route'                    : [str, None, None],
+        'SR_route'                    : [str, 1, None],
+        'rR_route'                    : [str, 1, []],
+        'binary'                      : [int, 1, 0],
+        'HR_unit'                     : [str, 1, 'Ry'],
+        'rR_unit'                     : [str, 1, 'Bohr'],
+    },
+
+    'WANNIER90' :
+    {
+        'w90_TB_route'                : [str, 1, None],
+        'w90_TB_has_r'                : [int, 1, 0]
+    }
+}
+
 INPUT = {
     'INPUT_PARAMETERS' : 
     {
@@ -121,12 +149,6 @@ INPUT = {
         'package'                     : [str, 1, 'ABACUS'],
         'fermi_energy'                : [str, 1, 'Auto'],
         'fermi_energy_unit'           : [str, 1, 'eV'],
-        'HR_route'                    : [str, None, None],
-        'SR_route'                    : [str, 1, None],
-        'rR_route'                    : [str, 1, []],
-        'binary'                      : [int, 1, 0],
-        'HR_unit'                     : [str, 1, 'Ry'],
-        'rR_unit'                     : [str, 1, 'Bohr'],
         'max_kpoint_num'              : [int, 1, 8000],
         'sparse_format'               : [int, 1, 0]
     },
@@ -143,10 +165,20 @@ INPUT = {
     'BAND_STRUCTURE' : 
     {
         'wf_collect'                  : [int, 1, False],
+        'band_range'                  : [int, 2, [-1, -1]],
         'kpoint_mode'                 : [str, 1, None]
     },
 
     'BANDUNFOLDING' : 
+    {
+        'stru_file'                   : [str, 1, None],
+        'ecut'                        : [float, 1, 10],
+        'band_range'                  : [int, 2, None],
+        'm_matrix'                    : [float, 9, None],
+        'kpoint_mode'                 : [str, 1, None]
+    },
+
+    'BANDUNFOLDING_SPIN_TEXTURE' : 
     {
         'stru_file'                   : [str, 1, None],
         'ecut'                        : [float, 1, 10],
@@ -210,7 +242,7 @@ INPUT = {
         'integrate_mode'              : [str, 1, None]
     },
 
-    'AEC' : 
+    'ANC' : 
     {
         'method'                      : [int, 1, 0],
         'fermi_range'                 : [float, 2, [-1.0, 1.0]],
@@ -235,6 +267,19 @@ INPUT = {
         # 'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
         'grid'                        : [int, 3, None],
         'method'                      : [int, 1, 1]
+    },
+
+    'ORBITAL_MAGNETIZATION' : 
+    {
+        'fermi_energy'                : [float, 1, None],
+        'fermi_range'                 : [float, 2, [-2.0, 2.0]],
+        'de'                          : [float, 1, 0.05],
+        'eta'                         : [float, 1, 0.01],  # unit is eV
+        # 'k_start'                     : [float, 3, [0.0, 0.0, 0.0]],
+        # 'k_vect1'                     : [float, 3, [1.0, 0.0, 0.0]],
+        # 'k_vect2'                     : [float, 3, [0.0, 1.0, 0.0]],
+        # 'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
+        'grid'                        : [int, 3, None],
     },
 
     'POLARIZATION' : 
@@ -300,7 +345,7 @@ INPUT = {
 
     'SPIN_TEXTURE' : 
     {
-        'nband'                       : [int, 1, None],
+        'band_range'                  : [int, 2, None],
         'kpoint_mode'                 : [str, 1, None]
     },
 
@@ -312,7 +357,7 @@ INPUT = {
         #'k_vect1'                     : [float, 3, [1.0, 0.0, 0.0]],
         #'k_vect2'                     : [float, 3, [0.0, 1.0, 0.0]],
         #'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
-        'integrate_mode'              : [str, 1, None]
+        'grid'                        : [int, 3, None]
     },
 
     'CHIRALITY':
@@ -325,10 +370,13 @@ INPUT = {
 
     'SURFACE_STATE':
     {
-        'cal_surface_method'          : [str, 1, None],
+        'cal_surface_method'          : [str, 1, 'green_fun'],
         'surface_direction'           : [str, 1, 'c'],
-        'energy_windows'              : [float, 3, None],
+        'energy_windows'              : [float, 2, None],
+        'de'                          : [float, 1, None],
+        'eta'                         : [float, 1, 0.01],  # unit is eV
         'coupling_layers'             : [int, 1, None],
+        'calculate_layer'             : [int, 1, 1],
         'kpoint_mode'                 : [str, 1, None]
     },
 
@@ -361,12 +409,55 @@ INPUT = {
         'band_index_range'            : [int, 2, None],
         'kpoint_mode'                 : [str, 1, None]
     },
+    
+    'SHG':
+    {
+        'method'                      : [int, 1, 0],
+        'eta'                      : [float, 1, 0.05],
+        'omega'                       : [float, 2, None],
+        'domega'                      : [float, 1, None],
+        #'k_start'                     : [float, 3, [0.0, 0.0, 0.0]],
+        #'k_vect1'                     : [float, 3, [1.0, 0.0, 0.0]],
+        #'k_vect2'                     : [float, 3, [0.0, 1.0, 0.0]],
+        #'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
+        'grid'                        : [int, 3, None]
+    },
+
+    'POCKELS':
+    {
+        'omega1'                      : [float, 1, 0],
+        'omega'                       : [float, 2, None],
+        'domega'                      : [float, 1, None],
+        #'k_start'                     : [float, 3, [0.0, 0.0, 0.0]],
+        #'k_vect1'                     : [float, 3, [1.0, 0.0, 0.0]],
+        #'k_vect2'                     : [float, 3, [0.0, 1.0, 0.0]],
+        #'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
+        'grid'                        : [int, 3, None]
+    },
+
+    'BOLTZ_TRANSPORT':
+    {
+        'transport_coeff_cal'         : [int, 1, 1],
+        'effective_mass_cal'          : [int, 1, 0],
+        'transport_method'            : [str, 1, 'CRTA'],
+        'electron_num'                : [int, 1, None],
+        'grid'                        : [int, 3, None],
+        'delta_mu_range'              : [float, 2, [-5.0, 5.0]],
+        'mu_step'                     : [float, 1, 0.1],
+        'temperature_range'           : [float, 2, [300, 300]],
+        'temperature_step'            : [float, 1, 50],
+        'eta'                         : [float, 1, 0.1],
+        'relax_time'                  : [float, 1, 10], # unit is fs
+        'def_pot'                     : [float, 1, 2],
+        'young_mod'                   : [float, 1, 240]
+    },
 
 }
 
 
 # these parameters have many options
 parameter_options = {
+    'package' : package,
     'kpoint_mode' : kpoint_mode,
     'integrate_mode' : integrate_mode,
     'cal_surface_method' : cal_surface_method
@@ -387,11 +478,15 @@ def operate_HR_route(nspin):
         return [str, 2, None]
     else:
         raise KeyError('nspin parameters setting is incorrect!')
+    
+def operate_kpoint_label(kpoint_num):
+    return [str, kpoint_num, ['X']*kpoint_num]
 
 def operate_polarization_atom_type(atom_type):
     return [int, atom_type, None]
 
 parameter_dependence = {
     'HR_route'                        : [['nspin'], operate_HR_route],
+    'kpoint_label'                    : [['kpoint_num'], operate_kpoint_label],
     'valence_e'                       : [['atom_type'], operate_polarization_atom_type]
 }

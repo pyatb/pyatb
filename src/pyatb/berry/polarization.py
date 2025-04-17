@@ -104,23 +104,38 @@ class Polarization:
                     phik.append(phase)
 
         phik = COMM.reduce(phik, root=0, op=op_sum)
-
+        
         if RANK == 0:
             phik = np.array(phik)
             cphik = np.cos(phik) + 1j * np.sin(phik)
             cphik_ave = cphik.mean()
             theta0 = np.arctan2(cphik_ave.imag, cphik_ave.real)
             cphik = cphik / cphik_ave
+            two_pi = 2.0 * np.pi
             for istring in range(phik.size):
-                phik[istring] = (theta0 + np.arctan2(cphik[istring].imag, cphik[istring].real)) / (2 * np.pi)
-            phik_ave = phik.mean()
+                phik[istring] = (theta0 + np.arctan2(cphik[istring].imag, cphik[istring].real))
+                phik[istring] = phik[istring] - np.rint(phik[istring] / two_pi) * two_pi
+            t1 = phik[0] / two_pi
+            for istring in range(phik.size):
+                t = phik[istring] / two_pi
+                if np.abs(t + 1.0 - t1) < np.abs(t - t1):
+                    phik[istring] += two_pi
+                if np.abs(t - 1.0 - t1) < np.abs(t - t1):
+                    phik[istring] -= two_pi
+            phik_ave = phik.mean() / two_pi
+
+            # test
+            # print("phik = \n", phik/np.pi)
+            # test
 
             if self.nspin == 1:
-                pdl_elec_tot = 2 * phik_ave
-                pdl_elec_tot = pdl_elec_tot - 2.0 * np.round(pdl_elec_tot)
+                # pdl_elec_tot = 2 * phik_ave
+                # pdl_elec_tot = pdl_elec_tot - 2.0 * np.rint(pdl_elec_tot)
+                pdl_elec_tot = phik_ave - 1.0 * np.rint(phik_ave)
+                pdl_elec_tot = 2 * pdl_elec_tot
             else:
                 pdl_elec_tot = phik_ave
-                pdl_elec_tot = pdl_elec_tot - 1.0 * np.round(pdl_elec_tot)
+                pdl_elec_tot = pdl_elec_tot - 1.0 * np.rint(pdl_elec_tot)
 
             return pdl_elec_tot
         else:
@@ -144,25 +159,25 @@ class Polarization:
                     mod_ion.append(2)
                 
                 for direction in range(3):
-                    pdl_ion[direction, atom_index] = zv * np.dot(ia, self.__tb.reciprocal_vector[direction, :])
+                    pdl_ion[direction, atom_index] = zv * np.dot(ia, self.__tb.reciprocal_vector.T)[direction]
                 
                 atom_index += 1
 
         for direction in range(3):
             for atom_index in range(self.__tb.total_atom_num):
                 if mod_ion[atom_index] == 1:
-                    pdl_ion[direction, atom_index] = pdl_ion[direction, atom_index] - np.round(pdl_ion[direction, atom_index])
+                    pdl_ion[direction, atom_index] = pdl_ion[direction, atom_index] - np.rint(pdl_ion[direction, atom_index])
                 elif mod_ion[atom_index] == 2:
-                    pdl_ion[direction, atom_index] = pdl_ion[direction, atom_index] - 2.0 * np.round(pdl_ion[direction, atom_index] / 2.0)
+                    pdl_ion[direction, atom_index] = pdl_ion[direction, atom_index] - 2.0 * np.rint(pdl_ion[direction, atom_index] / 2.0)
 
             polarization_ion[direction] = np.sum(pdl_ion[direction])
 
         if lodd:
             for direction in range(3):
-                polarization_ion[direction] = polarization_ion[direction] - np.round(polarization_ion[direction])
+                polarization_ion[direction] = polarization_ion[direction] - np.rint(polarization_ion[direction])
         else:
             for direction in range(3):
-                polarization_ion[direction] = polarization_ion[direction] - 2.0 * np.round(polarization_ion[direction] / 2.0)
+                polarization_ion[direction] = polarization_ion[direction] - 2.0 * np.rint(polarization_ion[direction] / 2.0)
 
         ion_zv_is_odd = lodd
         return polarization_ion, ion_zv_is_odd
@@ -214,7 +229,7 @@ class Polarization:
                     self.polarization_ele[direction] += pdl_elec_tot
 
                     # for nspin = 2
-                    self.polarization_ele[direction] = self.polarization_ele[direction] - np.round(self.polarization_ele[direction])
+                    # self.polarization_ele[direction] = self.polarization_ele[direction] - np.rint(self.polarization_ele[direction])
                     
                     self.polarization[direction] = fac * (self.polarization_ele[direction] + self.polarization_ion[direction])
                     self.modulus[direction] = self.modulus[direction] * fac

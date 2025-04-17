@@ -1,0 +1,57 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build_wheel_wheels:
+    name: build wheels
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            python: 38
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 39
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 310
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 311
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 312
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: install cibuildwheel
+        run: python -m pip install cibuildwheel
+      - name: build wheel
+        env:
+          CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform_id }}
+          CIBW_ARCHS: all
+          CIBW_MANYLINUX_X86_64_IMAGE: ${{ matrix.manylinux_image }}
+          CIBW_BEFORE_ALL_LINUX: yum install -y openblas-devel lapack lapack-devel
+          CIBW_BUILD_VERBOSITY: 1
+        run: python -m cibuildwheel . --output-dir dist
+      - name: upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: dist/*.whl

@@ -13,8 +13,8 @@ from pyatb.tools.plot_utils import (energy_minus_efermi, get_angular_momentum_la
 class DOS:
     """Parse DOS data"""
 
-    def __init__(self) -> None:
-        self.nspin = 1
+    def __init__(self, nspin) -> None:
+        self.nspin = nspin
         if self.nspin in [1, 4]:
             self._nsplit = 1
         elif self.nspin == 2:
@@ -27,10 +27,11 @@ class DOS:
                             lw=dosplot._lw, label=label)
         elif self._nsplit == 2:
             dos_up, dos_dw = np.split(dos, self._nsplit, axis=1)
-            dosplot.ax.plot(energy_f, dos_up, lw=dosplot._lw, linestyle="-",
+            line1 = dosplot.ax.plot(energy_f, dos_up, lw=dosplot._lw, linestyle="-",
                             label=f'{label}'+r'$\uparrow$')
+            color = line1[-1].get_color()
             dos_dw = -dos_dw
-            dosplot.ax.plot(energy_f, dos_dw, lw=dosplot._lw, linestyle="--",
+            dosplot.ax.plot(energy_f, dos_dw, lw=dosplot._lw, linestyle="--", color=color,
                             label=f'{label}'+r'$\downarrow$')
 
         return dosplot.ax
@@ -85,7 +86,8 @@ class DOS:
 class DOSPlot:
     """Plot density of state(DOS)"""
 
-    def __init__(self, fig: Figure = None, ax: axes.Axes = None, **kwargs) -> None:
+    def __init__(self, fig: Figure = None, ax: axes.Axes = None, nspin: int = 1,  **kwargs) -> None:
+        self.nspin = nspin
         self.fig = fig
         self.ax = ax
         self._lw = kwargs.pop('lw', 2)
@@ -138,19 +140,26 @@ class DOSPlot:
         else:
             self.ax.axvline(0, linestyle="--", c='b', lw=1.0)
 
+        if self.nspin == 2:
+            self.ax.axhline(0, linestyle="--", c='gray', lw=1.0)
+
+        handles, labels = self.ax.get_legend_handles_labels()
+        by_label = OrderedDict(zip(labels, handles))
         if "legend_prop" in self.plot_params.keys():
-            self.ax.legend(prop=self.plot_params["legend_prop"])
+            self.ax.legend(by_label.values(), by_label.keys(),
+                               prop=self.plot_params["legend_prop"])
         else:
-            self.ax.legend(prop={'size': 15})
+            self.ax.legend(by_label.values(),
+                               by_label.keys(), prop={'size': 15})
 
 
 class TDOS(DOS):
     """Parse total DOS data"""
 
     def __init__(self, tdosfile: PathLike = None) -> None:
-        super().__init__()
         self.tdosfile = tdosfile
         self._read()
+        super().__init__(self.nspin)
 
     def _read(self) -> tuple:
         """Read total DOS data file
@@ -164,7 +173,7 @@ class TDOS(DOS):
             self.energy, self.dos = np.split(data, self.nspin+1, axis=1)
         elif self.nspin == 2:
             self.energy, dos_up, dos_dw = np.split(data, self.nspin+1, axis=1)
-            self.dos = np.hstack(dos_up, dos_dw)
+            self.dos = np.hstack((dos_up, dos_dw))
 
     def _shift_energy(self, efermi: float = 0, shift: bool = False, prec: float = 0.01):
         if shift:
@@ -181,7 +190,7 @@ class TDOS(DOS):
 
         energy_f = self._shift_energy(efermi, shift, prec)
 
-        dosplot = DOSPlot(fig, ax, **kwargs)
+        dosplot = DOSPlot(fig, ax, self.nspin, **kwargs)
         dosplot.ax = self._plot(dosplot, energy_f, self.dos, "TDOS")
         if "notes" in dosplot.plot_params.keys():
             dosplot._set_figure(energy_range, dos_range,
@@ -196,9 +205,9 @@ class PDOS(DOS):
     """Parse partial DOS data"""
 
     def __init__(self, pdosfile: PathLike = None) -> None:
-        super().__init__()
         self.pdosfile = pdosfile
         self._read()
+        super().__init__(self.nspin)
 
     def _read(self):
         """Read partial DOS data file
@@ -384,14 +393,12 @@ class PDOS(DOS):
         Returns:
             DOSPlot object: for manually plotting picture with dosplot.ax 
         """
-        if isinstance(ax, axes.Axes):
-            ax = [ax]
 
         dos, totnum = parse_projected_data(self.orbitals, species, keyname)
         energy_f, tdos = self._shift_energy(efermi, shift, prec)
 
         if not species:
-            dosplot = DOSPlot(fig, ax, **kwargs)
+            dosplot = DOSPlot(fig, ax, self.nspin, **kwargs)
             dosplot.ax = self._plot(dosplot, energy_f, tdos, "TDOS")
             if "notes" in dosplot.plot_params.keys():
                 dosplot._set_figure(energy_range, dos_range,
@@ -402,7 +409,7 @@ class PDOS(DOS):
             return dosplot
 
         if isinstance(species, (list, tuple)):
-            dosplot = DOSPlot(fig, ax, **kwargs)
+            dosplot = DOSPlot(fig, ax, self.nspin, **kwargs)
             if "xlabel_params" in dosplot.plot_params.keys():
                 dosplot.ax.set_xlabel("Energy(eV)", **
                                       dosplot.plot_params["xlabel_params"])
@@ -420,11 +427,14 @@ class PDOS(DOS):
             return dosplot
 
         elif isinstance(species, dict):
+            if isinstance(ax, axes.Axes):
+                ax = [ax]
+
             dosplots = []
             assert len(ax) >= len(
                 dos.keys()), "There must be enough `axes` to plot."
             for i, elem in enumerate(dos.keys()):
-                dosplot = DOSPlot(fig, ax[i], **kwargs)
+                dosplot = DOSPlot(fig, ax[i], self.nspin, **kwargs)
                 for ang in dos[elem].keys():
                     l_index = int(ang)
                     if isinstance(dos[elem][ang], dict):

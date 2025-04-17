@@ -46,7 +46,9 @@ class Chern_Num:
         self.__k_start = k_start
         self.__k_vect1 = k_vect1
         self.__k_vect2 = k_vect2
-        self.__k_vect3 = np.cross(k_vect1, k_vect2)
+        v1 = self.__tb.direct_to_cartesian_kspace(self.__k_vect1)
+        v2 = self.__tb.direct_to_cartesian_kspace(self.__k_vect2)
+        self.__k_vect3 = np.cross(v1, v2)
         self.__k_vect3 = self.__k_vect3 / np.linalg.norm(self.__k_vect3, ord=2)
 
         if RANK == 0:

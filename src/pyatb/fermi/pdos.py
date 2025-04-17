@@ -255,9 +255,9 @@ energy_range = [{Emin}-efermi, {Emax}-efermi]
 # -------- plot TDOS --------------
 tdosfile = '{tdos_file}'
 tdos = TDOS(tdosfile)
-# dos_range = [0, 5]
-fig, ax = plt.subplots(figsize=(6.4, 4.8))
-dosplots = tdos.plot(fig, ax, efermi=efermi, shift=False, energy_range=energy_range)
+dos_range = [0, 5]
+fig, ax = plt.subplots(figsize=(8, 8))
+dosplots = tdos.plot(fig, ax, efermi=efermi, shift=False, energy_range=energy_range, dos_range=dos_range)
 fig.savefig('tdos.png')
 plt.close()
 
@@ -290,14 +290,22 @@ pdos = PDOS(pdosfile)
 
 # index = [1, 2, 3, 4]
 atom_index = {{1: {{1: [0, 1, 2]}}}}
-# species = {{"Ag": [2], "Cl": [1], "In": [0]}}
-# dos_range = [0, 5]
-fig, ax = plt.subplots(1, 1, sharex=True, figsize=(6.4, 4.8))
+# species = ["Ag", "Cl", "In"]
+# species = {{"Ag":[0, 1, 2], "Cl": [0, 1, 2], "In":[0, 1, 2]}}  # plot PDOS of s, p, d orbitals of Ag, Cl, In
+# species = {{"Ag":{{0:[0], 1:[0, 1, 2], 2:[0, 1, 2, 3, 4]}}}}     # plot PDOS of s, pz, py, px, dz2, dxz, dyz, dxy, dx2-y2 orbitals of Ag
+dos_range = [0, 5]
+# If you have 5 keys in you atom_index or species, you should set fig, ax = plt.subplots(1, 5, ...)
+fig, ax = plt.subplots(1, 1, sharex=True, figsize=(8, 8), tight_layout=True)
 
-# if you want to specify `species` or `index`, you need to set `species=species` or `index=index` in the following two functions
-dosplots = pdos.plot(fig, ax, atom_index=atom_index, efermi=efermi, shift=False, energy_range=energy_range)
-fig.savefig('pdos.png')
+# if you want to specify `index`, `atom_index` or `species` , , you need to set `index=index`, `atom_index=atom_index` or `species=species` in the following two functions
+# 1. write different contributions to files that can be used for plotting in other ways
 pdos.write(atom_index=atom_index)
+
+# 2. plot different contributions in single picture
+dosplots = pdos.plot(fig, ax, atom_index=atom_index, efermi=efermi, shift=False, energy_range=energy_range, dos_range=dos_range)
+# dosplots = pdos.plot(fig, ax, species=species, efermi=efermi, shift=False, energy_range=energy_range, dos_range=dos_range)
+
+fig.savefig('pdos.png')
 plt.close('all')
 """.format(fermi_energy=fermi_energy, Emin=start_E, Emax=end_E, tdos_file=tdos_file, pdos_file=pdos_file)
             f.write(plot_script)

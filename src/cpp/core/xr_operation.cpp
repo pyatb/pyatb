@@ -453,3 +453,116 @@ void xr_operation::SurfaceState_Xk(
     }
    
 }
+
+
+void xr_operation::Fourier_R_to_k_SurfaceState_bulk_Xk_1k(
+    base_data &Base_Data,
+    const int &direction,
+    const VectorXd &k_direct_coor,
+    const int &coupling_layers,
+    std::vector<VectorXcd> &bulk_Xk,
+    const MatrixXcd &XR_upperTriangleOfDenseMatrix
+)
+{
+    int basis_num = Base_Data.get_basis_num();
+    int R_num = Base_Data.R_num;
+    int max_coupling_R = 2 * coupling_layers - 1;
+    int coupling_R_num = 2 * max_coupling_R + 1;
+
+    MatrixXi temp_R_direct_coor = Base_Data.R_direct_coor.cast<int>();
+
+    int col_size = (basis_num * basis_num - basis_num) / 2 + basis_num;
+    for (int iR = 0; iR < coupling_R_num; ++iR)
+    {
+        bulk_Xk[iR].setZero(col_size);
+    }
+
+    int a, b;
+    if (direction == 0)
+    {
+        a = 1;
+        b = 2;
+    }
+    else if(direction == 1)
+    {
+        a = 0;
+        b = 2;
+    }
+    else if(direction == 2)
+    {
+        a = 0;
+        b = 1;
+    }
+
+    for (int i = 0; i < R_num; ++i)
+    {
+        for (int iR_coor = -max_coupling_R; iR_coor <= max_coupling_R; ++iR_coor)
+        {
+            int count = 0;
+            if (temp_R_direct_coor(i, direction) == iR_coor)
+            {
+                double kR = k_direct_coor(a) *  temp_R_direct_coor(i, a) + k_direct_coor(b) *  temp_R_direct_coor(i, b);
+                bulk_Xk[iR_coor+max_coupling_R] += std::exp(IMAG_UNIT * TWO_PI * kR) * XR_upperTriangleOfDenseMatrix.row(i);
+                count++;
+            }
+        }
+    }
+
+}
+
+
+void xr_operation::SurfaceState_Xk_1k(
+    base_data &Base_Data,
+    const int &direction,
+    const VectorXd &k_direct_coor,
+    const int &coupling_layers,
+    const char &X,
+    MatrixXcd &Xk00,
+    MatrixXcd &Xk01
+)
+{
+    int basis_num = Base_Data.get_basis_num();
+    int max_coupling_R = 2 * coupling_layers - 1;
+    int coupling_R_num = 2 * max_coupling_R + 1;
+
+    std::vector<VectorXcd> bulk_Xk;
+    bulk_Xk.resize(coupling_R_num);
+
+    if (X == 'H')
+    {
+        Fourier_R_to_k_SurfaceState_bulk_Xk_1k(Base_Data, direction, k_direct_coor, coupling_layers, bulk_Xk, Base_Data.HR_upperTriangleOfDenseMatrix);
+    }
+    else if (X == 'S')
+    {
+        Fourier_R_to_k_SurfaceState_bulk_Xk_1k(Base_Data, direction, k_direct_coor, coupling_layers, bulk_Xk, Base_Data.SR_upperTriangleOfDenseMatrix);
+    }
+
+    MatrixXcd tem_block00 = MatrixXcd::Zero(basis_num, basis_num);
+    MatrixXcd tem_block01 = MatrixXcd::Zero(basis_num, basis_num);
+
+    // Xk00.setZero(coupling_layers*basis_num, coupling_layers*basis_num);
+    // Xk01.setZero(coupling_layers*basis_num, coupling_layers*basis_num);
+    for (int row_block = 0; row_block < coupling_layers; ++row_block)
+    {
+        for (int col_block = 0; col_block < coupling_layers; ++col_block)
+        {
+            int iR_coor00 = col_block - row_block;
+            int iR_coor01 = coupling_layers + col_block - row_block;
+            int count = 0;
+            for (int row = 0; row < basis_num; ++row)
+            {
+                for (int col = row; col < basis_num; ++col)
+                {
+                    tem_block00(row, col) = bulk_Xk[iR_coor00+max_coupling_R](count);
+                    tem_block00(col, row) = conj(bulk_Xk[-iR_coor00+max_coupling_R](count));
+                    tem_block01(row, col) = bulk_Xk[iR_coor01+max_coupling_R](count);
+                    tem_block01(col, row) = conj(bulk_Xk[-iR_coor01+max_coupling_R](count));
+                    count++;
+                }
+            }
+            Xk00.block(row_block*basis_num, col_block*basis_num, basis_num, basis_num) = tem_block00;
+            Xk01.block(row_block*basis_num, col_block*basis_num, basis_num, basis_num) = tem_block01;
+        }
+    }
+   
+}

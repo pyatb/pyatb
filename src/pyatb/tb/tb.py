@@ -153,6 +153,7 @@ class tb:
             for i in self.stru_atom:
                 atom_type = i.species
                 na = i.atom_num
+                i.cartesian_coor = i.cartesian_coor / self.lattice_constant
                 tau_car = i.cartesian_coor
                 self.total_atom_num += na
 

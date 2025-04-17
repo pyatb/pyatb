@@ -9,11 +9,11 @@ import numpy as np
 import os
 import shutil
 from mpi4py import MPI
+import time
 class Berry_Curvature_Dipole:
     def __init__(
         self,
         tb:tb,
-        integrate_mode,
         **kwarg
     ):
         if tb.nspin == 2:
@@ -48,8 +48,8 @@ class Berry_Curvature_Dipole:
                 f.write('\n|                                                    |')
                 f.write('\n------------------------------------------------------')
                 f.write('\n\n')
-        if integrate_mode != 'Grid':
-            raise ValueError('Since the integration is of a tensor, only Grid integrate_mode is available.')
+        #if integrate_mode != 'Grid':
+            #raise ValueError('Since the integration is of a tensor, only Grid integrate_mode is available.')
         self.set_parameters(**kwarg)
     def get_constant(self):
         v1 = self.__tb.direct_to_cartesian_kspace(self.__k_vect1)
@@ -62,257 +62,246 @@ class Berry_Curvature_Dipole:
         self, 
         omega, 
         domega, 
-        integrate_grid, 
-        adaptive_grid, 
-        adaptive_grid_threshold,
+        grid,
         **kwarg):
         
         self.__start_omega = omega[0]
         self.__end_omega = omega[1]
         self.__domega = domega
         self.__omega_num = int((self.__end_omega - self.__start_omega) / domega ) + 1
-        self.__integrate_grid = integrate_grid
-        self.__adaptive_grid = adaptive_grid
-        self.__adaptive_grid_threshold = adaptive_grid_threshold
+        self.grid = grid
+        
         if RANK == 0:
             with open(RUNNING_LOG, 'a') as f:
                 f.write('\nParameter setting : \n')
                 f.write(' >> omega    : %-8.4f %-8.4f\n' % (self.__start_omega, self.__end_omega))
                 f.write(' >> domega   : %-10.6f\n' % (self.__domega))
-                f.write(' >> integrate_grid          : %-8d %-8d %-8d\n' %(self.__integrate_grid[0], self.__integrate_grid[1], self.__integrate_grid[2]))
-                f.write(' >> adaptive_grid           : %-8d %-8d %-8d\n' %(self.__adaptive_grid[0], self.__adaptive_grid[1], self.__adaptive_grid[2]))
-                f.write(' >> adaptive_grid_threshold : %-10.4f\n' %(self.__adaptive_grid_threshold))
-    def calculate_berry_curvature_dipole(self,**kwarg):
-        constant1 = self.get_constant()
-        constant2 = 1/(self.__integrate_grid[0]*self.__integrate_grid[1]*self.__integrate_grid[2])
-        data = self.__area_judge(
-            self.__k_start,
-            self.__k_vect1,
-            self.__k_vect2,
-            self.__k_vect3,
-            self.__integrate_grid,
-            self.__adaptive_grid_threshold)
-        self.bcd_0 = data[0]
-        kpoint_list1 = data[1]
-        kpoint_num1 = kpoint_list1.shape[0]
+                f.write(' >> grid          : %-8d %-8d %-8d\n' %(self.grid[0], self.grid[1], self.grid[2]))
+    def set_k_mp(
+        self, 
+        mp_grid, 
+        k_start = np.array([0.0, 0.0, 0.0], dtype=float), 
+        k_vect1 = np.array([1.0, 0.0, 0.0], dtype=float), 
+        k_vect2 = np.array([0.0, 1.0, 0.0], dtype=float), 
+        k_vect3 = np.array([0.0, 0.0, 1.0], dtype=float),
+        **kwarg
+    ):
         
-        k_vect12 = self.__k_vect1/(self.__integrate_grid[0])
-        k_vect22 = self.__k_vect2/(self.__integrate_grid[1])
-        k_vect32 = self.__k_vect3/(self.__integrate_grid[2])
-        delta = k_vect12+k_vect22+k_vect32
-        if RANK == 0:
-            
-            np.savetxt(os.path.join(self.output_path, 'kpoint_list'), kpoint_list1, fmt='%0.8f')
-            #np.savetxt(os.path.join(self.output_path, 'bcd_step1.dat'), self.bcd_0*constant1*constant2, fmt='%0.8f')
-        for i in range(kpoint_num1):
-            k_generator = self.__set_k_mp(kpoint_list1[i,:]-delta/2,k_vect12,k_vect22,k_vect32,self.__adaptive_grid)
-            bcd_total = np.zeros([self.__omega_num,9],dtype = float)
-            for ik in k_generator:
-                ik_process = kpoint_generator.kpoints_in_different_process(SIZE, RANK, ik)
-                k_direct_coor = ik_process.k_direct_coor_local
-                kpoint_num = ik_process.k_direct_coor_local.shape[0]
+        self.__kpoint_mode = 'mp'
+        self.__k_generator = kpoint_generator.mp_generator(self.__max_kpoint_num, k_start, k_vect1, k_vect2, k_vect3, mp_grid)
+    def calculate_berry_curvature_dipole(self,**kwarg):
+        self.bcd =0
+        self.set_k_mp(self.grid)
+        constant1 = self.get_constant()
+        constant2 = 1/(self.grid[0]*self.grid[1]*self.grid[2])
+        if self.__k_generator is None:
+            raise ValueError('please set k point!')
+        else:
+            k_generator = self.__k_generator
+        timer.start('BCD', 'calculate_BCD')
 
-                bcd_pl = self.get_bcd_pl(k_direct_coor)
-                bcd_local = bcd_pl.sum(axis=0)
+        E_min = self.__start_omega
+        E_max = self.__end_omega
+        E_num = self.__omega_num
+        delta_E = (E_max-E_min)/E_num
+        
+        for ik in k_generator:
+            COMM.Barrier()
+            
+            ik_process = kpoint_generator.kpoints_in_different_process(SIZE, RANK, ik)
+            kpoint_num = ik_process.k_direct_coor_local.shape[0]
+            
+            
+            if RANK == 0:
+                self.kvec_d = ik
+            tem_bcd = np.zeros([9,int(self.__omega_num)], dtype=float)
+            if kpoint_num:
+                #tem_berry_curvature = self.__tb_solver.get_total_berry_curvature_fermi(ik_process.k_direct_coor_local, fermi_energy, method)
+                time_start = time.time()
                 
-                bcd_temp = COMM.reduce(bcd_local, root = 0, op=MPI.SUM)
+                temp_bcd = self.__tb_solver.get_bcd(self.__omega_num, delta_E, E_min,kpoint_num,ik_process.k_direct_coor_local)
+                self.bcd+=temp_bcd
+                time_end = time.time()
                 if RANK == 0:
-                    bcd_total = bcd_total+bcd_temp
-            bcd_total =  COMM.bcast(bcd_total, root=0)
-            self.bcd_0 = self.bcd_0+bcd_total/(self.__adaptive_grid[0]*self.__adaptive_grid[1]*self.__adaptive_grid[2])
+                    with open(RUNNING_LOG, 'a') as f:
+                        f.write(' >> Calculated %10d k points, took %.6e s\n'%(ik.shape[0], time_end-time_start))
+
             
+            COMM.Barrier()
+        self.bcd = COMM.reduce(self.bcd, root=0, op=MPI.SUM)
+
+        
+        
         if RANK == 0:
-            
-            self.print_data(self.bcd_0*constant1*constant2)
-            
+            self.bcd  = self.bcd *constant1*constant2
+            if self.__tb.nspin == 1:
+                self.bcd = self.bcd*2
+            self.print_data(self.bcd)
+        timer.end('BCD', 'calculate_BCD')    
             
             
             
         return
+    
     def print_data(self,data):
         output_path = self.output_path
         np.savetxt(os.path.join(output_path, 'bcd.dat'), data, fmt='%0.8f')
         return
     def print_plot_script(self):
+        v1 = self.__tb.direct_to_cartesian_kspace(self.__k_vect1)
+        v2 = self.__tb.direct_to_cartesian_kspace(self.__k_vect2)
+        v3 = self.__tb.direct_to_cartesian_kspace(self.__k_vect3)
+        V = np.linalg.det(np.array([v1.T,v2.T,v3.T]))
+        S = np.linalg.norm(np.cross(v1,v2))
+        C = S*(2*np.pi)/V
+        
+        
         output_path = os.path.join(self.output_path, '')
         with open(os.path.join(output_path, 'plot_bcd.py'), 'w') as f:
             bcd_file = os.path.join(output_path, 'bcd.dat')
             
 
-            plot_script = """import numpy as np
+            plot_script = """import json
+import os
+import numpy as np
 import matplotlib.pyplot as plt
-direction = {{
-    'xx' : 1,
-    'xy' : 2,
-    'xz' : 3,
-    'yx' : 4,
-    'yy' : 5,
-    'yz' : 6,
-    'zx' : 7,
-    'zy' : 8,
-    'zz' : 9
+from multiprocessing import Pool, cpu_count
+
+
+
+E_min = {E_min}
+E_max = {E_max}
+E_num = int({E_num})
+
+
+# 定义方向字典
+direction = {{'xx': 1,
+    'xy': 2,
+    'xz': 3,
+    'yx': 4,
+    'yy': 5,
+    'yz': 6,
+    'zx': 7,
+    'zy': 8,
+    'zz': 9
 }}
-data = np.loadtxt('{bcd_file}')
+
+# 读取数据文件
+data = np.loadtxt('bcd.dat').T
+
+# 设置能量范围
+x = np.linspace(E_min, E_max, E_num)
+
+# 初始化smearing值列表
+smearing_values = [5e-3, 2e-3, 8e-3, 1e-3, 1e-2, 5e-2, 5e-4, 8e-2]
 
 
-x = np.linspace({E_min},{E_max},{E_num})
-
-smearing = 1e-3
-def partial_f(smearing,E):
-    
-    temp = np.exp((E)/smearing)
-    ans = temp/((1+temp)**2 *smearing )
+def partial_f(smearing, E):
+    temp = np.exp(E / smearing)
+    ans = temp / ((1 + temp)**2 * smearing)
     return ans
-    
-num = {E_num}
-data_smear = np.zeros([num,9],dtype = float)
-for i in range(num):
-    for j in range(num):
-        
-        data_smear[i,:] = data_smear[i,:]+data[j,:]*partial_f(smearing,(x[i]-x[j]))
+
+# 并行处理函数
+def process_row(i, data, x, smearing):
+    result = np.zeros(9, dtype=float)
+    for j in range(E_num):
+        result += data[j, :] * partial_f(smearing, (x[i] - x[j])) * 57.3302236800000031
+    return result
+
+# 定义函数来检测和调整smearing值
+def find_working_smearing(data, x, smearing_values):
+    for smearing in smearing_values:
+        try:
+            data_smear = np.zeros([E_num, 9], dtype=float)
+            with Pool(cpu_count()) as pool:
+                results = pool.starmap(process_row, [(i, data, x, smearing) for i in range(E_num)])
+            for i, result in enumerate(results):
+                data_smear[i, :] = result
+            print(f"Working smearing found: {{smearing:.1e}}")
+            return smearing, data_smear
+        except (FloatingPointError, OverflowError):
+            print(f"Smearing {{smearing:.1e}} did not work. Trying next value.")
+    raise ValueError("Unable to find a suitable smearing value after multiple attempts")
+
+# 尝试找到合适的smearing值
+try:
+    np.seterr(over='raise')  # 设置浮点错误为异常
+    smearing, data_smear = find_working_smearing(data, x, smearing_values)
+except ValueError as e:
+    print(e)
+    exit(1)
+
+# 检查z方向的网格是否为1，并获取晶格常数
+z_direction_is_one = {gridz} == 1
+z_lattice_constant = {z} if z_direction_is_one else 1.0
+
+# 创建3d_plot文件夹
+os.makedirs('3d_plot', exist_ok=True)
+
+# 创建并保存3D图形
+fig, axs = plt.subplots(3, 3, figsize=(20, 12))
+fig.suptitle('Berry Curvature Dipole', fontsize=20)
+
+for ax, (key, value) in zip(axs.flat, direction.items()):
+    ax.set_title('%s'%(key), fontsize=18)
+    ax.set_xlim(x[0], x[-1])
+    ax.set_xlabel('$\omega (eV)$', fontsize=16)
+    ax.set_ylabel('$BCD_{{%s}} $'%(key), fontsize=16)
+    ax.plot(x, data_smear[:, value - 1], color='b', linewidth=1, linestyle='-')
+    ax.tick_params(axis='both', which='major', labelsize=12)
+
+plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.savefig('3d_plot/bcd-all.pdf', dpi=300)
+plt.savefig('bcd-all.pdf', dpi=300)
+# plt.show()
+
+# 另外保存每张3D子图
 for key, value in direction.items():
-    figure = plt.figure()
-    plt.title('Berry Curvature Dipole')
-    plt.xlim(x[0], x[-1])
-    plt.xlabel('$\omega (eV)$')
-    plt.ylabel('$BCD_{{%s}} $'%(key))
+    fig_single, ax_single = plt.subplots()
+    ax_single.set_title('Berry Curvature Dipole')
+    ax_single.set_xlim(x[0], x[-1])
+    ax_single.set_xlabel('$\omega (eV)$')
+    ax_single.set_ylabel('$BCD_{{%s}} $'%(key))
+    ax_single.plot(x, data_smear[:, value - 1], color='b', linewidth=1, linestyle='-')
+    fig_single.savefig('3d_plot/bcd-'+'%s.pdf'%(key))
+    plt.close(fig_single)
+
+# 如果z方向的网格为1，为二维材料，创建2d_plot文件夹，并保存2D图形
+if z_direction_is_one:
+    os.makedirs('2d_plot', exist_ok=True)
+
+    # 创建3x3的2D图形布局
+    fig, axs = plt.subplots(3, 3, figsize=(20, 12))
+    fig.suptitle('Berry Curvature Dipole in 2D', fontsize=20)
+
+    for ax, (key, value) in zip(axs.flat, direction.items()):
+        ax.set_title('%s'%(key), fontsize=18)
+        ax.set_xlim(x[0], x[-1])
+        ax.set_xlabel('$\omega (eV)$', fontsize=16)
+        ax.set_ylabel('$BCD_{{%s}} (\AA)$'%(key), fontsize=16)
+        ax.plot(x, data_smear[:, value - 1] * z_lattice_constant, color='b', linewidth=1, linestyle='-')
+        ax.tick_params(axis='both', which='major', labelsize=12)
+
+    plt.tight_layout(rect=[0, 0, 1, 0.96])
+    plt.savefig('2d_plot/bcd-all_2d.pdf', dpi=300)
+    plt.savefig('bcd-all_2d.pdf', dpi=300)
+    # plt.show()
+
+    # 另外保存每张2D子图
+    for key, value in direction.items():
+        fig_single, ax_single = plt.subplots()
+        ax_single.set_title('Berry Curvature Dipole')
+        ax_single.set_xlim(x[0], x[-1])
+        ax_single.set_xlabel('$\omega (eV)$')
+        ax_single.set_ylabel('$BCD_{{%s}} (\AA)$'%(key))
+        ax_single.plot(x, data_smear[:, value - 1] * z_lattice_constant, color='b', linewidth=1, linestyle='-')
+        fig_single.savefig('2d_plot/bcd-'+'%s_2d.pdf'%(key))
+        plt.close(fig_single)
+
     
-    plt.plot(x, data_smear[:,value-1], color='b', linewidth=1, linestyle='-')
-    plt.legend()
-    plt.savefig('{output_path}' + 'bcd-%s.pdf'%(key))
-    plt.close('all')
     
-    
-""".format(bcd_file=bcd_file, E_min=self.__start_omega, E_max=self.__end_omega, E_num = self.__omega_num, output_path=output_path)
+""".format(E_min=self.__start_omega, E_max=self.__end_omega, E_num = self.__omega_num, gridz = self.grid[2],z = self.__tb.lattice_vector[2][2]*self.__tb.lattice_constant,output_path=output_path)
 
             f.write(plot_script)
 
-    def get_bcd_pl(self,k_direct_coor):
-        E_min = self.__start_omega
-        E_max = self.__end_omega
-        E_num = self.__omega_num
-        E_list = np.linspace(E_min,E_max,E_num)
-        
-        #then the contribution would not be considered
-        
-        delta_E = (E_max-E_min)/E_num
-        matrix_dim = self.__tb.basis_num
-        k_direct_coor = np.array(k_direct_coor,dtype = float)
-        kpoint_num = k_direct_coor.shape[0]
-        bcd_pl = np.zeros([kpoint_num,int(E_num),9],dtype = float)
-        
-        
-        eigenvalues,velocity_matrix = self.__tb_solver.get_velocity_matrix(k_direct_coor)
-        
-        
-        #print('Rank %d calculate velocity matrix, time cost: %f'%(RANK,(end-start)))
-        #####################################
-        for ik in range(kpoint_num):
-            
-            for nband in range(matrix_dim):
-                E = eigenvalues[ik,nband]
-                
-                n = int((E-E_min)/delta_E)
-                if n <= (E_num-1)and n>=0:
-                    
-                    #calculate berry curvature for single nband
-                    E_bar = 1e-4
-                    bc_nband = np.zeros(3,dtype = float)
-                    for iband in range(matrix_dim):
-                        E_in = np.abs(eigenvalues[ik,iband]-E)
-                        C = E_in**2
-                        if np.abs(E_in)>E_bar:
-                            bc_nband[0] +=\
-                            ((velocity_matrix[ik,1,nband,iband]*velocity_matrix[ik,2,iband,nband])*2j/C).real
-                            bc_nband[1] += \
-                            ((velocity_matrix[ik,2,nband,iband]*velocity_matrix[ik,0,iband,nband])*2j/C).real
-                            bc_nband[2] += \
-                            ((velocity_matrix[ik,0,nband,iband]*velocity_matrix[ik,1,iband,nband])*2j/C).real
-                            
-                    bcd_pl[ik,n,0]+=(velocity_matrix[ik,0,nband,nband]*bc_nband[0]).real
-                    bcd_pl[ik,n,1]+=(velocity_matrix[ik,0,nband,nband]*bc_nband[1]).real
-                    bcd_pl[ik,n,2]+=(velocity_matrix[ik,0,nband,nband]*bc_nband[2]).real
-                    bcd_pl[ik,n,3]+=(velocity_matrix[ik,1,nband,nband]*bc_nband[0]).real
-                    bcd_pl[ik,n,4]+=(velocity_matrix[ik,1,nband,nband]*bc_nband[1]).real
-                    bcd_pl[ik,n,5]+=(velocity_matrix[ik,1,nband,nband]*bc_nband[2]).real
-                    bcd_pl[ik,n,6]+=(velocity_matrix[ik,2,nband,nband]*bc_nband[0]).real
-                    bcd_pl[ik,n,7]+=(velocity_matrix[ik,2,nband,nband]*bc_nband[1]).real
-                    bcd_pl[ik,n,8]+=(velocity_matrix[ik,2,nband,nband]*bc_nband[2]).real
-                else:
-                    continue
-                    
-                    
-        #####################################
-        
-        #print('Rank %d calculate bcd for %d kpoints, time cost: %f'%(RANK,kpoint_num,(end-start)))
-        return bcd_pl
-    def __area_judge(
-        self, 
-        k_start,
-        k_vect1,
-        k_vect2,
-        k_vect3,
-        grid,
-        bar,
-        ):
-        
-        #search for kpoints in a given area 
-        #whose band land on a given energy range 
-        #whose bcd above a certain bar
-        E_min = self.__start_omega
-        E_max = self.__end_omega
-        E_num = self.__omega_num
-        matrix_dim = self.__tb.basis_num
-        k_generator = self.__set_k_mp(k_start,k_vect1,k_vect2,k_vect3,grid)
-        
-        fermi_points_total = np.zeros([0,3],dtype = float)
-        bcd_total = np.zeros([E_num,9],dtype = float)
-        bcd_total_ = np.zeros([E_num,9],dtype = float)
-        for ik in k_generator:
-            
-            fermi_points = np.zeros([0,3],dtype = float)
-            ik_process = kpoint_generator.kpoints_in_different_process(SIZE, RANK, ik)
-            k_direct_coor = ik_process.k_direct_coor_local
-            kpoint_num = ik_process.k_direct_coor_local.shape[0]
-            
-            
-            bcd_pl = self.get_bcd_pl(k_direct_coor)
-            
-            bcd_local = bcd_pl.sum(axis=0)
-            bcd_local_ = bcd_local
-            for i in range(kpoint_num):
-                
-                flag = 0
-                if np.max(bcd_pl[i,:,:])>=bar or np.min(bcd_pl[i,:,:])<=-bar:
-                    flag = 1
-                    bcd_local -= bcd_pl[i,:,:]
-                    
-                if flag:
-                    fermi_points = np.r_[fermi_points,np.array([k_direct_coor[i,:]])]
-            fermi_points_local = COMM.reduce(fermi_points, root=0,op=op_gather_numpy)
-            bcd_temp = COMM.reduce(bcd_local, root = 0, op=MPI.SUM)
-            bcd_temp_ = COMM.reduce(bcd_local_, root = 0, op=MPI.SUM)
-            if RANK == 0:
-                
-                fermi_points_total = np.r_[fermi_points_total,fermi_points_local]
-                bcd_total = bcd_total+bcd_temp
-                bcd_total_ = bcd_total_+bcd_temp_
-        fermi_points_total = COMM.bcast(fermi_points_total, root=0)
-        bcd_total =  COMM.bcast(bcd_total, root=0)
-        #if RANK == 0:
-            #np.savetxt(os.path.join(self.output_path, 'bcd_step0.dat'), bcd_total_, fmt='%0.8f')
-        return [bcd_total,fermi_points_total]
-    def __set_k_mp(
-        self,
-        k_start,
-        k_vect1,
-        k_vect2,
-        k_vect3,
-        mp_grid
-    ):
-        k_generator = kpoint_generator.mp_generator(self.__max_kpoint_num, k_start, k_vect1,k_vect2, k_vect3, mp_grid)
-        return k_generator
-    
-    def __set_k_direct(self, kpoint_direct_coor, **kwarg):
-        k_generator = kpoint_generator.array_generater(self.__max_kpoint_num, kpoint_direct_coor)
-        return k_generator
+        return

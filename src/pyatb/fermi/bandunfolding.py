@@ -111,8 +111,8 @@ class Bandunfolding:
         else:
             k_generator = self.__k_generator
 
-        min_bandindex = band_range[0] - 1
-        max_bandindex = band_range[1] - 1
+        min_bandindex = band_range[0]
+        max_bandindex = band_range[1]
         select_band_num = max_bandindex - min_bandindex + 1
 
         if RANK == 0:
@@ -201,9 +201,9 @@ class Bandunfolding:
                         f.write('# kpoint_number = %d, band_number = %d\n'%(self.total_k_num, self.eig[ispin].shape[1]))
                         f.write('# %-15s %-10s\n'%('Energy', 'spectral_weight'))
 
-                    for i in range(self.eig[0].shape[0]):
-                        for ib in range(self.eig[0].shape[1]):
-                            f.write('  %-15.6f %-10.6f\n'%(self.eig[0][i, ib], self.spectral_weight[0][i, ib]))
+                    for i in range(self.eig[ispin].shape[0]):
+                        for ib in range(self.eig[ispin].shape[1]):
+                            f.write('  %-15.6f %-10.6f\n'%(self.eig[ispin][i, ib], self.spectral_weight[ispin][i, ib]))
 
         self.first_print = False
 

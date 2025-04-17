@@ -124,7 +124,8 @@ class AHC:
                 self.__k_vect3, 
                 self.__integrate_grid, 
                 self.__adaptive_grid, 
-                self.__adaptive_grid_threshold
+                self.__adaptive_grid_threshold,
+                self.__max_kpoint_num
             )
             ahc.integrate()
             ahc_ans = ahc.ans

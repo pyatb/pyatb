@@ -4,8 +4,10 @@ from pyatb.io import read_input
 from pyatb.tb import tb
 from pyatb.tb import multiXR
 from pyatb.io.abacus_read_xr import abacus_readHR, abacus_readSR, abacus_readrR
+from pyatb.io.wannier90_read_tb import wannier90_readHR, wannier90_readTB
 from pyatb.fermi import *  
 from pyatb.berry import *
+from pyatb.transport import *
 import os
 
 def main():
@@ -38,7 +40,14 @@ def main():
 
         if bool_need_rR:
             rR = abacus_readrR(**input_parameters)
+    elif package == 'WANNIER90':
+        if nspin == 2:
+            raise ValueError('WANNIER90 only for nspin = 1 or 4 !')
 
+        if input_parameters['w90_TB_has_r']:
+            HR, SR, *rR = wannier90_readTB(**input_parameters)
+        else:
+            HR, SR = wannier90_readHR(**input_parameters)
     
     # set tb
     if sparse_format == 0:
@@ -83,10 +92,10 @@ def main():
         band_structure_parameters = INPUT['BAND_STRUCTURE']
         wf_collect = band_structure_parameters['wf_collect']
         cal_BS = Band_Structure(m_tb, wf_collect)
-        cal_BS.calculate_band_structure(**band_structure_parameters)
         fermi_energy = input_parameters['fermi_energy']
+        cal_BS.calculate_band_structure(fermi_energy=fermi_energy, **band_structure_parameters)
         if RANK == 0:
-            cal_BS.print_plot_script(fermi_energy)
+            cal_BS.print_plot_script()
 
     if function_switch['BANDUNFOLDING']:
         bandunfolding_parameters = INPUT['BANDUNFOLDING']
@@ -97,6 +106,16 @@ def main():
         if RANK == 0:
             fermi_energy = input_parameters['fermi_energy']
             cal_BUNF.print_plot_script(fermi_energy)
+
+    if function_switch['BANDUNFOLDING_SPIN_TEXTURE']:
+        bandunfolding_spin_texture_parameters = INPUT['BANDUNFOLDING_SPIN_TEXTURE']
+        M_matrix = bandunfolding_spin_texture_parameters['m_matrix'].reshape(3, 3)
+        bandunfolding_spin_texture_parameters['m_matrix'] = M_matrix
+        cal_BUNF_ST = Bandunfolding_Spin_Texture(m_tb)
+        cal_BUNF_ST.calculate_bandunfolding_spin_texture(**bandunfolding_spin_texture_parameters)
+        if RANK == 0:
+            fermi_energy = input_parameters['fermi_energy']
+            cal_BUNF_ST.print_plot_script(fermi_energy)
 
     if function_switch['FAT_BAND']:
         fatband_parameters = INPUT['FAT_BAND']
@@ -125,6 +144,8 @@ def main():
         jdos_parameters = INPUT['JDOS']
         cal_JDOS = JDOS(m_tb)
         cal_JDOS.calculate_jdos(**jdos_parameters)
+        if RANK == 0:
+            cal_JDOS.print_plot_script()
 
     if function_switch['PDOS']:
         pdos_parameters = INPUT['PDOS']
@@ -141,13 +162,24 @@ def main():
             cal_ST = Spin_Texture(m_tb)
             cal_ST.calculate_spin_texture(**spin_texture_parameters)
         if RANK == 0:
-            cal_ST.print_plot_script()
+            fermi_energy = input_parameters['fermi_energy']
+            cal_ST.print_plot_script(fermi_energy=fermi_energy)
+
+    if function_switch['SURFACE_STATE']:
+        surface_state_parameters = INPUT['SURFACE_STATE']
+        cal_SS = Surface_State(m_tb)
+        fermi_energy = input_parameters['fermi_energy']
+        cal_SS.calculate_surface_state(fermi_energy=fermi_energy, **surface_state_parameters)
+        if RANK == 0:
+            cal_SS.print_plot_script()
 
     if function_switch['BERRY_CURVATURE']:
         berry_curvature_parameters = INPUT['BERRY_CURVATURE']
         cal_BC = Berry_Curvature(m_tb)
         fermi_energy = input_parameters['fermi_energy']
         cal_BC.calculate_berry_curvature(fermi_energy=fermi_energy, **berry_curvature_parameters)
+        if RANK == 0:
+            cal_BC.print_plot_script()
 
     if function_switch['CHERN_NUMBER']:
         chern_number_parameters = INPUT['CHERN_NUMBER']
@@ -161,11 +193,13 @@ def main():
         fermi_energy = input_parameters['fermi_energy']
         cal_AHC.calculate_ahc(fermi_energy=fermi_energy, **ahc_parameters)
 
-    if function_switch['AEC']:
-        aec_parameters = INPUT['AEC']
-        cal_AEC = AEC(m_tb)
+    if function_switch['ANC']:
+        anc_parameters = INPUT['ANC']
+        cal_ANC = ANC(m_tb)
         fermi_energy = input_parameters['fermi_energy']
-        cal_AEC.calculate_aec(fermi_energy=fermi_energy, **aec_parameters)
+        cal_ANC.calculate_anc(fermi_energy=fermi_energy, **anc_parameters)
+        if RANK == 0:
+            cal_ANC.print_plot_script()
 
     if function_switch['OPTICAL_CONDUCTIVITY']:
         optical_conductivity_parameters = INPUT['OPTICAL_CONDUCTIVITY']
@@ -173,6 +207,13 @@ def main():
         cal_OC.calculate_optical_conductivity(**optical_conductivity_parameters)
         if RANK == 0:
             cal_OC.print_plot_script()
+
+    if function_switch['ORBITAL_MAGNETIZATION']:
+        orbital_magnetization_parameters = INPUT['ORBITAL_MAGNETIZATION']
+        cal_OM = Orbital_Magnetization(m_tb)
+        cal_OM.calculate_orbital_magnetization(**orbital_magnetization_parameters)
+        if RANK == 0:
+            cal_OM.print_plot_script()
 
     if function_switch['POLARIZATION']:
         polarization_parameters = INPUT['POLARIZATION']
@@ -199,7 +240,20 @@ def main():
         cal_berry_curvature_dipole.calculate_berry_curvature_dipole(**berry_curvature_dipole_parameters)
         if RANK == 0:
             cal_berry_curvature_dipole.print_plot_script()
-
+    if function_switch['SHG']:
+        shg_parameters = INPUT['SHG']
+        cal_shg = Second_Harmonic_Generation(m_tb,**input_parameters, **shg_parameters)
+        cal_shg.calculate_shg(**shg_parameters)
+        if RANK == 0:
+            cal_shg.print_plot_script()
+            
+    if function_switch['POCKELS']:
+        pockels_parameters = INPUT['POCKELS']
+        cal_pockels = Pockels(m_tb,**input_parameters, **pockels_parameters)
+        cal_pockels.calculate_pockels(**pockels_parameters)
+        if RANK == 0:
+            cal_pockels.print_plot_script()
+        
     if function_switch['CHIRALITY']:
         chirality_parameters = INPUT['CHIRALITY']
         cal_chirality = Chirality(m_tb)
@@ -220,6 +274,12 @@ def main():
         reduce_basis_parameters = INPUT['REDUCE_BASIS']
         RBC = Reduce_Basis_Check(m_tb)
         RBC.get_reduce_basis(**reduce_basis_parameters)
+
+    if function_switch['BOLTZ_TRANSPORT']:
+        transport_parameters = INPUT['BOLTZ_TRANSPORT']
+        TRANS = Boltz_Transport(m_tb)
+        fermi_energy = input_parameters['fermi_energy']
+        TRANS.calculate_boltz_transport(fermi_energy=fermi_energy, **transport_parameters)
     
     if RANK == 0:
         timer.print_all()

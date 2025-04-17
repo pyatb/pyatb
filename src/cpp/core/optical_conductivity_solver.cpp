@@ -33,7 +33,7 @@ void optical_conductivity_solver::set_parameters(
 
 void optical_conductivity_solver::KK_triangularFunction_ik(
     const VectorXd &eigenvalues_ik, 
-    const array<MatrixXcd, 3> &velocity_ik, 
+    const std::array<MatrixXcd, 3> &velocity_ik, 
     const int &occupied_num,
     MatrixXcd &optical_conductivity_ik, // out data
     MatrixXcd &dielectric_function_ik   // out data
@@ -159,7 +159,7 @@ void optical_conductivity_solver::KK_triangularFunction_ik(
 
 MatrixXcd optical_conductivity_solver::KK_triangularFunction_simpson_ik(
     const VectorXd &eigenvalues_ik, 
-    const array<MatrixXcd, 3> &velocity_ik, 
+    const std::array<MatrixXcd, 3> &velocity_ik, 
     const int &occupied_num
 )
 {
@@ -265,7 +265,7 @@ MatrixXcd optical_conductivity_solver::KK_triangularFunction_simpson_ik(
 
 void optical_conductivity_solver::LorentianFunction_ik(
     const VectorXd &eigenvalues_ik, 
-    const array<MatrixXcd, 3> &velocity_ik, 
+    const std::array<MatrixXcd, 3> &velocity_ik, 
     const int &occupied_num,
     MatrixXcd &optical_conductivity_ik,
     MatrixXcd &dielectric_function_ik
