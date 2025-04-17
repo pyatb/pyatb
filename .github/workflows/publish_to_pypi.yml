@@ -1,4 +1,4 @@
-name: build with_hash
+name: publish_to_pypi
 
 on:
   release:
