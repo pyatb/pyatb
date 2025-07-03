@@ -315,7 +315,9 @@ INPUT = {
         # 'k_vect2'                     : [float, 3, [0.0, 1.0, 0.0]],
         # 'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
         'grid'                        : [int, 3, None],
-        'method'                      : [int, 1, 1]
+        'method'                      : [int, 1, 1],
+        'n_occ'                       : [int, 1, -1], # count from 1
+        'm_unocc'                     : [int, 1, -1]  # count from 1
     },
 
     'FERMI_SURFACE' : 

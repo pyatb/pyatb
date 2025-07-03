@@ -1,0 +1,33 @@
+INPUT_PARAMETERS
+
+# System variables
+suffix                WSSe
+calculation           scf
+esolver_type          ksdft
+symmetry              1
+init_chg              atomic
+
+# Input Files
+pseudo_dir            ./
+orbital_dir           ./
+
+# Plane Wave
+ecutwfc               100
+
+# Electronic structure
+basis_type            lcao
+ks_solver             genelpa
+nspin                 4
+smearing_method       gauss
+smearing_sigma        0.02
+mixing_type           pulay
+mixing_beta           0.7
+scf_nmax              200
+scf_thr               1e-8
+lspinorb              1
+noncolin              0
+
+# Output Variables
+out_chg               1
+out_mat_hs2           1
+out_mat_r             1

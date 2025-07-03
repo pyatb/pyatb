@@ -44,7 +44,7 @@ class Shift_Current:
                 f.write('\n------------------------------------------------------')
                 f.write('\n\n')
 
-    def set_parameters(self, occ_band, omega, domega, smearing_method, eta, grid, method, **kwarg):
+    def set_parameters(self, occ_band, omega, domega, smearing_method, eta, grid, method, n_occ, m_unocc, **kwarg):
         self.__occ_band = occ_band
         self.__start_omega = omega[0]
         self.__end_omega = omega[1]
@@ -53,6 +53,13 @@ class Shift_Current:
         self.__smearing_method = smearing_method
         self.__eta = eta
         self.__method = method
+
+        if n_occ >= 1 and m_unocc >=1 and m_unocc > n_occ:
+            self.__is_band_pair_specified = True
+            self.__n_occ = n_occ - 1
+            self.__m_unocc = m_unocc - 1
+        else:
+            self.__is_band_pair_specified = False
         
         k_start = np.array([0.0, 0.0, 0.0], dtype=float)
         k_vect1 = np.array([1.0, 0.0, 0.0], dtype=float)
@@ -71,6 +78,10 @@ class Shift_Current:
                 f.write(' >> eta             : %-10.6f\n' % (self.__eta))
                 f.write(' >> grid            : %d %d %d\n' % (grid[0], grid[1], grid[2]))
                 f.write(' >> method          : %d' %(self.__method))
+
+                if self.__is_band_pair_specified:
+                    f.write('\n >> n_occ           : %d' %(self.__n_occ+1))
+                    f.write('\n >> m_unocc         : %d' %(self.__m_unocc+1))
 
     def print_data(self):
         output_path = self.output_path
@@ -105,10 +116,16 @@ class Shift_Current:
             kpoint_num = ik_process.k_direct_coor_local.shape[0]
 
             if kpoint_num:
-                shift_current_value = self.__tb_solver.get_shift_current(
-                    self.nspin, self.__omega_num, self.__domega, self.__start_omega, self.__smearing_method, 
-                    self.__eta, self.__occ_band, ik_process.k_direct_coor_local, total_kpoint_num, self.__method
-                )
+                if self.__is_band_pair_specified:
+                    shift_current_value = self.__tb_solver.get_shift_current_n_m_pair(
+                        self.nspin, self.__omega_num, self.__domega, self.__start_omega, self.__smearing_method, 
+                        self.__eta, self.__occ_band, ik_process.k_direct_coor_local, total_kpoint_num, self.__n_occ, self.__m_unocc, self.__method
+                    )
+                else:
+                    shift_current_value = self.__tb_solver.get_shift_current(
+                        self.nspin, self.__omega_num, self.__domega, self.__start_omega, self.__smearing_method, 
+                        self.__eta, self.__occ_band, ik_process.k_direct_coor_local, total_kpoint_num, self.__method
+                    )
 
                 self.shift_current += shift_current_value
 

@@ -44,7 +44,7 @@ class Berry_Curvature_Dipole:
                 f.write('\n')
                 f.write('\n------------------------------------------------------')
                 f.write('\n|                                                    |')
-                f.write('\n|                 Berry Curvature Dipole                   |')
+                f.write('\n|                 Berry Curvature Dipole             |')
                 f.write('\n|                                                    |')
                 f.write('\n------------------------------------------------------')
                 f.write('\n\n')
@@ -143,39 +143,55 @@ class Berry_Curvature_Dipole:
             
         return
     
-    def print_data(self,data):
+    def print_data(self, data):
         output_path = self.output_path
-        np.savetxt(os.path.join(output_path, 'bcd.dat'), data, fmt='%0.8f')
-        return
-    def print_plot_script(self):
-        v1 = self.__tb.direct_to_cartesian_kspace(self.__k_vect1)
-        v2 = self.__tb.direct_to_cartesian_kspace(self.__k_vect2)
-        v3 = self.__tb.direct_to_cartesian_kspace(self.__k_vect3)
-        V = np.linalg.det(np.array([v1.T,v2.T,v3.T]))
-        S = np.linalg.norm(np.cross(v1,v2))
-        C = S*(2*np.pi)/V
-        
-        
-        output_path = os.path.join(self.output_path, '')
-        with open(os.path.join(output_path, 'plot_bcd.py'), 'w') as f:
-            bcd_file = os.path.join(output_path, 'bcd.dat')
-            
+        E_min = self.__start_omega
+        E_max = self.__end_omega
+        E_num = self.__omega_num
+        E = np.linspace(E_min, E_max, E_num)
 
-            plot_script = """import json
+        with open(os.path.join(output_path, 'bcd.dat'), 'w') as f:
+            f.write("%1s%10s%14s%15s%15s%15s%15s%15s%15s%15s%15s\n"
+                    %('#', 'Ef(eV)', 'xx', 'xy', 'xz', 'yx', 
+                    'yy', 'yz', 'zx', 'zy', 'zz'))
+            for i, iE in enumerate(E):
+                f.write("%10.5f"%(iE))
+                for direction in range(9):
+                    f.write("%15.6e"%(data[direction, i]))
+                f.write('\n')
+        return
+    
+    def print_plot_script(self):
+        output_path = self.output_path
+        script_path = os.path.join(output_path, 'plot_bcd.py')
+        with open(script_path, 'w') as f:
+            gridz = self.grid[2]
+            z = self.__tb.lattice_vector[2][2] * self.__tb.lattice_constant
+            plot_script = f'''
 import os
 import numpy as np
-import matplotlib.pyplot as plt
+from scipy.special import expit
 from multiprocessing import Pool, cpu_count
+import matplotlib.pyplot as plt
 
+# work_path = '{output_path}'
+work_path = os.getcwd()
 
+# 热能项 kT（单位 eV），用于费米分布函数中的 smearing 处理
+# 典型室温下 kT = 0.02585 eV（T = 300 K）
+smearing_values = 5e-2
 
-E_min = {E_min}
-E_max = {E_max}
-E_num = int({E_num})
-
+# 检查z方向的网格是否为1，判断是否为2D材料，提取z方向厚度
+z_direction_is_one = {gridz} == 1
+if z_direction_is_one:
+    is_plot_2D = True
+    layer_thickness = {z} # Angstrom
+else:
+    is_plot_2D = False
 
 # 定义方向字典
-direction = {{'xx': 1,
+direction = {{
+    'xx': 1,
     'xy': 2,
     'xz': 3,
     'yx': 4,
@@ -187,121 +203,104 @@ direction = {{'xx': 1,
 }}
 
 # 读取数据文件
-data = np.loadtxt('bcd.dat').T
+data = np.loadtxt('bcd.dat')
+E = data[:, 0]
+bcd_data = data[:, 1:]
 
-# 设置能量范围
-x = np.linspace(E_min, E_max, E_num)
+def partial_f(smearing, E, mu):
+    """
+    smearing is kT
+    f(E) = 1 / (np.exp((E-mu)/kT) + 1)
+    expit(x) = 1 / (1 + np.exp(-x))
+    \partial_E f(E) = - 1 / kT * f(E) * (1 - f(E))
 
-# 初始化smearing值列表
-smearing_values = [5e-3, 2e-3, 8e-3, 1e-3, 1e-2, 5e-2, 5e-4, 8e-2]
-
-
-def partial_f(smearing, E):
-    temp = np.exp(E / smearing)
-    ans = temp / ((1 + temp)**2 * smearing)
+    return -\partial_E f(E)
+    """
+    x = -(E - mu) / smearing
+    f_E = expit(x)
+    ans = f_E * (1.0 - f_E) / smearing
     return ans
 
-# 并行处理函数
-def process_row(i, data, x, smearing):
+# 计算指定费米能的BCD
+def process_row(mu, bcd_data, E, smearing):
     result = np.zeros(9, dtype=float)
-    for j in range(E_num):
-        result += data[j, :] * partial_f(smearing, (x[i] - x[j])) * 57.3302236800000031
+    for i, iE in enumerate(E):
+        result += bcd_data[i, :] * partial_f(smearing, iE, mu)
     return result
 
-# 定义函数来检测和调整smearing值
-def find_working_smearing(data, x, smearing_values):
-    for smearing in smearing_values:
-        try:
-            data_smear = np.zeros([E_num, 9], dtype=float)
-            with Pool(cpu_count()) as pool:
-                results = pool.starmap(process_row, [(i, data, x, smearing) for i in range(E_num)])
-            for i, result in enumerate(results):
-                data_smear[i, :] = result
-            print(f"Working smearing found: {{smearing:.1e}}")
-            return smearing, data_smear
-        except (FloatingPointError, OverflowError):
-            print(f"Smearing {{smearing:.1e}} did not work. Trying next value.")
-    raise ValueError("Unable to find a suitable smearing value after multiple attempts")
+# 并行计算不同费米能的BCD
+def cal_bcd_smear(bcd_data, E, smearing):
+    E_num = E.size
+    bcd_data_smear = np.zeros([E_num, 9], dtype=float)
+    with Pool(cpu_count()) as pool:
+        results = pool.starmap(process_row, [(mu, bcd_data, E, smearing) for mu in E])
+    for i, result in enumerate(results):
+        bcd_data_smear[i, :] = result
 
-# 尝试找到合适的smearing值
-try:
-    np.seterr(over='raise')  # 设置浮点错误为异常
-    smearing, data_smear = find_working_smearing(data, x, smearing_values)
-except ValueError as e:
-    print(e)
-    exit(1)
+    return bcd_data_smear
 
-# 检查z方向的网格是否为1，并获取晶格常数
-z_direction_is_one = {gridz} == 1
-z_lattice_constant = {z} if z_direction_is_one else 1.0
+bcd_data_smear = cal_bcd_smear(bcd_data, E, smearing_values)
 
 # 创建3d_plot文件夹
 os.makedirs('3d_plot', exist_ok=True)
 
 # 创建并保存3D图形
-fig, axs = plt.subplots(3, 3, figsize=(20, 12))
+fig, axs = plt.subplots(3, 3, figsize=(20, 12), tight_layout=True)
 fig.suptitle('Berry Curvature Dipole', fontsize=20)
 
 for ax, (key, value) in zip(axs.flat, direction.items()):
     ax.set_title('%s'%(key), fontsize=18)
-    ax.set_xlim(x[0], x[-1])
+    ax.set_xlim(E[0], E[-1])
     ax.set_xlabel('$\omega (eV)$', fontsize=16)
     ax.set_ylabel('$BCD_{{%s}} $'%(key), fontsize=16)
-    ax.plot(x, data_smear[:, value - 1], color='b', linewidth=1, linestyle='-')
+    ax.plot(E, bcd_data_smear[:, value - 1], color='b', linewidth=1, linestyle='-')
     ax.tick_params(axis='both', which='major', labelsize=12)
 
-plt.tight_layout(rect=[0, 0, 1, 0.96])
-plt.savefig('3d_plot/bcd-all.pdf', dpi=300)
-plt.savefig('bcd-all.pdf', dpi=300)
-# plt.show()
+plt.savefig('3d_plot/bcd-all.pdf')
+plt.savefig('bcd-all.pdf')
 
 # 另外保存每张3D子图
 for key, value in direction.items():
-    fig_single, ax_single = plt.subplots()
+    fig_single, ax_single = plt.subplots(tight_layout=True)
     ax_single.set_title('Berry Curvature Dipole')
-    ax_single.set_xlim(x[0], x[-1])
+    ax_single.set_xlim(E[0], E[-1])
     ax_single.set_xlabel('$\omega (eV)$')
     ax_single.set_ylabel('$BCD_{{%s}} $'%(key))
-    ax_single.plot(x, data_smear[:, value - 1], color='b', linewidth=1, linestyle='-')
+    ax_single.plot(E, bcd_data_smear[:, value - 1], color='b', linewidth=1, linestyle='-')
     fig_single.savefig('3d_plot/bcd-'+'%s.pdf'%(key))
     plt.close(fig_single)
 
-# 如果z方向的网格为1，为二维材料，创建2d_plot文件夹，并保存2D图形
-if z_direction_is_one:
+# 二维材料，创建2d_plot文件夹，并保存2D图形
+if is_plot_2D:
     os.makedirs('2d_plot', exist_ok=True)
 
     # 创建3x3的2D图形布局
-    fig, axs = plt.subplots(3, 3, figsize=(20, 12))
+    fig, axs = plt.subplots(3, 3, figsize=(20, 12), tight_layout=True)
     fig.suptitle('Berry Curvature Dipole in 2D', fontsize=20)
 
     for ax, (key, value) in zip(axs.flat, direction.items()):
         ax.set_title('%s'%(key), fontsize=18)
-        ax.set_xlim(x[0], x[-1])
+        ax.set_xlim(E[0], E[-1])
         ax.set_xlabel('$\omega (eV)$', fontsize=16)
         ax.set_ylabel('$BCD_{{%s}} (\AA)$'%(key), fontsize=16)
-        ax.plot(x, data_smear[:, value - 1] * z_lattice_constant, color='b', linewidth=1, linestyle='-')
+        ax.plot(E, bcd_data_smear[:, value - 1] * layer_thickness, color='b', linewidth=1, linestyle='-')
         ax.tick_params(axis='both', which='major', labelsize=12)
 
-    plt.tight_layout(rect=[0, 0, 1, 0.96])
     plt.savefig('2d_plot/bcd-all_2d.pdf', dpi=300)
     plt.savefig('bcd-all_2d.pdf', dpi=300)
-    # plt.show()
 
     # 另外保存每张2D子图
     for key, value in direction.items():
-        fig_single, ax_single = plt.subplots()
+        fig_single, ax_single = plt.subplots(tight_layout=True)
         ax_single.set_title('Berry Curvature Dipole')
-        ax_single.set_xlim(x[0], x[-1])
+        ax_single.set_xlim(E[0], E[-1])
         ax_single.set_xlabel('$\omega (eV)$')
         ax_single.set_ylabel('$BCD_{{%s}} (\AA)$'%(key))
-        ax_single.plot(x, data_smear[:, value - 1] * z_lattice_constant, color='b', linewidth=1, linestyle='-')
+        ax_single.plot(E, bcd_data_smear[:, value - 1] * layer_thickness, color='b', linewidth=1, linestyle='-')
         fig_single.savefig('2d_plot/bcd-'+'%s_2d.pdf'%(key))
         plt.close(fig_single)
 
-    
-    
-""".format(E_min=self.__start_omega, E_max=self.__end_omega, E_num = self.__omega_num, gridz = self.grid[2],z = self.__tb.lattice_vector[2][2]*self.__tb.lattice_constant,output_path=output_path)
-
+'''
             f.write(plot_script)
 
         return

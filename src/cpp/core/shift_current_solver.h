@@ -19,7 +19,9 @@ public:
         const double &domega,
         const double &start_omega,
         const int &smearing_method,
-        const double &eta
+        const double &eta,
+        int occ_band_index=-1, 
+        int unocc_band_index=-1
     );
 
     MatrixXd get_shift_current_conductivity(
@@ -69,7 +71,9 @@ private:
     double start_omega;
     int smearing_method = 1;
     double eta;
-    
+    bool is_band_pair_specified = false;
+    int occ_band_index = -1;
+    int unocc_band_index = -1;
 };
 
 #endif

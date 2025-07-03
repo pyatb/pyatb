@@ -969,6 +969,37 @@ void interface_python::get_shift_current(
 }
 
 
+void interface_python::get_shift_current_n_m_pair(
+    const int &nspin,
+    const int &omega_num,
+    const double &domega,
+    const double &start_omega,
+    const int &smearing_method,
+    const double &eta,
+    const int &occupied_band_num,
+    const MatrixXd &k_direct_coor,
+    const int &total_kpoint_num,
+    const int &n_occ, 
+    const int &m_unocc,
+    const int &method,
+    py::array_t<double> shift_current
+)
+{
+    auto data = shift_current.mutable_unchecked<2>();
+
+    shift_current_solver SCS;
+    SCS.set_parameters(nspin, omega_num, domega, start_omega, smearing_method, eta, n_occ, m_unocc);
+    MatrixXd tem = SCS.get_shift_current_conductivity(Base_Data, k_direct_coor, total_kpoint_num, occupied_band_num, method);
+
+    for (int i = 0; i < 18; ++i)
+    {
+        for (int i_omega = 0; i_omega < omega_num; ++i_omega)
+        {
+            data(i, i_omega) += tem(i, i_omega);
+        }
+    }
+}
+
 
 void interface_python::get_velocity_matrix(
     const MatrixXd &k_direct_coor,
@@ -1344,6 +1375,7 @@ PYBIND11_MODULE(interface_python, m)
         .def("get_wilson_loop", &interface_python::get_wilson_loop)
         .def("get_optical_conductivity_by_kubo", &interface_python::get_optical_conductivity_by_kubo)
         .def("get_shift_current", &interface_python::get_shift_current)
+        .def("get_shift_current_n_m_pair", &interface_python::get_shift_current_n_m_pair)
         .def("get_second_harmonic", &interface_python::get_second_harmonic)
         .def("get_pockels", &interface_python::get_pockels)
         .def("get_second_order_static", &interface_python::get_second_order_static)

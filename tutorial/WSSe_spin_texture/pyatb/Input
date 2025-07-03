@@ -1,0 +1,56 @@
+INPUT_PARAMETERS
+{
+    nspin                           4
+    package                         ABACUS
+    fermi_energy                    1.4232523137
+    fermi_energy_unit               eV
+    HR_route                        ../abacus/OUT.WSSe/data-HR-sparse_SPIN0.csr
+    SR_route                        ../abacus/OUT.WSSe/data-SR-sparse_SPIN0.csr
+    rR_route                        ../abacus/OUT.WSSe/data-rR-sparse.csr
+    HR_unit                         Ry
+    rR_unit                         Bohr
+    max_kpoint_num                  4000
+}
+
+LATTICE
+{
+    lattice_constant                1.8897162
+    lattice_constant_unit           Bohr
+    lattice_vector
+    3.2521424294         0.0000000000         0.0000000000
+    1.6260712147         2.8164379605         0.0000000000
+    0.0000000000         0.0000000000        18.2324867249
+}
+
+BAND_STRUCTURE
+{
+    wf_collect                0
+    kpoint_mode               line
+    kpoint_num                7
+    high_symmetry_kpoint
+    0.0000000000   0.0000000000   0.0000000000  100    # G
+    0.0000000000   0.5000000000   0.0000000000  100    # M'
+    0.3333333333   0.6666666666   0.0000000000  100    # K'
+    0.0000000000   0.0000000000   0.0000000000  100    # G
+    0.5000000000   0.5000000000   0.0000000000  100    # M
+    0.6666666666   0.3333333333   0.0000000000  100    # K
+    0.0000000000   0.0000000000   0.0000000000  1      # G
+    kpoint_label                    G,M',K',G,M,K,G
+}
+
+
+SPIN_TEXTURE
+{
+    band_range                35 38
+    kpoint_mode               line
+    kpoint_num                7
+    high_symmetry_kpoint
+    0.0000000000   0.0000000000   0.0000000000  100    # G
+    0.0000000000   0.5000000000   0.0000000000  100    # M'
+    0.3333333333   0.6666666666   0.0000000000  100    # K'
+    0.0000000000   0.0000000000   0.0000000000  100    # G
+    0.5000000000   0.5000000000   0.0000000000  100    # M
+    0.6666666666   0.3333333333   0.0000000000  100    # K
+    0.0000000000   0.0000000000   0.0000000000  1      # G
+    kpoint_label                    G,M',K',G,M,K,G
+}

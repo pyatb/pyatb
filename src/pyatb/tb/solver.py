@@ -204,6 +204,12 @@ class solver:
 
         return shift_current
     
+    def get_shift_current_n_m_pair(self, nspin, omega_num, domega, start_omega, smearing_method, eta, occupiedNumber, k_direct_coor, total_kpoint_num, n_occ, m_unocc, method=1):
+        shift_current = np.zeros([18, omega_num], dtype=float)
+        self.tb_solver.get_shift_current_n_m_pair(nspin, omega_num, domega, start_omega, smearing_method, eta, occupiedNumber, k_direct_coor, total_kpoint_num, n_occ, m_unocc, method, shift_current)
+
+        return shift_current
+    
     def get_second_harmonic(self, method,eta,omega_num, domega, start_omega, fermi_energy, total_kpoint_num,k_direct_coor):
         second_harmonic = np.zeros([27, omega_num], dtype=complex)
         self.tb_solver.get_second_harmonic(method,eta,omega_num, domega, start_omega, fermi_energy, total_kpoint_num,k_direct_coor, second_harmonic)

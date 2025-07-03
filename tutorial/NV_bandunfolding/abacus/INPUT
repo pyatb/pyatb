@@ -1,0 +1,32 @@
+INPUT_PARAMETERS
+
+# System variables
+suffix                NV
+calculation           scf
+esolver_type          ksdft
+symmetry              1
+init_chg              atomic
+
+# Input Files
+pseudo_dir            ./
+orbital_dir           ./
+
+# Plane Wave
+ecutwfc               100
+
+# Electronic structure
+basis_type            lcao
+ks_solver             genelpa
+nelec                 254
+nspin                 1
+smearing_method       gauss
+smearing_sigma        5e-4
+mixing_type           broyden
+mixing_beta           0.8
+scf_nmax              300
+scf_thr               1e-7
+
+# Output Variables
+out_chg               1
+out_mat_hs2           1
+out_mat_r             1

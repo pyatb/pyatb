@@ -1,0 +1,36 @@
+INPUT_PARAMETERS
+{
+    nspin                          4
+    package                        ABACUS
+    fermi_energy                   9.5064566484
+    fermi_energy_unit              eV
+    HR_route                       ../abacus/OUT.Bi2Se3/data-HR-sparse_SPIN0.csr
+    SR_route                       ../abacus/OUT.Bi2Se3/data-SR-sparse_SPIN0.csr
+    rR_route                       ../abacus/OUT.Bi2Se3/data-rR-sparse.csr
+    HR_unit                        Ry
+    rR_unit                        Bohr
+    max_kpoint_num                 8000
+}
+
+LATTICE
+{
+    lattice_constant               1.8897162
+    lattice_constant_unit          Bohr
+    lattice_vector
+    -2.069  -3.583614  0.000000
+     2.069  -3.583614  0.000000
+     0.000   2.389075  9.546667
+}
+
+WILSON_LOOP
+{
+    occ_band           78
+    # kz = 0.0 half plane
+    k_start            0.0  0.0  0.0
+    k_vect1            1.0  0.0  0.0
+    k_vect2            0.0  0.5  0.0
+    nk1                101
+    nk2                101
+}
+
+

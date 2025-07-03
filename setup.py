@@ -34,7 +34,7 @@ ext_modules = [
 ]
 
 # 设置默认的大版本号和是否是 release 版本
-ver_default = '1.1.0'
+ver_default = '1.1.1'
 ver_release = True           # 将此设置为 True 以标记为 release 版本
 
 # 获取环境变量中的 commit hash 值

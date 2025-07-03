@@ -279,6 +279,22 @@ public:
         const int &method,
         py::array_t<double> shift_current
     );
+
+    void get_shift_current_n_m_pair(
+        const int &nspin,
+        const int &omega_num,
+        const double &domega,
+        const double &start_omega,
+        const int &smearing_method,
+        const double &eta,
+        const int &occupied_band_num,
+        const MatrixXd &k_direct_coor,
+        const int &total_kpoint_num,
+        const int &n_occ, 
+        const int &m_unocc,
+        const int &method,
+        py::array_t<double> shift_current
+    );
     
     void get_second_harmonic(
     const int &method,

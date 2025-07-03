@@ -62,7 +62,7 @@ class Second_Harmonic_Generation:
                 f.write('\n')
                 f.write('\n------------------------------------------------------')
                 f.write('\n|                                                    |')
-                f.write('\n|                        SHG                       |')
+                f.write('\n|                        SHG                         |')
                 f.write('\n|                                                    |')
                 f.write('\n------------------------------------------------------')
                 f.write('\n\n')
@@ -130,7 +130,7 @@ class Second_Harmonic_Generation:
         self.method = method
         if RANK == 0:
             with open(RUNNING_LOG, 'a') as f:
-                f.write('start')
+                f.write('\nEnter the SHG calculation module ==> \n')
 
         #self.set_k_direct(kpt)
         #self.set_k_mp(np.array([1,1,1],dtype = int))
@@ -255,66 +255,111 @@ class Second_Harmonic_Generation:
             #np.savetxt(f, self.kvec_d, fmt='%0.8f')
         #kpt_num = self.kvec_d.shape
         if self.nspin == 1:
-            with open(os.path.join(output_path, 'shg.dat'), 'a+') as f:
-                np.savetxt(f, self.shg_3v.T*2, fmt='%0.8f')
+            factor = 2.0
         elif self.nspin == 4:
-            with open(os.path.join(output_path, 'shg.dat'), 'a+') as f:
-                np.savetxt(f, self.shg_3v.T, fmt='%0.8f')
-    def print_plot_script(self):
-        output_path = os.path.join(self.output_path, '')
-        with open(os.path.join(output_path, 'plot_shg.py'), 'w') as f:
-            bcd_file = os.path.join('shg.dat')
-            
+            factor = 1.0
 
-            plot_script = """import numpy as np
+        with open(os.path.join(output_path, 'shg_real.dat'), 'a+') as f:
+            for i_omega in range(self.__omega_num):
+                f.write("%10.5f"%(self.__start_omega + self.__domega * i_omega))
+                for a in range(3):
+                    for b in range(3):
+                        for c in range(3):
+                            direction = 9 * a + 3 * b + c
+                            f.write("%18.8e"%(self.shg_3v[direction, i_omega].real * factor))
+                f.write('\n')
+
+        with open(os.path.join(output_path, 'shg_imag.dat'), 'a+') as f:
+            for i_omega in range(self.__omega_num):
+                f.write("%10.5f"%(self.__start_omega + self.__domega * i_omega))
+                for a in range(3):
+                    for b in range(3):
+                        for c in range(3):
+                            direction = 9 * a + 3 * b + c
+                            f.write("%18.8e"%(self.shg_3v[direction, i_omega].imag * factor))
+                f.write('\n')
+
+    def print_plot_script(self):
+        output_path = self.output_path
+        script_path = os.path.join(output_path, 'plot_shg.py')
+        with open(script_path, 'w') as f:
+            plot_script = f"""
+import os
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
-data = np.loadtxt('shg.dat',dtype = complex)
+# work_path = '{output_path}'
+work_path = os.getcwd()
 
+# These three directions represent the three indices of the $\chi^{{abc}}$ matrices.
+a = 'x'
+b = 'y'
+c = 'z'
 
-E_min = {E_min}
-E_max = {E_max}
-E_num = {E_num}
-omega = np.linspace(E_min,E_max,E_num)
+shg_real = np.loadtxt('shg_real.dat', dtype=float)
+shg_imag = np.loadtxt('shg_imag.dat', dtype=float)
 
-##KK relation
-def KK(omega,imag):
+d_label = {{
+    'x' : 0,
+    'y' : 1,
+    'z' : 2
+}}
+
+# Kramers-Kronig transform on [0, \infty).
+def KK_pos_half_axis(omega, imag):
     num = omega.shape[0]
     real = np.zeros(num)
     for i in range(num):
         for j in range(num):
-            if (i!=j):
-                real[i] += imag[j]/(omega[j]-omega[i])
-    real = real*(omega[1]-omega[0])/np.pi
+            if i != j:
+                real[i] += omega[j] * imag[j] / (omega[j]**2 - omega[i]**2)
+    real = real * 2 * (omega[1] - omega[0]) / np.pi
     return real
-#these three directions indicates the three dimensions of chi matrices
-#where x->0 y->1 z->2
-direction1 = 2
-direction2 = 1
-direction3 = 1
-direction = 9*direction1+3*direction2+direction3
 
-plt.plot(omega,data[:,direction].real, color = 'blue',label = 'Real')
-plt.plot(omega,data[:,direction].imag, color = 'orange',label = 'Imag')
-plt.plot(omega, np.sqrt(data[:,direction].real**2+data[:,direction].imag**2), color = 'red',label = 'Norm')
-plt.plot(omega, KK(omega,data[:,direction].imag), color = 'blue',linestyle='--',label='KK relation')
+# plot
+direction = 9*d_label[a] + 3*d_label[b] + d_label[c] + 1
+omega = shg_real[:, 0]
+plot_shg_real = shg_real[:, direction]
+plot_shg_imga = shg_imag[:, direction]
 
-plt.axhline(0)
-plt.xlabel('$\omega (eV)$')
-plt.ylabel('$\chi$ (nm/V)')
-plt.xlim(E_min,E_max)
+fig, ax = plt.subplots(1, 1, tight_layout=True)
 
-#gap = 1.88
-#plt.axvline(gap/2,c='black',linestyle = '--')
-#plt.axvline(gap,c='black',linestyle = '--')
-plt.legend()
-plt.savefig('shg.pdf')
-    
-    
-""".format(E_min=self.__start_omega, E_max=self.__end_omega, E_num = self.__omega_num)
+mysize=10
+mpl.rcParams['font.size'] = mysize
 
+def set_fig(fig, ax, bwidth=1.0, width=1, mysize=10):
+    ax.spines['top'].set_linewidth(bwidth)
+    ax.spines['right'].set_linewidth(bwidth)
+    ax.spines['left'].set_linewidth(bwidth)
+    ax.spines['bottom'].set_linewidth(bwidth)
+    ax.tick_params(length=5, width=width, labelsize=mysize)
+
+set_fig(fig, ax)
+
+ax.plot(omega, plot_shg_real, color='blue', label='Real')
+ax.plot(omega, plot_shg_imga, color='orange', label='Imag')
+ax.plot(omega, np.sqrt(plot_shg_real**2 + plot_shg_imga**2), color='red', label='Norm')
+
+ax.axhline(0.0, color ="black", alpha = 1, lw = 1, linestyle='--')
+
+ax.set_xlabel('$\hbar \omega (eV)$')
+ax.set_ylabel('$\chi^{{%s}}$ (nm/V)'%(a+b+c))
+ax.set_xlim(omega[0], omega[-1])
+ax.legend()
+
+plt.savefig('shg.pdf')    
+"""
             f.write(plot_script)
+
+        try:
+            import subprocess
+            import sys
+            script_directory = os.path.dirname(script_path)
+            result = subprocess.run([sys.executable, script_path], cwd=script_directory, capture_output=True, text=True)
+        except ImportError:
+            print('ImportError: SHG Plot requires matplotlib package!')
+            return None
         
 
     

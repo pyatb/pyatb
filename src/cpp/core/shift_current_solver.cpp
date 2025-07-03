@@ -7,7 +7,9 @@ void shift_current_solver::set_parameters(
     const double &domega,
     const double &start_omega,
     const int &smearing_method,
-    const double &eta
+    const double &eta,
+    int occ_band_index, 
+    int unocc_band_index
 )
 {
     this->nspin = nspin;
@@ -16,6 +18,18 @@ void shift_current_solver::set_parameters(
     this->start_omega = start_omega;
     this->smearing_method = smearing_method;
     this->eta = eta;
+
+    if (occ_band_index >= 0 && unocc_band_index >= 0 && occ_band_index < unocc_band_index)
+    {
+        this->is_band_pair_specified = true;
+        this->occ_band_index = occ_band_index;
+        this->unocc_band_index = unocc_band_index;
+    }
+    else
+    {
+        this->is_band_pair_specified = false;
+    }
+    
 }
 
 
@@ -103,18 +117,27 @@ MatrixXd shift_current_solver::get_shift_current_conductivity_ik(
     std::vector<int> n;
     std::vector<int> m;
 
-    for (int in = occupied_num; in < basis_num; ++in)
+    if (is_band_pair_specified)
     {
-        for (int im = 0; im < occupied_num; ++im)
+        n.push_back(unocc_band_index);
+        m.push_back(occ_band_index);
+    }
+    else
+    {
+        for (int in = occupied_num; in < basis_num; ++in)
         {
-            double delta_e = eigenvalues(in) - eigenvalues(im);
-            if (delta_e >= start_omega && delta_e < start_omega + omega_num * domega)
+            for (int im = 0; im < occupied_num; ++im)
             {
-                n.push_back(in);
-                m.push_back(im);
+                double delta_e = eigenvalues(in) - eigenvalues(im);
+                if (delta_e >= start_omega && delta_e < start_omega + omega_num * domega)
+                {
+                    n.push_back(in);
+                    m.push_back(im);
+                }
             }
         }
     }
+    
 
     MatrixXd I_nm;
     if (method == 0)

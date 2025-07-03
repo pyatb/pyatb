@@ -1,0 +1,72 @@
+INPUT_PARAMETERS
+{
+    nspin               4
+    package             ABACUS
+    fermi_energy        0.0
+    fermi_energy_unit   eV
+    HR_route            data-HR-sparse_SPIN0.csr
+    SR_route            data-SR-sparse_SPIN0.csr
+    rR_route            data-rR-sparse_SPIN0.csr
+    HR_unit             eV
+    rR_unit             Angstrom
+    max_kpoint_num      1000000
+}
+
+LATTICE
+{
+    lattice_constant   1
+    lattice_constant_unit   Angstrom
+    lattice_vector
+    1 0 0
+    0 1 0
+    0 0 1
+}
+
+BAND_STRUCTURE
+{
+    kpoint_mode     line
+    kpoint_num      6
+    high_symmetry_kpoint
+    0.50000 0.00000  0.5000 200 # A1
+    0.00000 0.00000  0.0000 200 # G
+   -0.50000 0.00000 -0.5000 200 # A2
+   -0.50000 0.00000  0.5000 200 # A3
+    0.00000 0.00000  0.0000 200 # G
+    0.50000 0.00000 -0.5000 1   # A4
+    kpoint_label    A1,G,A2,A3,G,A4
+}
+
+FIND_NODES
+{
+    energy_range                    -0.1 0.1
+    initial_grid                    100 100 100
+    initial_threshold               0.01
+    adaptive_grid                   10 10 10
+    adaptive_threshold              0.001
+}
+
+BERRY_CURVATURE
+{
+    kpoint_mode     line
+    kpoint_num      2
+    high_symmetry_kpoint
+   -0.50000 0.00000 0.2500 200 # -X
+    0.50000 0.00000 0.2500 1   #  X
+    kpoint_label    -X, X
+}
+
+CHIRALITY
+{  
+    k_vect                          0.25000000 0.00000000 0.25000000
+    radius                          0.9
+    point_num                       10000
+    method                          1
+}
+
+BERRY_CURVATURE_DIPOLE
+{
+    omega    -3 3
+    domega   0.001
+    grid     200 200 200
+}
+

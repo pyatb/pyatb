@@ -1,0 +1,45 @@
+INPUT_PARAMETERS
+{
+    nspin                           4   
+    package                         ABACUS
+    fermi_energy                    -0.82497406093
+    fermi_energy_unit               eV  
+    HR_route                        ../abacus/OUT.FeCl2/data-HR-sparse_SPIN0.csr
+    SR_route                        ../abacus/OUT.FeCl2/data-SR-sparse_SPIN0.csr
+    rR_route                        ../abacus/OUT.FeCl2/data-rR-sparse.csr
+    HR_unit                         Ry  
+    rR_unit                         Bohr
+}
+
+
+LATTICE
+{
+    lattice_constant                1.8897162
+    lattice_constant_unit           Bohr
+    lattice_vector
+    3.4750    0.0000    0.00000
+   -1.7375    3.0094    0.00000
+    0.0000    0.0000   17.53999
+}
+
+BAND_STRUCTURE
+{
+    wf_collect                      0   
+    kpoint_mode                     line
+    kpoint_num                      4   
+    high_symmetry_kpoint
+    0.5       0        0       200  # M
+    0         0        0       200  # G 
+    0.3333    0.3333   0.3333  200  # K
+    0.5       0        0       1    # M 
+    kpoint_label                    M, G, K, M
+}
+
+ANC
+{
+    fermi_range                    -1.0 1.0
+    de                             0.01
+    eta                            0.01
+    integrate_grid                 200 200 1
+}
+
