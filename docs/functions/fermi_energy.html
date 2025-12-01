@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FERMI_ENERGY &mdash; PYATB v1.0.0  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>FERMI_ENERGY &mdash; PYATB v1.1.2  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +32,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            PYATB v1.0.0
+            PYATB v1.1.2
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -76,6 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="optical_conductivity.html">OPTICAL_CONDUCTIVITY</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shift_current.html">SHIFT_CURRENT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="berry_curvature_dipole.html">BERRY_CURVATURE_DIPOLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shg.html">SECOND_HARMONIC_GENERATION</a></li>
 </ul>
 </li>
 </ul>
@@ -90,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PYATB v1.0.0</a>
+          <a href="../index.html">PYATB v1.1.2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -110,9 +109,9 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="fermi-energy">
-<h1>FERMI_ENERGY<a class="headerlink" href="#fermi-energy" title="Permalink to this heading">¶</a></h1>
+<h1>FERMI_ENERGY<a class="headerlink" href="#fermi-energy" title="Link to this heading">¶</a></h1>
 <section id="introduction">
-<h2>introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<h2>introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>This function is to calculate the Fermi energy of solid materials given temperature and electronic occupation number. If the system is an insulator, fermi energy is given by the valence band maximum (VBM) .</p>
 <p>For each <span class="math notranslate nohighlight">\(\mathbf{k}\)</span> point, the  probability of finding an electron in any energy state should obey the Fermi-Dirac distribution. The integration of occupied electrons over the entire Brillouin zone should be the occupation number. Though which, the exact Fermi energy could be attained following Newton interpolation.</p>
 <div class="math notranslate nohighlight">
@@ -125,7 +124,7 @@ N[E_f]=\int_{BZ}[d\mathbf{k}]\sum_nf(E_n,E_f,T)
 \]</div>
 </section>
 <section id="example">
-<h2>example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<h2>example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h2>
 <p>You can find an example of how to calculate the Fermi energy of Copper in the <code class="docutils literal notranslate"><span class="pre">examples/Cu</span></code> folder.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INPUT_PARAMETERS</span>
@@ -178,7 +177,7 @@ N[E_f]=\int_{BZ}[d\mathbf{k}]\sum_nf(E_n,E_f,T)
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, PYATB.</p>
+    <p>&#169; Copyright 2025, PYATB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

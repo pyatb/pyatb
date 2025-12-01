@@ -17,8 +17,8 @@ sys.path.insert(0, os.path.abspath('.'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'PYATB v1.0.0'
-copyright = '2023, PYATB'
+project = 'PYATB v1.1.2'
+copyright = '2025, PYATB'
 author = 'PYATB'
 
 

@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WILSON_LOOP &mdash; PYATB v1.0.0  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>WILSON_LOOP &mdash; PYATB v1.1.2  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +32,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            PYATB v1.0.0
+            PYATB v1.1.2
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -76,6 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="optical_conductivity.html">OPTICAL_CONDUCTIVITY</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shift_current.html">SHIFT_CURRENT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="berry_curvature_dipole.html">BERRY_CURVATURE_DIPOLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shg.html">SECOND_HARMONIC_GENERATION</a></li>
 </ul>
 </li>
 </ul>
@@ -90,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PYATB v1.0.0</a>
+          <a href="../index.html">PYATB v1.1.2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -110,9 +109,9 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="wilson-loop">
-<h1>WILSON_LOOP<a class="headerlink" href="#wilson-loop" title="Permalink to this heading">¶</a></h1>
+<h1>WILSON_LOOP<a class="headerlink" href="#wilson-loop" title="Link to this heading">¶</a></h1>
 <section id="introduction">
-<h2>introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<h2>introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>We can determine the Z2 topology number of the topological insulator by Wilson loop. Computing the six time reversal invariant planes, we can obtain the Z2 topology metrics (<span class="math notranslate nohighlight">\(\nu_0\)</span>, <span class="math notranslate nohighlight">\(\nu_1\)</span> <span class="math notranslate nohighlight">\(\nu_2\)</span> <span class="math notranslate nohighlight">\(\nu_3\)</span>). These six planes are k1=0.0, k1=0.5, k2=0.0, k2=0.5, k3=0.0, k3=0.5, respectively. When selecting a plane, only half of the plane needs to be selected.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}
@@ -128,7 +127,7 @@ W_n(\mathbf{k_2}) = \frac{i}{2\pi} \int_{0}^{2\pi} d\mathbf{k_1} \langle u_{n,\m
 \)</span>$</p>
 </section>
 <section id="example">
-<h2>example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
+<h2>example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h2>
 <p>Here is an example of how to calculate the Wilson loop of the topological insulator Bi<span class="math notranslate nohighlight">\(_2\)</span>Se<span class="math notranslate nohighlight">\(_3\)</span> located in the <code class="docutils literal notranslate"><span class="pre">examples/Bi2Se3</span></code> folder.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INPUT_PARAMETERS</span>
@@ -187,7 +186,7 @@ W_n(\mathbf{k_2}) = \frac{i}{2\pi} \int_{0}^{2\pi} d\mathbf{k_1} \langle u_{n,\m
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, PYATB.</p>
+    <p>&#169; Copyright 2025, PYATB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

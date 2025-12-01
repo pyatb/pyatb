@@ -1,0 +1,220 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SECOND_HARMONIC_GENERATION &mdash; PYATB v1.1.2  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Detailed Introduction of the Input Files" href="../input/index.html" />
+    <link rel="prev" title="BERRY_CURVATURE_DIPOLE" href="berry_curvature_dipole.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            PYATB v1.1.2
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Quick Start</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../run.html">Run</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../input_files.html">Brief introduction of the input files</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Functions</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Functions</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="band_structure.html">BAND_STRUCTURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bandunfolding.html">BANDUNFOLDING</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fermi_energy.html">FERMI_ENERGY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fermi_surface.html">FERMI_SURFACE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="find_nodes.html">FIND_NODES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pdos.html">PDOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fat_band.html">FAT_BAND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spin_texture.html">SPIN_TEXTURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="wilson_loop.html">WILSON_LOOP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="polarization.html">POLARIZATION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="berry_curvature.html">BERRY_CURVATURE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ahc.html">AHC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chern_number.html">CHERN_NUMBER</a></li>
+<li class="toctree-l2"><a class="reference internal" href="chirality.html">CHIRALITY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jdos.html">JDOS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="optical_conductivity.html">OPTICAL_CONDUCTIVITY</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shift_current.html">SHIFT_CURRENT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="berry_curvature_dipole.html">BERRY_CURVATURE_DIPOLE</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SECOND_HARMONIC_GENERATION</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#example">example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Keywords</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../input/index.html">Detailed Introduction of the Input Files</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PYATB v1.1.2</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Functions</a></li>
+      <li class="breadcrumb-item active">SECOND_HARMONIC_GENERATION</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/functions/shg.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="second-harmonic-generation">
+<h1>SECOND_HARMONIC_GENERATION<a class="headerlink" href="#second-harmonic-generation" title="Link to this heading">¶</a></h1>
+<section id="introduction">
+<h2>introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<p>Second harmonic generation (SHG), also called frequency doubling, is a nonlinear optical process, in which photons interacting with a nonlinear material are effectively ‘combined’ to form new photons having twice the frequency of initial photons.
+The SHG coefficient is defined:</p>
+<div class="math notranslate nohighlight">
+\[
+P^c(2\omega) = \chi^{abc}(-2\omega;\omega,\omega) E^a(\omega) E^b(\omega)
+\]</div>
+<p>In PYATB, the SHG calculated using two methods. One is the commonly used form which divides SHG into inter- and intra-band parts, shown in the following formula:</p>
+<div class="math notranslate nohighlight">
+\[
+\chi_{interband}^{a b c}(-2 \omega, \omega, \omega)=  \frac{e^3}{\hbar^2 \Omega} \sum_{n m l, \mathbf{k}} \frac{r_{n m}^a\left\{r_{m l}^b r_{l n}^c\right\}}{\left(\omega_{l n}-\omega_{m l}\right)} 
+\left[\frac{2 f_{n m}}{\omega_{m n}-2 \omega}+\frac{f_{l n}}{\omega_{l n}-\omega}+\frac{f_{m l}}{\omega_{m l}-\omega}\right]
+\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{aligned}
+        \chi_{intraband}^{a b c}(-2 \omega, \omega, \omega)= &amp; \frac{i}{2} \frac{e^3}{\hbar^2 \Omega} \sum_{n m, \mathbf{k}} f_{n m}\left[\frac{2}{\omega_{m n}\left(\omega_{m n}-2 \omega\right)} r_{n m}^a\left(r_{n m ; c}^b+r_{m n ; b}^c\right)+\frac{1}{\omega_{m n}\left(\omega_{m n}-\omega\right)}\left(r_{n m ; c}^a r_{m n}^b+r_{n m ; b}^a r_{m n}^c\right)\right. \\
+        &amp; +\frac{1}{\omega_{m n}^2}\left(\frac{1}{\omega_{m n}-\omega}-\frac{4}{\omega_{m n}-2 \omega}\right) r_{n m}^a\left(r_{m n}^b \Delta_{m n}^c+r_{m n}^c \Delta_{m n}^b\right)\\
+        &amp;-\left.\frac{1}{2 \omega_{m n}\left(\omega_{m n}-\omega\right)}\left(r_{n m ; a}^b r_{m n}^c+r_{n m ; a}^c r_{m n}^b\right)\right]
+\end{aligned}
+\end{split}\]</div>
+<p>This is the most widely used form and is the default method (method 0) of SHG calculation. Secondly SHG could be expressed in the form of multiplying velocity matrices:</p>
+<div class="math notranslate nohighlight">
+\[
+\chi^{abc}\left(-2\omega; \omega, \omega\right)=-\sum_{n, m, l,\mathbf{k}} \frac{i}{2\omega^3(2\omega-\omega_{m n})}\left(\frac{f_{n l}}{\omega-\omega_{l n}}+\frac{f_{m l}}{\omega-\omega_{m l}}\right)  v_{n m}^c v_{m l}^a v_{l n}^b
+\]</div>
+<p>This form is generally aligns with the upper formula, while the calculation can be costly for a wide energy range can be contributing to a single energy point.</p>
+</section>
+<section id="example">
+<h2>example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h2>
+<p>Here, we provide an example of calculating the SHG of the GaAs (refer to folder <code class="docutils literal notranslate"><span class="pre">tutorial/GaAs_SHG/</span></code>).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INPUT_PARAMETERS</span>
+<span class="p">{</span>
+    <span class="n">nspin</span>               <span class="mi">1</span>
+    <span class="n">package</span>             <span class="n">ABACUS</span>
+    <span class="n">fermi_energy</span>        <span class="mf">10.171348972</span>
+    <span class="n">fermi_energy_unit</span>   <span class="n">eV</span>
+    <span class="n">HR_route</span>            <span class="o">../</span><span class="n">abacus</span><span class="o">/</span><span class="n">OUT</span><span class="o">.</span><span class="n">GaAs</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">HR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">SR_route</span>            <span class="o">../</span><span class="n">abacus</span><span class="o">/</span><span class="n">OUT</span><span class="o">.</span><span class="n">GaAs</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">SR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">rR_route</span>            <span class="o">../</span><span class="n">abacus</span><span class="o">/</span><span class="n">OUT</span><span class="o">.</span><span class="n">GaAs</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">rR</span><span class="o">-</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">HR_unit</span>             <span class="n">Ry</span>
+    <span class="n">rR_unit</span>             <span class="n">Bohr</span>
+   <span class="n">max_kpoint_num</span>       <span class="mi">100000</span>
+<span class="p">}</span>
+
+<span class="n">LATTICE</span>
+<span class="p">{</span>
+    <span class="n">lattice_constant</span>        <span class="mf">1.889727</span>
+    <span class="n">lattice_constant_unit</span>   <span class="n">Bohr</span>
+    <span class="n">lattice_vector</span>
+    <span class="mf">0.0000000000000000</span>    <span class="mf">2.7650000000000001</span>    <span class="mf">2.7650000000000001</span>
+    <span class="mf">2.7650000000000001</span>    <span class="mf">0.0000000000000000</span>    <span class="mf">2.7650000000000001</span>
+    <span class="mf">2.7650000000000001</span>    <span class="mf">2.7650000000000001</span>    <span class="mf">0.0000000000000000</span>
+
+<span class="p">}</span>
+
+<span class="n">SHG</span>
+<span class="p">{</span>
+    <span class="n">omega</span>           <span class="mf">0.01</span> <span class="mi">4</span>
+    <span class="n">domega</span>          <span class="mf">0.01</span>
+    <span class="n">eta</span>             <span class="mf">0.05</span>
+    <span class="n">grid</span>            <span class="mi">50</span> <span class="mi">50</span> <span class="mi">50</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">omega</span></code>: To set the energy range for the SHG, you can adjust it. the unit is eV.</p>
+<p><code class="docutils literal notranslate"><span class="pre">domega</span></code>: Specifies the energy interval of the omega.</p>
+<p><code class="docutils literal notranslate"><span class="pre">grid</span></code>: Specifies the uniform k-point grid used to calculate the SHG.</p>
+<p><code class="docutils literal notranslate"><span class="pre">eta</span></code>: <span class="math notranslate nohighlight">\(\hbar\omega \to \hbar\omega + i \eta\)</span> is used to prevent numerical divergence caused by a zero denominator.</p>
+<p>Once the task has been finished, three crucial files are produced in the <code class="docutils literal notranslate"><span class="pre">Out/Second_Harmonic_Generation</span></code> directory. These files consist of <code class="docutils literal notranslate"><span class="pre">shg_real.dat</span></code>, <code class="docutils literal notranslate"><span class="pre">shg_imag.dat</span></code> and <code class="docutils literal notranslate"><span class="pre">plot_shg.py</span></code>.</p>
+<p>The first two files contain the real and imaginary parts of the SHG’s magnitude, and the last one is a plotting script.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="berry_curvature_dipole.html" class="btn btn-neutral float-left" title="BERRY_CURVATURE_DIPOLE" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../input/index.html" class="btn btn-neutral float-right" title="Detailed Introduction of the Input Files" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, PYATB.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

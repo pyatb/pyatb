@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SPIN_TEXTURE &mdash; PYATB v1.0.0  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>SPIN_TEXTURE &mdash; PYATB v1.1.2  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -34,7 +32,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            PYATB v1.0.0
+            PYATB v1.1.2
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -76,6 +74,7 @@
 <li class="toctree-l2"><a class="reference internal" href="optical_conductivity.html">OPTICAL_CONDUCTIVITY</a></li>
 <li class="toctree-l2"><a class="reference internal" href="shift_current.html">SHIFT_CURRENT</a></li>
 <li class="toctree-l2"><a class="reference internal" href="berry_curvature_dipole.html">BERRY_CURVATURE_DIPOLE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="shg.html">SECOND_HARMONIC_GENERATION</a></li>
 </ul>
 </li>
 </ul>
@@ -90,7 +89,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PYATB v1.0.0</a>
+          <a href="../index.html">PYATB v1.1.2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -110,9 +109,9 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="spin-texture">
-<h1>SPIN_TEXTURE<a class="headerlink" href="#spin-texture" title="Permalink to this heading">¶</a></h1>
+<h1>SPIN_TEXTURE<a class="headerlink" href="#spin-texture" title="Link to this heading">¶</a></h1>
 <section id="introduction">
-<h2>introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
+<h2>introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
 <p>Spin texture refers to the spatial distribution of electron spins in momentum space. In PYATB, the spin texture is calculated as follows,</p>
 <div class="math notranslate nohighlight">
 \[
@@ -122,65 +121,69 @@
 <p>where <span class="math notranslate nohighlight">\(\hat{\sigma}_i\)</span> are the Pauli matrices, with <span class="math notranslate nohighlight">\(i\)</span>= <span class="math notranslate nohighlight">\(x\)</span>, <span class="math notranslate nohighlight">\(y\)</span>, <span class="math notranslate nohighlight">\(z\)</span>, and <span class="math notranslate nohighlight">\(s\)</span>=<span class="math notranslate nohighlight">\(\uparrow\)</span>, <span class="math notranslate nohighlight">\(\downarrow\)</span> is the spin index.</p>
 </section>
 <section id="example">
-<h2>example<a class="headerlink" href="#example" title="Permalink to this heading">¶</a></h2>
-<p>Here, we provide an example of calculating the spin texture of Bi<span class="math notranslate nohighlight">\(_2\)</span>Se<span class="math notranslate nohighlight">\(_3\)</span> (refer to folder <code class="docutils literal notranslate"><span class="pre">examples/Bi2Se3</span></code>).</p>
+<h2>example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h2>
+<p>Here, we provide an example of calculating the spin texture of WSSe (refer to folder <code class="docutils literal notranslate"><span class="pre">tutorial/WSSe_spin_texture</span></code>).</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">Input</span></code> file is:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INPUT_PARAMETERS</span>
 <span class="p">{</span>
-    <span class="n">nspin</span>                          <span class="mi">4</span>
-    <span class="n">package</span>                        <span class="n">ABACUS</span>
-    <span class="n">fermi_energy</span>                   <span class="mf">9.557219691497478</span>
-    <span class="n">fermi_energy_unit</span>              <span class="n">eV</span>
-    <span class="n">HR_route</span>                       <span class="n">data</span><span class="o">-</span><span class="n">HR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
-    <span class="n">SR_route</span>                       <span class="n">data</span><span class="o">-</span><span class="n">SR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
-    <span class="n">rR_route</span>                       <span class="n">data</span><span class="o">-</span><span class="n">rR</span><span class="o">-</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr</span>
-    <span class="n">HR_unit</span>                        <span class="n">Ry</span>
-    <span class="n">rR_unit</span>                        <span class="n">Bohr</span>
-    <span class="n">max_kpoint_num</span>                 <span class="mi">8000</span>
+    <span class="n">nspin</span>                           <span class="mi">4</span>
+    <span class="n">package</span>                         <span class="n">ABACUS</span>
+    <span class="n">fermi_energy</span>                    <span class="mf">1.4232523137</span>
+    <span class="n">fermi_energy_unit</span>               <span class="n">eV</span>
+    <span class="n">HR_route</span>                        <span class="o">../</span><span class="n">abacus</span><span class="o">/</span><span class="n">OUT</span><span class="o">.</span><span class="n">WSSe</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">HR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">SR_route</span>                        <span class="o">../</span><span class="n">abacus</span><span class="o">/</span><span class="n">OUT</span><span class="o">.</span><span class="n">WSSe</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">SR</span><span class="o">-</span><span class="n">sparse_SPIN0</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">rR_route</span>                        <span class="o">../</span><span class="n">abacus</span><span class="o">/</span><span class="n">OUT</span><span class="o">.</span><span class="n">WSSe</span><span class="o">/</span><span class="n">data</span><span class="o">-</span><span class="n">rR</span><span class="o">-</span><span class="n">sparse</span><span class="o">.</span><span class="n">csr</span>
+    <span class="n">HR_unit</span>                         <span class="n">Ry</span>
+    <span class="n">rR_unit</span>                         <span class="n">Bohr</span>
+    <span class="n">max_kpoint_num</span>                  <span class="mi">4000</span>
 <span class="p">}</span>
 
 <span class="n">LATTICE</span>
 <span class="p">{</span>
-    <span class="n">lattice_constant</span>               <span class="mf">1.8897162</span>
-    <span class="n">lattice_constant_unit</span>          <span class="n">Bohr</span>
+    <span class="n">lattice_constant</span>                <span class="mf">1.8897162</span>
+    <span class="n">lattice_constant_unit</span>           <span class="n">Bohr</span>
     <span class="n">lattice_vector</span>
-    <span class="o">-</span><span class="mf">2.069</span>  <span class="o">-</span><span class="mf">3.583614</span>  <span class="mf">0.000000</span>
-     <span class="mf">2.069</span>  <span class="o">-</span><span class="mf">3.583614</span>  <span class="mf">0.000000</span>
-     <span class="mf">0.000</span>   <span class="mf">2.389075</span>  <span class="mf">9.546667</span>
+    <span class="mf">3.2521424294</span>         <span class="mf">0.0000000000</span>         <span class="mf">0.0000000000</span>
+    <span class="mf">1.6260712147</span>         <span class="mf">2.8164379605</span>         <span class="mf">0.0000000000</span>
+    <span class="mf">0.0000000000</span>         <span class="mf">0.0000000000</span>        <span class="mf">18.2324867249</span>
+<span class="p">}</span>
+
+<span class="n">BAND_STRUCTURE</span>
+<span class="p">{</span>
+    <span class="n">wf_collect</span>                <span class="mi">0</span>
+    <span class="n">kpoint_mode</span>               <span class="n">line</span>
+    <span class="n">kpoint_num</span>                <span class="mi">7</span>
+    <span class="n">high_symmetry_kpoint</span>
+    <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># G</span>
+    <span class="mf">0.0000000000</span>   <span class="mf">0.5000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># M&#39;</span>
+    <span class="mf">0.3333333333</span>   <span class="mf">0.6666666666</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># K&#39;</span>
+    <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># G</span>
+    <span class="mf">0.5000000000</span>   <span class="mf">0.5000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># M</span>
+    <span class="mf">0.6666666666</span>   <span class="mf">0.3333333333</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># K</span>
+    <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">1</span>      <span class="c1"># G</span>
+    <span class="n">kpoint_label</span>                    <span class="n">G</span><span class="p">,</span><span class="n">M</span><span class="s1">&#39;,K&#39;</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">G</span>
 <span class="p">}</span>
 
 <span class="n">SPIN_TEXTURE</span>
 <span class="p">{</span>
-    <span class="n">nband</span>              <span class="mi">78</span>
-    <span class="n">kpoint_mode</span>        <span class="n">direct</span>
-    <span class="n">kpoint_num</span>         <span class="mi">20</span>
-    <span class="n">kpoint_direct_coor</span>
-    <span class="mf">0.010000</span>  <span class="mf">0.000000</span> <span class="mf">0.000000</span>
-    <span class="mf">0.009511</span>  <span class="mf">0.003090</span> <span class="mf">0.000000</span>
-    <span class="mf">0.008090</span>  <span class="mf">0.005878</span> <span class="mf">0.000000</span>
-    <span class="mf">0.005878</span>  <span class="mf">0.008090</span> <span class="mf">0.000000</span>
-    <span class="mf">0.003090</span>  <span class="mf">0.009511</span> <span class="mf">0.000000</span>
-    <span class="mf">0.000000</span>  <span class="mf">0.010000</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.003090</span>  <span class="mf">0.009511</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.005878</span>  <span class="mf">0.008090</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.008090</span>  <span class="mf">0.005878</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.009511</span>  <span class="mf">0.003090</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.010000</span>  <span class="mf">0.000000</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.009511</span> <span class="o">-</span><span class="mf">0.003090</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.008090</span> <span class="o">-</span><span class="mf">0.005878</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.005878</span> <span class="o">-</span><span class="mf">0.008090</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.003090</span> <span class="o">-</span><span class="mf">0.009511</span> <span class="mf">0.000000</span>
-   <span class="o">-</span><span class="mf">0.000000</span> <span class="o">-</span><span class="mf">0.010000</span> <span class="mf">0.000000</span>
-    <span class="mf">0.003090</span> <span class="o">-</span><span class="mf">0.009511</span> <span class="mf">0.000000</span>
-    <span class="mf">0.005878</span> <span class="o">-</span><span class="mf">0.008090</span> <span class="mf">0.000000</span>
-    <span class="mf">0.008090</span> <span class="o">-</span><span class="mf">0.005878</span> <span class="mf">0.000000</span>
-    <span class="mf">0.009511</span> <span class="o">-</span><span class="mf">0.003090</span> <span class="mf">0.000000</span>
+    <span class="n">band_range</span>                <span class="mi">35</span> <span class="mi">38</span>
+    <span class="n">kpoint_mode</span>               <span class="n">line</span>
+    <span class="n">kpoint_num</span>                <span class="mi">7</span>
+    <span class="n">high_symmetry_kpoint</span>
+    <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># G</span>
+    <span class="mf">0.0000000000</span>   <span class="mf">0.5000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># M&#39;</span>
+    <span class="mf">0.3333333333</span>   <span class="mf">0.6666666666</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># K&#39;</span>
+    <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># G</span>
+    <span class="mf">0.5000000000</span>   <span class="mf">0.5000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># M</span>
+    <span class="mf">0.6666666666</span>   <span class="mf">0.3333333333</span>   <span class="mf">0.0000000000</span>  <span class="mi">100</span>    <span class="c1"># K</span>
+    <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>   <span class="mf">0.0000000000</span>  <span class="mi">1</span>      <span class="c1"># G</span>
+    <span class="n">kpoint_label</span>                    <span class="n">G</span><span class="p">,</span><span class="n">M</span><span class="s1">&#39;,K&#39;</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">K</span><span class="p">,</span><span class="n">G</span>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">nband</span></code>: Denote the band number of which spin texture is calculated.</p>
+<p><code class="docutils literal notranslate"><span class="pre">band_range</span></code>: Integer type, with two values, used to define the range of energy bands for calculation. Counting starts from 1. For example, “1 20” specifies that the calculation includes energy bands from the 1st to the 20th, a total of 21 bands.</p>
 <p>For the k point setting of this function, please refer to the <code class="docutils literal notranslate"><span class="pre">kpoint_mode</span></code> module.</p>
-<p>After the task calculation is completed, there will be three files in the <code class="docutils literal notranslate"><span class="pre">Out/Spin_Texture</span></code> folder, namely <code class="docutils literal notranslate"><span class="pre">kpt.dat</span></code> and <code class="docutils literal notranslate"><span class="pre">spin_texture.dat</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_spin_texture.py</span></code>, corresponding to the k-point and the spin texture, the drawing script.</p>
+<p>After the task calculation is completed, there will be three files in the <code class="docutils literal notranslate"><span class="pre">Out/Spin_Texture</span></code> folder, namely <code class="docutils literal notranslate"><span class="pre">kpt.dat</span></code> and <code class="docutils literal notranslate"><span class="pre">spin_texture_x.dat</span></code>, <code class="docutils literal notranslate"><span class="pre">spin_texture_y.dat</span></code>, <code class="docutils literal notranslate"><span class="pre">spin_texture_z.dat</span></code>, <code class="docutils literal notranslate"><span class="pre">plot_spintexture_line.py</span></code>, corresponding to the k-point and the spin texture, the drawing script.</p>
 </section>
 </section>
 
@@ -195,7 +198,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, PYATB.</p>
+    <p>&#169; Copyright 2025, PYATB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

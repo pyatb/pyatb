@@ -1,1 +1,0 @@
-from pyatb.kpt import kpoint_generator

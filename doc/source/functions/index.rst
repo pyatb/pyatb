@@ -24,3 +24,4 @@ Functions
    optical_conductivity
    shift_current
    berry_curvature_dipole
+   shg

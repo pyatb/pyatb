@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Introduction &mdash; PYATB v1.0.0  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Introduction &mdash; PYATB v1.1.2  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            PYATB v1.0.0
+            PYATB v1.1.2
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -71,7 +69,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PYATB v1.0.0</a>
+          <a href="index.html">PYATB v1.1.2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -90,15 +88,15 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h1>
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h1>
 <p><img alt="PYATB" src="_images/PYATB.jpg" /></p>
 <p>PYATB (Python ab initio tight binding simulation package) is an open-source software package designed for computing electronic structures and related properties based on the ab initio tight binding Hamiltonian. The Hamiltonian can be directly obtained after conducting self-consistent calculations with first-principles packages using numerical atomic orbital (NAO) bases, such as <a class="reference external" href="https://abacus.ustc.edu.cn/">ABACUS</a>. The package comprises three modules - Bands, Geometric, and Optical, each providing a comprehensive set of tools for analyzing different aspects of a material’s electronic structure.</p>
 <p>The Bands module enables users to calculate essential properties of band structures, including the partial density of states (PDOS), fat bands, Fermi surfaces, Wyel/Dirac points, and more. Additionally, the band unfolding method is utilized to obtain the energy band spectra of a supercell by projecting the electronic structure of the supercell onto the Brillouin zone of the primitive cell.</p>
 <p>In the Geometric module, users have access to tools for computing Berry phase and Berry curvature-related quantities, such as electric polarization, Wilson loops, Chern numbers, anomalous Hall conductivities, and more.</p>
 <p>The Optical module offers a range of optical property calculations, including optical conductivity and nonlinear optical responses, such as shift current and Berry curvature dipole.</p>
-<p>PYATB is licensed under GPLv3.0, making it freely available for use and modification by the scientific community. The main developers of PYATB are Gan Jin, Hongsheng Pang, Yuyang Ji, Zujian Dai, under the supervision of Prof. Lixin He at the University of Science and Technology of China.</p>
+<p>PYATB is licensed under GPLv3.0, making it freely available for use and modification by the scientific community. The main developers of PYATB are Gan Jin, Hongsheng Pang, Yuyang Ji, Zujian Dai, Xudong Zhu, under the supervision of Prof. Lixin He at the University of Science and Technology of China.</p>
 <section id="capabilities">
-<h2>Capabilities<a class="headerlink" href="#capabilities" title="Permalink to this heading">¶</a></h2>
+<h2>Capabilities<a class="headerlink" href="#capabilities" title="Link to this heading">¶</a></h2>
 <p>PYATB provides three major modules: <em>Bands module</em>, <em>Geometric module</em>, <em>Optical module</em>, each with its own set of functions:</p>
 <ul class="simple">
 <li><p>Bands module</p>
@@ -143,6 +141,11 @@
 </dd>
 </dl>
 </li>
+<li><dl class="simple myst">
+<dt>Surface states</dt><dd><p>Calculates the spectral weights using the iterative surface Green’s function method.</p>
+</dd>
+</dl>
+</li>
 </ul>
 </li>
 <li><p>Geometric module</p>
@@ -163,7 +166,17 @@
 </dl>
 </li>
 <li><dl class="simple myst">
-<dt>Anomalous Hall conductivity</dt><dd><p>Calculates the anomalous Hall conductivity using Berry curvature.</p>
+<dt>Anomalous Hall conductivity</dt><dd><p>Calculates the anomalous Hall conductivity (AHC) using Berry curvature.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple myst">
+<dt>Spin Hall conductivity</dt><dd><p>Calculates the spin Hall conductivity (SHC) using the band-projected Berry curvature-like term.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple myst">
+<dt>Anomalous Nernst conductivity</dt><dd><p>Calculates the anomalous Nernst conductivity (ANC) using the Berry-curvature–related thermoelectric kernel.</p>
 </dd>
 </dl>
 </li>
@@ -174,6 +187,11 @@
 </li>
 <li><dl class="simple myst">
 <dt>Chirality</dt><dd><p>Examines the chirality of Weyl points by calculating the Berry curvature on a sphere around the <span class="math notranslate nohighlight">\(\mathbf{k}\)</span> point.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple myst">
+<dt>Orbital magnetization</dt><dd><p>Calculates the orbital magnetization using the Berry-phase formulation.</p>
 </dd>
 </dl>
 </li>
@@ -201,12 +219,17 @@
 </dd>
 </dl>
 </li>
+<li><dl class="simple myst">
+<dt>Second harmonic generation</dt><dd><p>Calculates the second-harmonic generation susceptibility using Berry-connection–based nonlinear optical matrix elements.</p>
+</dd>
+</dl>
+</li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="methodology">
-<h2>Methodology<a class="headerlink" href="#methodology" title="Permalink to this heading">¶</a></h2>
+<h2>Methodology<a class="headerlink" href="#methodology" title="Link to this heading">¶</a></h2>
 <p>PYATB is based on the ab initio tight binding model, where the parameters of the Hamiltonian are generated directly from the self-consistent calculations using first-principles software based on numerical atomic orbitals (NAO) bases, such as <a class="reference external" href="https://abacus.ustc.edu.cn/">ABACUS</a>.</p>
 <p><strong>NOTE</strong>: ABACUS (Atomic-orbital Based Ab-initio Computation at UStc) is an open-source package based on density functional theory (DFT). For a detailed introduction, please refer to <a class="reference external" href="https://abacus.ustc.edu.cn/">https://abacus.ustc.edu.cn/</a>.</p>
 <p>In a periodic system, the Kohn–Sham equation at a given  <span class="math notranslate nohighlight">\(\mathbf{k}\)</span> point can be written as,</p>
@@ -253,7 +276,7 @@ A_{\nu\mu, a}^{R}(\mathbf{k}) = \sum_{\mathbf{R}} \mathrm{e}^{i\mathbf{k}\cdot\m
 <p>After obtaining the tight binding parameters <span class="math notranslate nohighlight">\(H_{\nu\mu}(\mathbf{R})\)</span>, <span class="math notranslate nohighlight">\(S_{\nu\mu}(\mathbf{R})\)</span>, and <span class="math notranslate nohighlight">\(r_{\nu\mu, a}(\mathbf{R})\)</span> from the first principles software, the electronic structures and related physical propertie can be calculated using PYATB. More description of the methods used in PYATB can be found in Ref. ???</p>
 </section>
 <section id="workflow">
-<h2>Workflow<a class="headerlink" href="#workflow" title="Permalink to this heading">¶</a></h2>
+<h2>Workflow<a class="headerlink" href="#workflow" title="Link to this heading">¶</a></h2>
 <p>The workflow of PYATB involves several key steps. First,one need to perform self-consistent calculations using ABAUCS to generate tight binding Hamiltonan, including <span class="math notranslate nohighlight">\(H_{\nu\mu}(\mathbf{R})\)</span>, <span class="math notranslate nohighlight">\(S_{\nu\mu}(\mathbf{R})\)</span>, and <span class="math notranslate nohighlight">\(r_{\nu\mu, a}(\mathbf{R})\)</span>. Some of the functions may require crystal structur file and atomic orbital data. Once all the necessary files are obtained, the user can either write an <code class="docutils literal notranslate"><span class="pre">Input</span></code> file to perform the corresponding function computation using PYATB or write a script utilizing the PYATB module to carry out the calculations.</p>
 <p><img alt="workflow" src="_images/workflow.png" /></p>
 </section>
@@ -270,7 +293,7 @@ A_{\nu\mu, a}^{R}(\mathbf{k}) = \sum_{\mathbf{R}} \mathrm{e}^{i\mathbf{k}\cdot\m
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, PYATB.</p>
+    <p>&#169; Copyright 2025, PYATB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

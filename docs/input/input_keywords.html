@@ -1,23 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Full List of INPUT Keywords &mdash; PYATB v1.0.0  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Full List of INPUT Keywords &mdash; PYATB v1.1.2  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
-        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -33,7 +31,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            PYATB v1.0.0
+            PYATB v1.1.2
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -71,6 +69,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#rr-unit-input-rr-unit">rR_unit {#input_rR_unit}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#max-kpoint-num-input-max-kpoint-num">max_kpoint_num {#input_max_kpoint_num}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#sparse-format-input-sparse-format">sparse_format {#input_sparse_format}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#w90-tb-route-input-w90-tb-route">w90_TB_route {input_w90_tb_route}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#w90-tb-has-r-input-w90-tb-has-r">w90_TB_has_r {input_w90_tb_has_r}</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#lattice">LATTICE</a><ul>
@@ -81,6 +81,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#band-structure">BAND_STRUCTURE</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#wf-collect-bandstructure-wf-collect">wf_collect {#bandstructure_wf_collect}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#band-range-bandstructure-band-range">band_range {#bandstructure_band_range}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kpoint-mode-bandstructure-kpoint-mode">kpoint_mode {#bandstructure_kpoint_mode}</a></li>
 </ul>
 </li>
@@ -133,8 +134,19 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#spin-texture">SPIN_TEXTURE</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#nband-spintexture-nband">nband {#spintexture_nband}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#band-range-spintexture-band-range">band_range {#spintexture_band_range}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#kpoint-mode-spintexture-kpoint-mode">kpoint_mode {#spintexture_kpoint_mode}</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#surface-state">SURFACE_STATE</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cal-surface-method-surface-state-cal-surface-method">cal_surface_method {#surface_state_cal_surface_method}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#surface-direction-surface-state-surface-direction">surface_direction {#surface_state_surface_direction}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#energy-windows-surface-state-energy-windows">energy_windows {#surface_state_energy_windows}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#de-surface-state-de">de {#surface_state_de}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta-surface-state-eta">eta {#surface_state_eta}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coupling-layers-surface-state-coupling-layers">coupling_layers {#surface_state_coupling_layers}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#calculate-layer-surface-state-calculate-layer">calculate_layer {#surface_state_calculate_layer}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kpoint-mode-surface-state-kpoint-mode">kpoint_mode {#surface_state_kpoint_mode}</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#wilson-loop">WILSON_LOOP</a><ul>
@@ -167,6 +179,23 @@
 <li class="toctree-l4"><a class="reference internal" href="#integrate-mode-ahc-integrate-mode">integrate_mode {#ahc_integrate_mode}</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#anc">ANC</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fermi-range-anc-fermi-range">fermi_range {#anc_fermi_range}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#de-anc-de">de {#anc_de}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta-anc-eta">eta {#anc_eta}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#integrate-grid-anc-integrate-grid">integrate_grid {#anc_integrate_grid}</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#shc">SHC</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#alpha-shc-alpha">alpha {#shc_alpha}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#beta-shc-beta">beta {#shc_beta}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gamma-shc-gamma">gamma {#shc_gamma}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fermi-range-shc-fermi-range">fermi_range {#shc_fermi_range}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#de-shc-de">de {#shc_de}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta-shc-eta">eta {#shc_eta}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#integrate-grid-shc-integrate-grid">integrate_grid {#shc_integrate_grid}</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#chern-number">CHERN_NUMBER</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#method-chernnumber-method">method {#chernnumber_method}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#occ-band-chernnumber-occ-band">occ_band {#chernnumber_occ_band}</a></li>
@@ -178,6 +207,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#chirality">CHIRALITY</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#method-chirality-method">method {#chirality_method}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#occ-band-chirality-occ-band">occ_band {#chirality_occ_band}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#k-vect-chirality-k-vect">k_vect {#chirality_k_vect}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#radius-chirality-radius">radius {#chirality_radius}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#point-num-chirality-point-num">point_num {#chirality_point_num}</a></li>
@@ -212,7 +242,22 @@
 <li class="toctree-l3"><a class="reference internal" href="#berry-curvature-dipole">BERRY_CURVATURE_DIPOLE</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#omega-berrycurvaturedipole-omega">omega {#berrycurvaturedipole_omega}</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#domega-berrycurvaturedipole-domega">domega {#berrycurvaturedipole_domega}</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#integrate-mode-berrycurvaturedipole-integrate-mode">integrate_mode {#berrycurvaturedipole_integrate_mode}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grid-berrycurvaturedipole-grid">grid {#berrycurvaturedipole_grid}</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#shg">SHG</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#method-shg-method">method {#shg_method}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#omega-shg-omega">omega {#shg_omega}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#domega-shg-domega">domega {#shg_domega}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eta-shg-eta">eta {#shg_eta}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grid-shg-grid">grid {#shg_grid}</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pockels">POCKELS</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#omega1-pockels-omega1">omega1 {#pockels_omega1}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#omega-pockels-omega">omega {#pockels_omega}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#domega-pockels-domega">domega {#pockels_domega}</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#grid-pockels-grid">grid {#pockels_grid}</a></li>
 </ul>
 </li>
 </ul>
@@ -228,6 +273,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#when-kpoint-mode-is-line">When kpoint_mode is ‘line’</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#kpoint-num">kpoint_num</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#kpoint-label">kpoint_label</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#high-symmetry-kpoint">high_symmetry_kpoint</a></li>
 </ul>
 </li>
@@ -263,7 +309,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">PYATB v1.0.0</a>
+          <a href="../index.html">PYATB v1.1.2</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -283,16 +329,16 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="full-list-of-input-keywords">
-<h1>Full List of INPUT Keywords<a class="headerlink" href="#full-list-of-input-keywords" title="Permalink to this heading">¶</a></h1>
+<h1>Full List of INPUT Keywords<a class="headerlink" href="#full-list-of-input-keywords" title="Link to this heading">¶</a></h1>
 <ul>
 <li><p><a class="reference internal" href="#input-parameters">INPUT_PARAMETERS</a></p>
-<p><a class="reference internal" href="#nspin-input-nspin">nspin</a> | <a class="reference internal" href="#package-input-package">package</a> | <a class="reference internal" href="#fermi-energy-input-fermi-energy">fermi_energy</a> | <a class="reference internal" href="#fermi-energy-unit-input-fermi-energy-unit">fermi_energy_unit</a> | <a class="reference internal" href="#hr-route-input-hr-route">HR_route</a> | <a class="reference internal" href="#sr-route-input-sr-route">SR_route</a> | <a class="reference internal" href="#rr-route-input-rr-route">rR_route</a> | <a class="reference internal" href="#binary-input-binary">binary</a> | <a class="reference internal" href="#hr-unit-input-hr-unit">HR_unit</a> | <a class="reference internal" href="#rr-unit-input-rr-unit">rR_unit</a> | <a class="reference internal" href="#max-kpoint-num-input-max-kpoint-num">max_kpoint_num</a> | <a class="reference internal" href="#sparse-format-input-sparse-format">sparse_format</a></p>
+<p><a class="reference internal" href="#nspin-input-nspin">nspin</a> | <a class="reference internal" href="#package-input-package">package</a> | <a class="reference internal" href="#fermi-energy-input-fermi-energy">fermi_energy</a> | <a class="reference internal" href="#fermi-energy-unit-input-fermi-energy-unit">fermi_energy_unit</a> | <a class="reference internal" href="#hr-route-input-hr-route">HR_route</a> | <a class="reference internal" href="#sr-route-input-sr-route">SR_route</a> | <a class="reference internal" href="#rr-route-input-rr-route">rR_route</a> | <a class="reference internal" href="#binary-input-binary">binary</a> | <a class="reference internal" href="#hr-unit-input-hr-unit">HR_unit</a> | <a class="reference internal" href="#rr-unit-input-rr-unit">rR_unit</a> | <a class="reference internal" href="#max-kpoint-num-input-max-kpoint-num">max_kpoint_num</a> | <a class="reference internal" href="#sparse-format-input-sparse-format">sparse_format</a> | <a class="reference internal" href="#w90-tb-route-input-w90-tb-route">w90_TB_route</a> | <a class="reference internal" href="#w90-tb-has-r-input-w90-tb-has-r">w90_TB_has_r</a></p>
 </li>
 <li><p><a class="reference internal" href="#lattice">LATTICE</a></p>
 <p><a class="reference internal" href="#lattice-constant-lattice-lattice-constant">lattice_constant</a> | <a class="reference internal" href="#lattice-constant-unit-lattice-lattice-constant-unit">lattice_constant_unit</a> | <a class="reference internal" href="#lattice-vector-lattice-lattice-vector">lattice_vector</a></p>
 </li>
 <li><p><a class="reference internal" href="#band-structure">BAND_STRUCTURE</a></p>
-<p><a class="reference internal" href="#wf-collect-bandstructure-wf-collect">wf_collect</a> | <a class="reference internal" href="#kpoint-mode-bandstructure-kpoint-mode">kpoint_mode</a></p>
+<p><a class="reference internal" href="#wf-collect-bandstructure-wf-collect">wf_collect</a> | <a class="reference internal" href="#band-range-bandstructure-band-range">band_range</a> | <a class="reference internal" href="#kpoint-mode-bandstructure-kpoint-mode">kpoint_mode</a></p>
 </li>
 <li><p><a class="reference internal" href="#bandunfolding">BANDUNFOLDING</a></p>
 <p><a class="reference internal" href="#stru-file-bandunfolding-stru-file">stru_file</a> | <a class="reference internal" href="#ecut-bandunfolding-ecut">ecut</a> | <a class="reference internal" href="#band-range-bandunfolding-band-range">band_range</a> | <a class="reference internal" href="#m-matrix-bandunfolding-m-matrix">m_matrix</a> | <a class="reference internal" href="#kpoint-mode-bandunfolding-kpoint-mode">kpoint_mode</a></p>
@@ -313,7 +359,10 @@
 <p><a class="reference internal" href="#band-range-fatband-band-range">band_range</a> | <a class="reference internal" href="#stru-file-fatband-stru-file">stru_file</a> | <a class="reference internal" href="#kpoint-mode-fatband-kpoint-mode">kpoint_mode</a></p>
 </li>
 <li><p><a class="reference internal" href="#spin-texture">SPIN_TEXTURE</a></p>
-<p><a class="reference internal" href="#nband-spintexture-nband">nband</a> | <a class="reference internal" href="#kpoint-mode-spintexture-kpoint-mode">kpoint_mode</a></p>
+<p><a class="reference internal" href="#band-range-spintexture-band-range">band_range</a> | <a class="reference internal" href="#kpoint-mode-spintexture-kpoint-mode">kpoint_mode</a></p>
+</li>
+<li><p><a class="reference internal" href="#surface-state">SURFACE_STATE</a></p>
+<p><a class="reference internal" href="#cal-surface-method-surface-state-cal-surface-method">cal_surface_method</a> | <a class="reference internal" href="#surface-direction-surface-state-surface-direction">surface_direction</a> | <a class="reference internal" href="#energy-windows-surface-state-energy-windows">energy_windows</a> | <a class="reference internal" href="#de-surface-state-de">de</a> | <a class="reference internal" href="#eta-surface-state-eta">eta</a> | <a class="reference internal" href="#coupling-layers-surface-state-coupling-layers">coupling_layers</a> | <a class="reference internal" href="#calculate-layer-surface-state-calculate-layer">calculate_layer</a> | <a class="reference internal" href="#kpoint-mode-surface-state-kpoint-mode">kpoint_mode</a></p>
 </li>
 <li><p><a class="reference internal" href="#wilson-loop">WILSON_LOOP</a></p>
 <p><a class="reference internal" href="#occ-band-wilsonloop-occ-band">occ_band</a> | <a class="reference internal" href="#k-start-wilsonloop-k-start">k_start</a> | <a class="reference internal" href="#k-vect1-wilsonloop-k-vect1">k_vect1</a> | <a class="reference internal" href="#k-vect2-wilsonloop-k-vect2">k_vect2</a> | <a class="reference internal" href="#nk1-wilsonloop-nk1">nk1</a> | <a class="reference internal" href="#nk2-wilsonloop-nk2">nk2</a></p>
@@ -327,11 +376,17 @@
 <li><p><a class="reference internal" href="#ahc">AHC</a></p>
 <p><a class="reference internal" href="#method-ahc-method">method</a> | <a class="reference internal" href="#integrate-mode-ahc-integrate-mode">integrate_mode</a></p>
 </li>
+<li><p><a class="reference internal" href="#anc">ANC</a></p>
+<p><a class="reference internal" href="#fermi-range-anc-fermi-range">fermi_range</a> | <a class="reference internal" href="#de-anc-de">de</a> | <a class="reference internal" href="#eta-anc-eta">eta</a> | <a class="reference internal" href="#integrate-grid-anc-integrate-grid">integrate_grid</a></p>
+</li>
+<li><p><a class="reference internal" href="#shc">SHC</a></p>
+<p><a class="reference internal" href="#alpha-shc-alpha">alpha</a> | <a class="reference internal" href="#beta-shc-beta">beta</a> | <a class="reference internal" href="#gamma-shc-gamma">gamma</a> | <a class="reference internal" href="#fermi-range-shc-fermi-range">fermi_range</a> | <a class="reference internal" href="#de-shc-de">de</a> | <a class="reference internal" href="#eta-shc-eta">eta</a> | <a class="reference internal" href="#integrate-grid-shc-integrate-grid">integrate_grid</a></p>
+</li>
 <li><p><a class="reference internal" href="#chern-number">CHERN_NUMBER</a></p>
 <p><a class="reference internal" href="#method-chernnumber-method">method</a> | <a class="reference internal" href="#occ-band-chernnumber-occ-band">occ_band</a> | <a class="reference internal" href="#k-start-chernnumber-k-start">k_start</a> | <a class="reference internal" href="#k-vect1-chernnumber-k-vect1">k_vect1</a> | <a class="reference internal" href="#k-vect2-chernnumber-k-vect2">k_vect2</a> | <a class="reference internal" href="#integrate-mode-chernnumber-integrate-mode">integrate_mode</a></p>
 </li>
 <li><p><a class="reference internal" href="#chirality">CHIRALITY</a></p>
-<p><a class="reference internal" href="#method-chirality-method">method</a> | <a class="reference internal" href="#k-vect-chirality-k-vect">k_vect</a> | <a class="reference internal" href="#radius-chirality-radius">radius</a> | <a class="reference internal" href="#point-num-chirality-point-num">point_num</a></p>
+<p><a class="reference internal" href="#method-chirality-method">method</a> | <a class="reference internal" href="#occ-band-chirality-occ-band">occ_band</a> | <a class="reference internal" href="#k-vect-chirality-k-vect">k_vect</a> | <a class="reference internal" href="#radius-chirality-radius">radius</a> | <a class="reference internal" href="#point-num-chirality-point-num">point_num</a></p>
 </li>
 <li><p><a class="reference internal" href="#jdos">JDOS</a></p>
 <p><a class="reference internal" href="#occ-band-jdos-occ-band">occ_band</a> | <a class="reference internal" href="#omega-jdos-omega">omega</a> | <a class="reference internal" href="#domega-jdos-domega">domega</a> | <a class="reference internal" href="#eta-jdos-eta">eta</a> | <a class="reference internal" href="#grid-jdos-grid">grid</a></p>
@@ -343,7 +398,13 @@
 <p><a class="reference internal" href="#occ-band-shiftcurrent-occ-band">occ_band</a> | <a class="reference internal" href="#omega-shiftcurrent-omega">omega</a> | <a class="reference internal" href="#domega-shiftcurrent-domega">domega</a> | <a class="reference internal" href="#smearing-method-shiftcurrent-smearing-method">smearing_method</a> | <a class="reference internal" href="#eta-shiftcurrent-eta">eta</a> | <a class="reference internal" href="#grid-shiftcurrent-grid">grid</a> | <a class="reference internal" href="#method-shiftcurrent-method">method</a></p>
 </li>
 <li><p><a class="reference internal" href="#berry-curvature-dipole">BERRY_CURVATURE_DIPOLE</a></p>
-<p><a class="reference internal" href="#omega-berrycurvaturedipole-omega">omega</a> | <a class="reference internal" href="#domega-berrycurvaturedipole-domega">domega</a> | <a class="reference internal" href="#integrate-mode-berrycurvaturedipole-integrate-mode">integrate_mode</a></p>
+<p><a class="reference internal" href="#omega-berrycurvaturedipole-omega">omega</a> | <a class="reference internal" href="#domega-berrycurvaturedipole-domega">domega</a> | <a class="reference internal" href="#grid-berrycurvaturedipole-grid">grid</a></p>
+</li>
+<li><p><a class="reference internal" href="#shg">SHG</a></p>
+<p><a class="reference internal" href="#method-shg-method">method</a> | <a class="reference internal" href="#omega-shg-omega">omega</a> | <a class="reference internal" href="#domega-shg-domega">domega</a> | <a class="reference internal" href="#eta-shg-eta">eta</a> | <a class="reference internal" href="#grid-shg-grid">grid</a></p>
+</li>
+<li><p><a class="reference internal" href="#pockels">POCKELS</a></p>
+<p><a class="reference internal" href="#omega1-pockels-omega1">omega1</a> | <a class="reference internal" href="#omega-pockels-omega">omega</a> | <a class="reference internal" href="#domega-pockels-domega">domega</a> | <a class="reference internal" href="#grid-pockels-grid">grid</a></p>
 </li>
 </ul>
 <p><a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p>
@@ -368,9 +429,9 @@
 </li>
 </ul>
 <section id="input-parameters">
-<h2>INPUT_PARAMETERS<a class="headerlink" href="#input-parameters" title="Permalink to this heading">¶</a></h2>
+<h2>INPUT_PARAMETERS<a class="headerlink" href="#input-parameters" title="Link to this heading">¶</a></h2>
 <section id="nspin-input-nspin">
-<h3>nspin {#input_nspin}<a class="headerlink" href="#nspin-input-nspin" title="Permalink to this heading">¶</a></h3>
+<h3>nspin {#input_nspin}<a class="headerlink" href="#nspin-input-nspin" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Indicates the spin component of the wave function, related to the structure of the HR file.</p>
@@ -384,7 +445,7 @@
 </ul>
 </section>
 <section id="package-input-package">
-<h3>package {#input_package}<a class="headerlink" href="#package-input-package" title="Permalink to this heading">¶</a></h3>
+<h3>package {#input_package}<a class="headerlink" href="#package-input-package" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Indicates data sources for HR, SR, rR.</p></li>
@@ -392,7 +453,7 @@
 </ul>
 </section>
 <section id="fermi-energy-input-fermi-energy">
-<h3>fermi_energy {#input_fermi_energy}<a class="headerlink" href="#fermi-energy-input-fermi-energy" title="Permalink to this heading">¶</a></h3>
+<h3>fermi_energy {#input_fermi_energy}<a class="headerlink" href="#fermi-energy-input-fermi-energy" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Indicates the Fermi energy of the system. When set to Auto, the FERMI_ENERGY function needs to be added.</p></li>
@@ -400,7 +461,7 @@
 </ul>
 </section>
 <section id="fermi-energy-unit-input-fermi-energy-unit">
-<h3>fermi_energy_unit {#input_fermi_energy_unit}<a class="headerlink" href="#fermi-energy-unit-input-fermi-energy-unit" title="Permalink to this heading">¶</a></h3>
+<h3>fermi_energy_unit {#input_fermi_energy_unit}<a class="headerlink" href="#fermi-energy-unit-input-fermi-energy-unit" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: The unit of Fermi. Can be set to Ry, eV.</p></li>
@@ -408,7 +469,7 @@
 </ul>
 </section>
 <section id="hr-route-input-hr-route">
-<h3>HR_route {#input_HR_route}<a class="headerlink" href="#hr-route-input-hr-route" title="Permalink to this heading">¶</a></h3>
+<h3>HR_route {#input_HR_route}<a class="headerlink" href="#hr-route-input-hr-route" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Path to HR matrix file. When nspin=2, two sets of paths need to be provided.</p></li>
@@ -416,7 +477,7 @@
 </ul>
 </section>
 <section id="sr-route-input-sr-route">
-<h3>SR_route {#input_SR_route}<a class="headerlink" href="#sr-route-input-sr-route" title="Permalink to this heading">¶</a></h3>
+<h3>SR_route {#input_SR_route}<a class="headerlink" href="#sr-route-input-sr-route" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Path to the SR matrix file.</p></li>
@@ -424,7 +485,7 @@
 </ul>
 </section>
 <section id="rr-route-input-rr-route">
-<h3>rR_route {#input_rR_route}<a class="headerlink" href="#rr-route-input-rr-route" title="Permalink to this heading">¶</a></h3>
+<h3>rR_route {#input_rR_route}<a class="headerlink" href="#rr-route-input-rr-route" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Path to the rR matrix file.</p></li>
@@ -432,7 +493,7 @@
 </ul>
 </section>
 <section id="binary-input-binary">
-<h3>binary {#input_binary}<a class="headerlink" href="#binary-input-binary" title="Permalink to this heading">¶</a></h3>
+<h3>binary {#input_binary}<a class="headerlink" href="#binary-input-binary" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Boolean</p></li>
 <li><p><strong>Description</strong>: Whether HR, SR, and rR files are binary files.</p></li>
@@ -440,7 +501,7 @@
 </ul>
 </section>
 <section id="hr-unit-input-hr-unit">
-<h3>HR_unit {#input_HR_unit}<a class="headerlink" href="#hr-unit-input-hr-unit" title="Permalink to this heading">¶</a></h3>
+<h3>HR_unit {#input_HR_unit}<a class="headerlink" href="#hr-unit-input-hr-unit" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: The unit of HR. Can be set to Ry, eV.</p></li>
@@ -448,7 +509,7 @@
 </ul>
 </section>
 <section id="rr-unit-input-rr-unit">
-<h3>rR_unit {#input_rR_unit}<a class="headerlink" href="#rr-unit-input-rr-unit" title="Permalink to this heading">¶</a></h3>
+<h3>rR_unit {#input_rR_unit}<a class="headerlink" href="#rr-unit-input-rr-unit" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: The unit of rR. Can be set to Bohr, Angstrom.</p></li>
@@ -456,7 +517,7 @@
 </ul>
 </section>
 <section id="max-kpoint-num-input-max-kpoint-num">
-<h3>max_kpoint_num {#input_max_kpoint_num}<a class="headerlink" href="#max-kpoint-num-input-max-kpoint-num" title="Permalink to this heading">¶</a></h3>
+<h3>max_kpoint_num {#input_max_kpoint_num}<a class="headerlink" href="#max-kpoint-num-input-max-kpoint-num" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The upper limit of the number of k points stored in the memory during program calculation, which is used to control the memory consumption during calculation.</p></li>
@@ -464,18 +525,34 @@
 </ul>
 </section>
 <section id="sparse-format-input-sparse-format">
-<h3>sparse_format {#input_sparse_format}<a class="headerlink" href="#sparse-format-input-sparse-format" title="Permalink to this heading">¶</a></h3>
+<h3>sparse_format {#input_sparse_format}<a class="headerlink" href="#sparse-format-input-sparse-format" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Boolean</p></li>
 <li><p><strong>Description</strong>: Whether HR, SR, rR matrices are stored in memory is sparse storage.</p></li>
 <li><p><strong>Default</strong>: 0</p></li>
 </ul>
 </section>
+<section id="w90-tb-route-input-w90-tb-route">
+<h3>w90_TB_route {input_w90_tb_route}<a class="headerlink" href="#w90-tb-route-input-w90-tb-route" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: String</p></li>
+<li><p><strong>Description</strong>: Specify the tight-binding file generated by Wannier90.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+<section id="w90-tb-has-r-input-w90-tb-has-r">
+<h3>w90_TB_has_r {input_w90_tb_has_r}<a class="headerlink" href="#w90-tb-has-r-input-w90-tb-has-r" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Boolean</p></li>
+<li><p><strong>Description</strong>: Whether the tight‑binding file generated by Wannier90 contain rR information.</p></li>
+<li><p><strong>Default</strong>: 0</p></li>
+</ul>
+</section>
 </section>
 <section id="lattice">
-<h2>LATTICE<a class="headerlink" href="#lattice" title="Permalink to this heading">¶</a></h2>
+<h2>LATTICE<a class="headerlink" href="#lattice" title="Link to this heading">¶</a></h2>
 <section id="lattice-constant-lattice-lattice-constant">
-<h3>lattice_constant {#lattice_lattice_constant}<a class="headerlink" href="#lattice-constant-lattice-lattice-constant" title="Permalink to this heading">¶</a></h3>
+<h3>lattice_constant {#lattice_lattice_constant}<a class="headerlink" href="#lattice-constant-lattice-lattice-constant" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The lattice constant of the system.</p></li>
@@ -483,7 +560,7 @@
 </ul>
 </section>
 <section id="lattice-constant-unit-lattice-lattice-constant-unit">
-<h3>lattice_constant_unit {#lattice_lattice_constant_unit}<a class="headerlink" href="#lattice-constant-unit-lattice-lattice-constant-unit" title="Permalink to this heading">¶</a></h3>
+<h3>lattice_constant_unit {#lattice_lattice_constant_unit}<a class="headerlink" href="#lattice-constant-unit-lattice-lattice-constant-unit" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: The unit of the lattice constant. Can be set to Bohr, Angstrom.</p></li>
@@ -491,7 +568,7 @@
 </ul>
 </section>
 <section id="lattice-vector-lattice-lattice-vector">
-<h3>lattice_vector {#lattice_lattice_vector}<a class="headerlink" href="#lattice-vector-lattice-lattice-vector" title="Permalink to this heading">¶</a></h3>
+<h3>lattice_vector {#lattice_lattice_vector}<a class="headerlink" href="#lattice-vector-lattice-lattice-vector" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The 3 lattice vectors of the system. Each lattice vector is a row, with a total of 3 rows and 9 parameters.</p></li>
@@ -500,17 +577,25 @@
 </section>
 </section>
 <section id="band-structure">
-<h2>BAND_STRUCTURE<a class="headerlink" href="#band-structure" title="Permalink to this heading">¶</a></h2>
+<h2>BAND_STRUCTURE<a class="headerlink" href="#band-structure" title="Link to this heading">¶</a></h2>
 <section id="wf-collect-bandstructure-wf-collect">
-<h3>wf_collect {#bandstructure_wf_collect}<a class="headerlink" href="#wf-collect-bandstructure-wf-collect" title="Permalink to this heading">¶</a></h3>
+<h3>wf_collect {#bandstructure_wf_collect}<a class="headerlink" href="#wf-collect-bandstructure-wf-collect" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Boolean</p></li>
 <li><p><strong>Description</strong>: Whether to output wave function matrix information.</p></li>
 <li><p><strong>Default</strong>: No default value</p></li>
 </ul>
 </section>
+<section id="band-range-bandstructure-band-range">
+<h3>band_range {#bandstructure_band_range}<a class="headerlink" href="#band-range-bandstructure-band-range" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: There are two numbers (separated by spaces) to indicate which bands are selected, counting from 1.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
 <section id="kpoint-mode-bandstructure-kpoint-mode">
-<h3>kpoint_mode {#bandstructure_kpoint_mode}<a class="headerlink" href="#kpoint-mode-bandstructure-kpoint-mode" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_mode {#bandstructure_kpoint_mode}<a class="headerlink" href="#kpoint-mode-bandstructure-kpoint-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used to set the k point. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
@@ -519,9 +604,9 @@
 </section>
 </section>
 <section id="bandunfolding">
-<h2>BANDUNFOLDING<a class="headerlink" href="#bandunfolding" title="Permalink to this heading">¶</a></h2>
+<h2>BANDUNFOLDING<a class="headerlink" href="#bandunfolding" title="Link to this heading">¶</a></h2>
 <section id="stru-file-bandunfolding-stru-file">
-<h3>stru_file {#bandunfolding_stru_file}<a class="headerlink" href="#stru-file-bandunfolding-stru-file" title="Permalink to this heading">¶</a></h3>
+<h3>stru_file {#bandunfolding_stru_file}<a class="headerlink" href="#stru-file-bandunfolding-stru-file" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Specify the strucutre file path.</p></li>
@@ -529,7 +614,7 @@
 </ul>
 </section>
 <section id="ecut-bandunfolding-ecut">
-<h3>ecut {#bandunfolding_ecut}<a class="headerlink" href="#ecut-bandunfolding-ecut" title="Permalink to this heading">¶</a></h3>
+<h3>ecut {#bandunfolding_ecut}<a class="headerlink" href="#ecut-bandunfolding-ecut" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Used to determine the number of plane wave basis sets. Unit is Ry.</p></li>
@@ -537,7 +622,7 @@
 </ul>
 </section>
 <section id="band-range-bandunfolding-band-range">
-<h3>band_range {#bandunfolding_band_range}<a class="headerlink" href="#band-range-bandunfolding-band-range" title="Permalink to this heading">¶</a></h3>
+<h3>band_range {#bandunfolding_band_range}<a class="headerlink" href="#band-range-bandunfolding-band-range" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Specifies the range of supercell energy band index within which the energy bands will be calculated. There are two parameters, representing the starting band index and the end band index, the index counts from 1.</p></li>
@@ -545,7 +630,7 @@
 </ul>
 </section>
 <section id="m-matrix-bandunfolding-m-matrix">
-<h3>m_matrix {#bandunfolding_m_matrix}<a class="headerlink" href="#m-matrix-bandunfolding-m-matrix" title="Permalink to this heading">¶</a></h3>
+<h3>m_matrix {#bandunfolding_m_matrix}<a class="headerlink" href="#m-matrix-bandunfolding-m-matrix" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The lattice vector transformation matrix between the supercell and the primitive cell, with 9 parameters, is written on the same line.</p></li>
@@ -553,7 +638,7 @@
 </ul>
 </section>
 <section id="kpoint-mode-bandunfolding-kpoint-mode">
-<h3>kpoint_mode {#bandunfolding_kpoint_mode}<a class="headerlink" href="#kpoint-mode-bandunfolding-kpoint-mode" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_mode {#bandunfolding_kpoint_mode}<a class="headerlink" href="#kpoint-mode-bandunfolding-kpoint-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used to set the k point of unitcell. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
@@ -562,9 +647,9 @@
 </section>
 </section>
 <section id="fermi-energy">
-<h2>FERMI_ENERGY<a class="headerlink" href="#fermi-energy" title="Permalink to this heading">¶</a></h2>
+<h2>FERMI_ENERGY<a class="headerlink" href="#fermi-energy" title="Link to this heading">¶</a></h2>
 <section id="temperature-fermienergy-temperature">
-<h3>temperature {#fermienergy_temperature}<a class="headerlink" href="#temperature-fermienergy-temperature" title="Permalink to this heading">¶</a></h3>
+<h3>temperature {#fermienergy_temperature}<a class="headerlink" href="#temperature-fermienergy-temperature" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: temperature. The unit is K</p></li>
@@ -572,7 +657,7 @@
 </ul>
 </section>
 <section id="electron-num-fermienergy-electron-num">
-<h3>electron_num {#fermienergy_electron_num}<a class="headerlink" href="#electron-num-fermienergy-electron-num" title="Permalink to this heading">¶</a></h3>
+<h3>electron_num {#fermienergy_electron_num}<a class="headerlink" href="#electron-num-fermienergy-electron-num" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The total number of electrons in the system.</p></li>
@@ -580,7 +665,7 @@
 </ul>
 </section>
 <section id="grid-fermienergy-grid">
-<h3>grid {#fermienergy_grid}<a class="headerlink" href="#grid-fermienergy-grid" title="Permalink to this heading">¶</a></h3>
+<h3>grid {#fermienergy_grid}<a class="headerlink" href="#grid-fermienergy-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The grid to use for Newton interpolation. There are three parameters.</p></li>
@@ -588,7 +673,7 @@
 </ul>
 </section>
 <section id="epsilon-fermienergy-epsilon">
-<h3>epsilon {#fermienergy_epsilon}<a class="headerlink" href="#epsilon-fermienergy-epsilon" title="Permalink to this heading">¶</a></h3>
+<h3>epsilon {#fermienergy_epsilon}<a class="headerlink" href="#epsilon-fermienergy-epsilon" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Newton interpolation parameters, absolute accuracy.</p></li>
@@ -597,9 +682,9 @@
 </section>
 </section>
 <section id="fermi-surface">
-<h2>FERMI_SURFACE<a class="headerlink" href="#fermi-surface" title="Permalink to this heading">¶</a></h2>
+<h2>FERMI_SURFACE<a class="headerlink" href="#fermi-surface" title="Link to this heading">¶</a></h2>
 <section id="bar-fermisurface-bar">
-<h3>bar {#fermisurface_bar}<a class="headerlink" href="#bar-fermisurface-bar" title="Permalink to this heading">¶</a></h3>
+<h3>bar {#fermisurface_bar}<a class="headerlink" href="#bar-fermisurface-bar" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The max tolerable error bar for the Fermi surface</p></li>
@@ -607,7 +692,7 @@
 </ul>
 </section>
 <section id="nbands-fermisurface-nbands">
-<h3>nbands {#fermisurface_nbands}<a class="headerlink" href="#nbands-fermisurface-nbands" title="Permalink to this heading">¶</a></h3>
+<h3>nbands {#fermisurface_nbands}<a class="headerlink" href="#nbands-fermisurface-nbands" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: If you know the energy band range where the Fermi energy is located, you can set this parameter to speed up the calculation. There are two numbers in total, indicating the range of the energy band. The default value is <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span></code>, that is, all energy bands are considered.</p></li>
@@ -615,7 +700,7 @@
 </ul>
 </section>
 <section id="kpoint-mode-fermisurface-kpoint-mode">
-<h3>kpoint_mode {#fermisurface_kpoint_mode}<a class="headerlink" href="#kpoint-mode-fermisurface-kpoint-mode" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_mode {#fermisurface_kpoint_mode}<a class="headerlink" href="#kpoint-mode-fermisurface-kpoint-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used to set the k point. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
@@ -624,9 +709,9 @@
 </section>
 </section>
 <section id="find-nodes">
-<h2>FIND_NODES<a class="headerlink" href="#find-nodes" title="Permalink to this heading">¶</a></h2>
+<h2>FIND_NODES<a class="headerlink" href="#find-nodes" title="Link to this heading">¶</a></h2>
 <section id="energy-range-findnodes-energy-range">
-<h3>energy_range {#findnodes_energy_range}<a class="headerlink" href="#energy-range-findnodes-energy-range" title="Permalink to this heading">¶</a></h3>
+<h3>energy_range {#findnodes_energy_range}<a class="headerlink" href="#energy-range-findnodes-energy-range" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The energy range in which the program searches for degenerate points, the energy unit is eV.</p></li>
@@ -634,7 +719,7 @@
 </ul>
 </section>
 <section id="k-start-findnodes-k-start">
-<h3>k_start {#findnodes_k_start}<a class="headerlink" href="#k-start-findnodes-k-start" title="Permalink to this heading">¶</a></h3>
+<h3>k_start {#findnodes_k_start}<a class="headerlink" href="#k-start-findnodes-k-start" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The origin point coordinates used to describe a Brillouin zone plane.</p></li>
@@ -642,7 +727,7 @@
 </ul>
 </section>
 <section id="k-vect1-findnodes-k-vect1">
-<h3>k_vect1 {#findnodes_k_vect1}<a class="headerlink" href="#k-vect1-findnodes-k-vect1" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect1 {#findnodes_k_vect1}<a class="headerlink" href="#k-vect1-findnodes-k-vect1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The expansion vector used to describe a Brillouin zone plane.</p></li>
@@ -650,7 +735,7 @@
 </ul>
 </section>
 <section id="k-vect2-findnodes-k-vect2">
-<h3>k_vect2 {#findnodes_k_vect2}<a class="headerlink" href="#k-vect2-findnodes-k-vect2" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect2 {#findnodes_k_vect2}<a class="headerlink" href="#k-vect2-findnodes-k-vect2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The expansion vector used to describe a Brillouin zone plane.</p></li>
@@ -658,7 +743,7 @@
 </ul>
 </section>
 <section id="k-vect3-findnodes-k-vect3">
-<h3>k_vect3 {#findnodes_k_vect3}<a class="headerlink" href="#k-vect3-findnodes-k-vect3" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect3 {#findnodes_k_vect3}<a class="headerlink" href="#k-vect3-findnodes-k-vect3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The expansion vector used to describe a Brillouin zone plane.</p></li>
@@ -666,7 +751,7 @@
 </ul>
 </section>
 <section id="initial-grid-findnodes-initial-grid">
-<h3>initial_grid {#findnodes_initial_grid}<a class="headerlink" href="#initial-grid-findnodes-initial-grid" title="Permalink to this heading">¶</a></h3>
+<h3>initial_grid {#findnodes_initial_grid}<a class="headerlink" href="#initial-grid-findnodes-initial-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Set the initial grid for searching degenerate k points. There are three parameters.</p></li>
@@ -674,7 +759,7 @@
 </ul>
 </section>
 <section id="initial-threshold-findnodes-initial-threshold">
-<h3>initial_threshold {#findnodes_initial_threshold}<a class="headerlink" href="#initial-threshold-findnodes-initial-threshold" title="Permalink to this heading">¶</a></h3>
+<h3>initial_threshold {#findnodes_initial_threshold}<a class="headerlink" href="#initial-threshold-findnodes-initial-threshold" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The energy unit is eV. In the initial grid, only the k-points whose band differences are less than the threshold can enter the search for the next round of degenerate points.</p></li>
@@ -682,7 +767,7 @@
 </ul>
 </section>
 <section id="adaptive-grid-findnodes-adaptive-grid">
-<h3>adaptive_grid {#findnodes_adaptive_grid}<a class="headerlink" href="#adaptive-grid-findnodes-adaptive-grid" title="Permalink to this heading">¶</a></h3>
+<h3>adaptive_grid {#findnodes_adaptive_grid}<a class="headerlink" href="#adaptive-grid-findnodes-adaptive-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The refined grid will refine the k-points that reach the initial_threshold in the initial grid. There are three parameters.</p></li>
@@ -690,7 +775,7 @@
 </ul>
 </section>
 <section id="adaptive-threshold-findnodes-adaptive-threshold">
-<h3>adaptive_threshold {#findnodes_adaptive_threshold}<a class="headerlink" href="#adaptive-threshold-findnodes-adaptive-threshold" title="Permalink to this heading">¶</a></h3>
+<h3>adaptive_threshold {#findnodes_adaptive_threshold}<a class="headerlink" href="#adaptive-threshold-findnodes-adaptive-threshold" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The minimum difference considered in independent bands, the energy unit is eV. This means if the band gap is below this bar, it will be recognized as degenerate bands.</p></li>
@@ -698,7 +783,7 @@
 </ul>
 </section>
 <section id="kpoint-mode-findnodes-kpoint-mode">
-<h3>kpoint_mode {#findnodes_kpoint_mode}<a class="headerlink" href="#kpoint-mode-findnodes-kpoint-mode" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_mode {#findnodes_kpoint_mode}<a class="headerlink" href="#kpoint-mode-findnodes-kpoint-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used to set the k point. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
@@ -707,9 +792,9 @@
 </section>
 </section>
 <section id="pdos">
-<h2>PDOS<a class="headerlink" href="#pdos" title="Permalink to this heading">¶</a></h2>
+<h2>PDOS<a class="headerlink" href="#pdos" title="Link to this heading">¶</a></h2>
 <section id="stru-file-pdos-stru-file">
-<h3>stru_file {#pdos_stru_file}<a class="headerlink" href="#stru-file-pdos-stru-file" title="Permalink to this heading">¶</a></h3>
+<h3>stru_file {#pdos_stru_file}<a class="headerlink" href="#stru-file-pdos-stru-file" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: The structure file name. This file records the structure of the lattice, the types of elements, and the atomic orbitals used. Make sure that both the structure file and the orbital file exist.</p></li>
@@ -717,7 +802,7 @@
 </ul>
 </section>
 <section id="e-range-pdos-e-range">
-<h3>e_range {#pdos_e_range}<a class="headerlink" href="#e-range-pdos-e-range" title="Permalink to this heading">¶</a></h3>
+<h3>e_range {#pdos_e_range}<a class="headerlink" href="#e-range-pdos-e-range" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The range of energy E. There are two parameters, indicating the starting point and the ending point.</p></li>
@@ -725,7 +810,7 @@
 </ul>
 </section>
 <section id="de-pdos-de">
-<h3>de {#pdos_de}<a class="headerlink" href="#de-pdos-de" title="Permalink to this heading">¶</a></h3>
+<h3>de {#pdos_de}<a class="headerlink" href="#de-pdos-de" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The interval dE for the energy E.</p></li>
@@ -733,7 +818,7 @@
 </ul>
 </section>
 <section id="sigma-pdos-sigma">
-<h3>sigma {#pdos_sigma}<a class="headerlink" href="#sigma-pdos-sigma" title="Permalink to this heading">¶</a></h3>
+<h3>sigma {#pdos_sigma}<a class="headerlink" href="#sigma-pdos-sigma" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Parameters for gauss smearing.</p></li>
@@ -741,7 +826,7 @@
 </ul>
 </section>
 <section id="kpoint-mode-pdos-kpoint-mode">
-<h3>kpoint_mode {#pdos_kpoint_mode}<a class="headerlink" href="#kpoint-mode-pdos-kpoint-mode" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_mode {#pdos_kpoint_mode}<a class="headerlink" href="#kpoint-mode-pdos-kpoint-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used to set the k point. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
@@ -750,9 +835,9 @@
 </section>
 </section>
 <section id="fat-band">
-<h2>FAT_BAND<a class="headerlink" href="#fat-band" title="Permalink to this heading">¶</a></h2>
+<h2>FAT_BAND<a class="headerlink" href="#fat-band" title="Link to this heading">¶</a></h2>
 <section id="band-range-fatband-band-range">
-<h3>band_range {#fatband_band_range}<a class="headerlink" href="#band-range-fatband-band-range" title="Permalink to this heading">¶</a></h3>
+<h3>band_range {#fatband_band_range}<a class="headerlink" href="#band-range-fatband-band-range" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: There are two numbers (separated by spaces) to indicate which bands are selected for projection, counting from 1.</p></li>
@@ -760,7 +845,7 @@
 </ul>
 </section>
 <section id="stru-file-fatband-stru-file">
-<h3>stru_file {#fatband_stru_file}<a class="headerlink" href="#stru-file-fatband-stru-file" title="Permalink to this heading">¶</a></h3>
+<h3>stru_file {#fatband_stru_file}<a class="headerlink" href="#stru-file-fatband-stru-file" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: The structure file name. This file indicates the crystal structure and the corresponding orbital file. Make sure that both the structure file and the orbital file exist.</p></li>
@@ -768,7 +853,7 @@
 </ul>
 </section>
 <section id="kpoint-mode-fatband-kpoint-mode">
-<h3>kpoint_mode {#fatband_kpoint_mode}<a class="headerlink" href="#kpoint-mode-fatband-kpoint-mode" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_mode {#fatband_kpoint_mode}<a class="headerlink" href="#kpoint-mode-fatband-kpoint-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used to set the k point of unitcell. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
@@ -777,17 +862,84 @@
 </section>
 </section>
 <section id="spin-texture">
-<h2>SPIN_TEXTURE<a class="headerlink" href="#spin-texture" title="Permalink to this heading">¶</a></h2>
-<section id="nband-spintexture-nband">
-<h3>nband {#spintexture_nband}<a class="headerlink" href="#nband-spintexture-nband" title="Permalink to this heading">¶</a></h3>
+<h2>SPIN_TEXTURE<a class="headerlink" href="#spin-texture" title="Link to this heading">¶</a></h2>
+<section id="band-range-spintexture-band-range">
+<h3>band_range {#spintexture_band_range}<a class="headerlink" href="#band-range-spintexture-band-range" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
-<li><p><strong>Description</strong>: A band index. (Band index counts from 1)</p></li>
+<li><p><strong>Description</strong>: There are two numbers (separated by spaces) to indicate which bands are selected, counting from 1.</p></li>
 <li><p><strong>Default</strong>: No default value</p></li>
 </ul>
 </section>
 <section id="kpoint-mode-spintexture-kpoint-mode">
-<h3>kpoint_mode {#spintexture_kpoint_mode}<a class="headerlink" href="#kpoint-mode-spintexture-kpoint-mode" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_mode {#spintexture_kpoint_mode}<a class="headerlink" href="#kpoint-mode-spintexture-kpoint-mode" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: String</p></li>
+<li><p><strong>Description</strong>: Used to set the k point. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+</section>
+<section id="surface-state">
+<h2>SURFACE_STATE<a class="headerlink" href="#surface-state" title="Link to this heading">¶</a></h2>
+<section id="cal-surface-method-surface-state-cal-surface-method">
+<h3>cal_surface_method {#surface_state_cal_surface_method}<a class="headerlink" href="#cal-surface-method-surface-state-cal-surface-method" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: String</p></li>
+<li><p><strong>Description</strong>: Perform calculations using the surface Green’s function.</p></li>
+<li><p><strong>Default</strong>: green_fun</p></li>
+</ul>
+</section>
+<section id="surface-direction-surface-state-surface-direction">
+<h3>surface_direction {#surface_state_surface_direction}<a class="headerlink" href="#surface-direction-surface-state-surface-direction" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: String</p></li>
+<li><p><strong>Description</strong>: Set the orientation of the material surface: a, b, and c represent the a, b, and c axes of the lattice vectors.</p></li>
+<li><p><strong>Default</strong>: c</p></li>
+</ul>
+</section>
+<section id="energy-windows-surface-state-energy-windows">
+<h3>energy_windows {#surface_state_energy_windows}<a class="headerlink" href="#energy-windows-surface-state-energy-windows" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: Set the energy range of the bands centered on the <a class="reference internal" href="#fermi-energy-input-fermi-energy">fermi_energy</a>. There are two values.</p></li>
+<li><p><strong>Default</strong>: -1.0 1.0</p></li>
+</ul>
+</section>
+<section id="de-surface-state-de">
+<h3>de {#surface_state_de}<a class="headerlink" href="#de-surface-state-de" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: Energy intervals dividing the energy_windows.</p></li>
+<li><p><strong>Default</strong>: 0.01</p></li>
+</ul>
+</section>
+<section id="eta-surface-state-eta">
+<h3>eta {#surface_state_eta}<a class="headerlink" href="#eta-surface-state-eta" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: Set the broadening of the Green’s function, <span class="math notranslate nohighlight">\(G = (E + i*\eta - H)^{-1}\)</span>.</p></li>
+<li><p><strong>Default</strong>: 0.01</p></li>
+</ul>
+</section>
+<section id="coupling-layers-surface-state-coupling-layers">
+<h3>coupling_layers {#surface_state_coupling_layers}<a class="headerlink" href="#coupling-layers-surface-state-coupling-layers" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: By setting the number of principal layers, it is possible to ensure that interactions occur only between adjacent principal layers.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+<section id="calculate-layer-surface-state-calculate-layer">
+<h3>calculate_layer {#surface_state_calculate_layer}<a class="headerlink" href="#calculate-layer-surface-state-calculate-layer" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: Specify the number of layers of the spectral function to output.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+<section id="kpoint-mode-surface-state-kpoint-mode">
+<h3>kpoint_mode {#surface_state_kpoint_mode}<a class="headerlink" href="#kpoint-mode-surface-state-kpoint-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used to set the k point. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
@@ -796,9 +948,9 @@
 </section>
 </section>
 <section id="wilson-loop">
-<h2>WILSON_LOOP<a class="headerlink" href="#wilson-loop" title="Permalink to this heading">¶</a></h2>
+<h2>WILSON_LOOP<a class="headerlink" href="#wilson-loop" title="Link to this heading">¶</a></h2>
 <section id="occ-band-wilsonloop-occ-band">
-<h3>occ_band {#wilsonloop_occ_band}<a class="headerlink" href="#occ-band-wilsonloop-occ-band" title="Permalink to this heading">¶</a></h3>
+<h3>occ_band {#wilsonloop_occ_band}<a class="headerlink" href="#occ-band-wilsonloop-occ-band" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of occupied energy bands of an insulator.</p></li>
@@ -806,7 +958,7 @@
 </ul>
 </section>
 <section id="k-start-wilsonloop-k-start">
-<h3>k_start {#wilsonloop_k_start}<a class="headerlink" href="#k-start-wilsonloop-k-start" title="Permalink to this heading">¶</a></h3>
+<h3>k_start {#wilsonloop_k_start}<a class="headerlink" href="#k-start-wilsonloop-k-start" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The origin point coordinates used to describe a Brillouin zone plane.</p></li>
@@ -814,7 +966,7 @@
 </ul>
 </section>
 <section id="k-vect1-wilsonloop-k-vect1">
-<h3>k_vect1 {#wilsonloop_k_vect1}<a class="headerlink" href="#k-vect1-wilsonloop-k-vect1" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect1 {#wilsonloop_k_vect1}<a class="headerlink" href="#k-vect1-wilsonloop-k-vect1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The expansion vector is a vector used to define a Brillouin zone plane, and it is also the direction of integration for calculations.</p></li>
@@ -822,7 +974,7 @@
 </ul>
 </section>
 <section id="k-vect2-wilsonloop-k-vect2">
-<h3>k_vect2 {#wilsonloop_k_vect2}<a class="headerlink" href="#k-vect2-wilsonloop-k-vect2" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect2 {#wilsonloop_k_vect2}<a class="headerlink" href="#k-vect2-wilsonloop-k-vect2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The expansion vector is a vector used to define a Brillouin zone plane, and it is also the direction of Wilson loop evolution for calculations.</p></li>
@@ -830,7 +982,7 @@
 </ul>
 </section>
 <section id="nk1-wilsonloop-nk1">
-<h3>nk1 {#wilsonloop_nk1}<a class="headerlink" href="#nk1-wilsonloop-nk1" title="Permalink to this heading">¶</a></h3>
+<h3>nk1 {#wilsonloop_nk1}<a class="headerlink" href="#nk1-wilsonloop-nk1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: k_vect1 is divided into nk1 k-points.</p></li>
@@ -838,7 +990,7 @@
 </ul>
 </section>
 <section id="nk2-wilsonloop-nk2">
-<h3>nk2 {#wilsonloop_nk2}<a class="headerlink" href="#nk2-wilsonloop-nk2" title="Permalink to this heading">¶</a></h3>
+<h3>nk2 {#wilsonloop_nk2}<a class="headerlink" href="#nk2-wilsonloop-nk2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: k_vect2 is divided into nk2 k-points.</p></li>
@@ -847,9 +999,9 @@
 </section>
 </section>
 <section id="polarization">
-<h2>POLARIZATION<a class="headerlink" href="#polarization" title="Permalink to this heading">¶</a></h2>
+<h2>POLARIZATION<a class="headerlink" href="#polarization" title="Link to this heading">¶</a></h2>
 <section id="occ-band-polarization-occ-band">
-<h3>occ_band {#polarization_occ_band}<a class="headerlink" href="#occ-band-polarization-occ-band" title="Permalink to this heading">¶</a></h3>
+<h3>occ_band {#polarization_occ_band}<a class="headerlink" href="#occ-band-polarization-occ-band" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of occupied energy bands of an insulator.</p></li>
@@ -857,7 +1009,7 @@
 </ul>
 </section>
 <section id="nk1-polarization-nk1">
-<h3>nk1 {#polarization_nk1}<a class="headerlink" href="#nk1-polarization-nk1" title="Permalink to this heading">¶</a></h3>
+<h3>nk1 {#polarization_nk1}<a class="headerlink" href="#nk1-polarization-nk1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of samples in the x direction of reciprocal lattice vector <span class="math notranslate nohighlight">\(\mathbf{G}\)</span>.</p></li>
@@ -865,7 +1017,7 @@
 </ul>
 </section>
 <section id="nk2-polarization-nk2">
-<h3>nk2 {#polarization_nk2}<a class="headerlink" href="#nk2-polarization-nk2" title="Permalink to this heading">¶</a></h3>
+<h3>nk2 {#polarization_nk2}<a class="headerlink" href="#nk2-polarization-nk2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of samples in the y direction of reciprocal lattice vector <span class="math notranslate nohighlight">\(\mathbf{G}\)</span>.</p></li>
@@ -873,7 +1025,7 @@
 </ul>
 </section>
 <section id="nk3-polarization-nk3">
-<h3>nk3 {#polarization_nk3}<a class="headerlink" href="#nk3-polarization-nk3" title="Permalink to this heading">¶</a></h3>
+<h3>nk3 {#polarization_nk3}<a class="headerlink" href="#nk3-polarization-nk3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of samples in the z direction of reciprocal lattice vector <span class="math notranslate nohighlight">\(\mathbf{G}\)</span>.</p></li>
@@ -881,7 +1033,7 @@
 </ul>
 </section>
 <section id="atom-type-polarization-atom-type">
-<h3>atom_type {#polarization_atom_type}<a class="headerlink" href="#atom-type-polarization-atom-type" title="Permalink to this heading">¶</a></h3>
+<h3>atom_type {#polarization_atom_type}<a class="headerlink" href="#atom-type-polarization-atom-type" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of element types in the system.</p></li>
@@ -889,7 +1041,7 @@
 </ul>
 </section>
 <section id="stru-file-polarization-stru-file">
-<h3>stru_file {#polarization_stru_file}<a class="headerlink" href="#stru-file-polarization-stru-file" title="Permalink to this heading">¶</a></h3>
+<h3>stru_file {#polarization_stru_file}<a class="headerlink" href="#stru-file-polarization-stru-file" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Specify the strucutre file. NAOs files are not required.</p></li>
@@ -897,7 +1049,7 @@
 </ul>
 </section>
 <section id="valence-e-polarization-valence-e">
-<h3>valence_e {#polarization_valence_e}<a class="headerlink" href="#valence-e-polarization-valence-e" title="Permalink to this heading">¶</a></h3>
+<h3>valence_e {#polarization_valence_e}<a class="headerlink" href="#valence-e-polarization-valence-e" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of valence electrons per element.</p></li>
@@ -906,9 +1058,9 @@
 </section>
 </section>
 <section id="berry-curvature">
-<h2>BERRY_CURVATURE<a class="headerlink" href="#berry-curvature" title="Permalink to this heading">¶</a></h2>
+<h2>BERRY_CURVATURE<a class="headerlink" href="#berry-curvature" title="Link to this heading">¶</a></h2>
 <section id="method-berrycurvature-method">
-<h3>method {#berrycurvature_method}<a class="headerlink" href="#method-berrycurvature-method" title="Permalink to this heading">¶</a></h3>
+<h3>method {#berrycurvature_method}<a class="headerlink" href="#method-berrycurvature-method" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Method for calculating berry curvature. <code class="docutils literal notranslate"><span class="pre">0</span></code> means direct calculation, <code class="docutils literal notranslate"><span class="pre">1</span></code> means calculation by Kubo formula.</p></li>
@@ -916,7 +1068,7 @@
 </ul>
 </section>
 <section id="occ-band-berrycurvature-occ-band">
-<h3>occ_band {#berrycurvature_occ_band}<a class="headerlink" href="#occ-band-berrycurvature-occ-band" title="Permalink to this heading">¶</a></h3>
+<h3>occ_band {#berrycurvature_occ_band}<a class="headerlink" href="#occ-band-berrycurvature-occ-band" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of occupied energy bands of an insulator. When this value is not set, it will be determined according to the Fermi energy.</p></li>
@@ -924,7 +1076,7 @@
 </ul>
 </section>
 <section id="kpoint-mode-berrycurvature-kpoint-mode">
-<h3>kpoint_mode {#berrycurvature_kpoint_mode}<a class="headerlink" href="#kpoint-mode-berrycurvature-kpoint-mode" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_mode {#berrycurvature_kpoint_mode}<a class="headerlink" href="#kpoint-mode-berrycurvature-kpoint-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used to set the k point. See <a class="reference internal" href="#setting-of-k-points">Setting of k points</a></p></li>
@@ -933,9 +1085,9 @@
 </section>
 </section>
 <section id="ahc">
-<h2>AHC<a class="headerlink" href="#ahc" title="Permalink to this heading">¶</a></h2>
+<h2>AHC<a class="headerlink" href="#ahc" title="Link to this heading">¶</a></h2>
 <section id="method-ahc-method">
-<h3>method {#ahc_method}<a class="headerlink" href="#method-ahc-method" title="Permalink to this heading">¶</a></h3>
+<h3>method {#ahc_method}<a class="headerlink" href="#method-ahc-method" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Method for calculating berry curvature. <code class="docutils literal notranslate"><span class="pre">0</span></code> means direct calculation, <code class="docutils literal notranslate"><span class="pre">1</span></code> means calculation by Kubo formula.</p></li>
@@ -943,7 +1095,7 @@
 </ul>
 </section>
 <section id="integrate-mode-ahc-integrate-mode">
-<h3>integrate_mode {#ahc_integrate_mode}<a class="headerlink" href="#integrate-mode-ahc-integrate-mode" title="Permalink to this heading">¶</a></h3>
+<h3>integrate_mode {#ahc_integrate_mode}<a class="headerlink" href="#integrate-mode-ahc-integrate-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used for integration settings. See <a class="reference internal" href="#setting-of-integration">Setting of integration</a>.</p></li>
@@ -951,10 +1103,104 @@
 </ul>
 </section>
 </section>
+<section id="anc">
+<h2>ANC<a class="headerlink" href="#anc" title="Link to this heading">¶</a></h2>
+<section id="fermi-range-anc-fermi-range">
+<h3>fermi_range {#anc_fermi_range}<a class="headerlink" href="#fermi-range-anc-fermi-range" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: Provide the range of the Fermi energy with respect to the reference point <a class="reference internal" href="#fermi-energy-input-fermi-energy">fermi_energy</a>. Specify two floating-point numbers.</p></li>
+<li><p><strong>Default</strong>: -1.0 1.0</p></li>
+</ul>
+</section>
+<section id="de-anc-de">
+<h3>de {#anc_de}<a class="headerlink" href="#de-anc-de" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: Energy intervals dividing the Fermi energy range.</p></li>
+<li><p><strong>Default</strong>: 0.01</p></li>
+</ul>
+</section>
+<section id="eta-anc-eta">
+<h3>eta {#anc_eta}<a class="headerlink" href="#eta-anc-eta" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: When calculating the Berry curvature using the Kubo formula, the energy difference in the denominator is modified as <span class="math notranslate nohighlight">\( E_{n\mathbf{k}} - E_{m\mathbf{k}} \to E_{n\mathbf{k}} - E_{m\mathbf{k}} + i\eta \)</span> to avoid numerical issues caused by degeneracy.</p></li>
+<li><p><strong>Default</strong>: 0.01</p></li>
+</ul>
+</section>
+<section id="integrate-grid-anc-integrate-grid">
+<h3>integrate_grid {#anc_integrate_grid}<a class="headerlink" href="#integrate-grid-anc-integrate-grid" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: The grid for integration. There are 3 parameters in total.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+</section>
+<section id="shc">
+<h2>SHC<a class="headerlink" href="#shc" title="Link to this heading">¶</a></h2>
+<section id="alpha-shc-alpha">
+<h3>alpha {#shc_alpha}<a class="headerlink" href="#alpha-shc-alpha" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: String</p></li>
+<li><p><strong>Description</strong>: Specify the current direction of the SHC, <span class="math notranslate nohighlight">\(\sigma_{\alpha \beta}^{\gamma}\)</span>.</p></li>
+<li><p><strong>Default</strong>: x</p></li>
+</ul>
+</section>
+<section id="beta-shc-beta">
+<h3>beta {#shc_beta}<a class="headerlink" href="#beta-shc-beta" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: String</p></li>
+<li><p><strong>Description</strong>: Specify the electric field direction of the SHC, <span class="math notranslate nohighlight">\(\sigma_{\alpha \beta}^{\gamma}\)</span>.</p></li>
+<li><p><strong>Default</strong>: y</p></li>
+</ul>
+</section>
+<section id="gamma-shc-gamma">
+<h3>gamma {#shc_gamma}<a class="headerlink" href="#gamma-shc-gamma" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: String</p></li>
+<li><p><strong>Description</strong>: Specify the spin polarization direction of the SHC, <span class="math notranslate nohighlight">\(\sigma_{\alpha \beta}^{\gamma}\)</span>.</p></li>
+<li><p><strong>Default</strong>: z</p></li>
+</ul>
+</section>
+<section id="fermi-range-shc-fermi-range">
+<h3>fermi_range {#shc_fermi_range}<a class="headerlink" href="#fermi-range-shc-fermi-range" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: Provide the range of the Fermi energy with respect to the reference point <a class="reference internal" href="#fermi-energy-input-fermi-energy">fermi_energy</a>. Specify two floating-point numbers.</p></li>
+<li><p><strong>Default</strong>: -1.0 1.0</p></li>
+</ul>
+</section>
+<section id="de-shc-de">
+<h3>de {#shc_de}<a class="headerlink" href="#de-shc-de" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: Energy intervals dividing the Fermi energy range.</p></li>
+<li><p><strong>Default</strong>: 0.01</p></li>
+</ul>
+</section>
+<section id="eta-shc-eta">
+<h3>eta {#shc_eta}<a class="headerlink" href="#eta-shc-eta" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: When calculating the Berry curvature using the Kubo formula, the energy difference in the denominator is modified as <span class="math notranslate nohighlight">\( E_{n\mathbf{k}} - E_{m\mathbf{k}} \to E_{n\mathbf{k}} - E_{m\mathbf{k}} + i\eta \)</span> to avoid numerical issues caused by degeneracy.</p></li>
+<li><p><strong>Default</strong>: 0.01</p></li>
+</ul>
+</section>
+<section id="integrate-grid-shc-integrate-grid">
+<h3>integrate_grid {#shc_integrate_grid}<a class="headerlink" href="#integrate-grid-shc-integrate-grid" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: The grid for integration. There are 3 parameters in total.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+</section>
 <section id="chern-number">
-<h2>CHERN_NUMBER<a class="headerlink" href="#chern-number" title="Permalink to this heading">¶</a></h2>
+<h2>CHERN_NUMBER<a class="headerlink" href="#chern-number" title="Link to this heading">¶</a></h2>
 <section id="method-chernnumber-method">
-<h3>method {#chernnumber_method}<a class="headerlink" href="#method-chernnumber-method" title="Permalink to this heading">¶</a></h3>
+<h3>method {#chernnumber_method}<a class="headerlink" href="#method-chernnumber-method" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Method for calculating berry curvature. <code class="docutils literal notranslate"><span class="pre">0</span></code> means direct calculation, <code class="docutils literal notranslate"><span class="pre">1</span></code> means calculation by Kubo formula.</p></li>
@@ -962,7 +1208,7 @@
 </ul>
 </section>
 <section id="occ-band-chernnumber-occ-band">
-<h3>occ_band {#chernnumber_occ_band}<a class="headerlink" href="#occ-band-chernnumber-occ-band" title="Permalink to this heading">¶</a></h3>
+<h3>occ_band {#chernnumber_occ_band}<a class="headerlink" href="#occ-band-chernnumber-occ-band" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of occupied energy bands of an insulator. When this value is not set, it will be determined according to the Fermi energy.</p></li>
@@ -970,7 +1216,7 @@
 </ul>
 </section>
 <section id="k-start-chernnumber-k-start">
-<h3>k_start {#chernnumber_k_start}<a class="headerlink" href="#k-start-chernnumber-k-start" title="Permalink to this heading">¶</a></h3>
+<h3>k_start {#chernnumber_k_start}<a class="headerlink" href="#k-start-chernnumber-k-start" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The origin point coordinates used to describe a Brillouin zone plane.</p></li>
@@ -978,7 +1224,7 @@
 </ul>
 </section>
 <section id="k-vect1-chernnumber-k-vect1">
-<h3>k_vect1 {#chernnumber_k_vect1}<a class="headerlink" href="#k-vect1-chernnumber-k-vect1" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect1 {#chernnumber_k_vect1}<a class="headerlink" href="#k-vect1-chernnumber-k-vect1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The expansion vector used to describe a Brillouin zone plane.</p></li>
@@ -986,7 +1232,7 @@
 </ul>
 </section>
 <section id="k-vect2-chernnumber-k-vect2">
-<h3>k_vect2 {#chernnumber_k_vect2}<a class="headerlink" href="#k-vect2-chernnumber-k-vect2" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect2 {#chernnumber_k_vect2}<a class="headerlink" href="#k-vect2-chernnumber-k-vect2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The expansion vector used to describe a Brillouin zone plane.</p></li>
@@ -994,7 +1240,7 @@
 </ul>
 </section>
 <section id="integrate-mode-chernnumber-integrate-mode">
-<h3>integrate_mode {#chernnumber_integrate_mode}<a class="headerlink" href="#integrate-mode-chernnumber-integrate-mode" title="Permalink to this heading">¶</a></h3>
+<h3>integrate_mode {#chernnumber_integrate_mode}<a class="headerlink" href="#integrate-mode-chernnumber-integrate-mode" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: String</p></li>
 <li><p><strong>Description</strong>: Used for integration settings. See <a class="reference internal" href="#setting-of-integration">Setting of integration</a>.</p></li>
@@ -1003,17 +1249,25 @@
 </section>
 </section>
 <section id="chirality">
-<h2>CHIRALITY<a class="headerlink" href="#chirality" title="Permalink to this heading">¶</a></h2>
+<h2>CHIRALITY<a class="headerlink" href="#chirality" title="Link to this heading">¶</a></h2>
 <section id="method-chirality-method">
-<h3>method {#chirality_method}<a class="headerlink" href="#method-chirality-method" title="Permalink to this heading">¶</a></h3>
+<h3>method {#chirality_method}<a class="headerlink" href="#method-chirality-method" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Method for calculating berry curvature. <code class="docutils literal notranslate"><span class="pre">0</span></code> means direct calculation, <code class="docutils literal notranslate"><span class="pre">1</span></code> means calculation by Kubo formula.</p></li>
 <li><p><strong>Default</strong>: 0</p></li>
 </ul>
 </section>
+<section id="occ-band-chirality-occ-band">
+<h3>occ_band {#chirality_occ_band}<a class="headerlink" href="#occ-band-chirality-occ-band" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: The number of occupied energy bands of an insulator. When this value is not set, it will be determined according to the Fermi energy.</p></li>
+<li><p><strong>Default</strong>: -1</p></li>
+</ul>
+</section>
 <section id="k-vect-chirality-k-vect">
-<h3>k_vect {#chirality_k_vect}<a class="headerlink" href="#k-vect-chirality-k-vect" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect {#chirality_k_vect}<a class="headerlink" href="#k-vect-chirality-k-vect" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The k-point coordinates need to be calculated. There are three parameters to represent the coordinates.</p></li>
@@ -1021,7 +1275,7 @@
 </ul>
 </section>
 <section id="radius-chirality-radius">
-<h3>radius {#chirality_radius}<a class="headerlink" href="#radius-chirality-radius" title="Permalink to this heading">¶</a></h3>
+<h3>radius {#chirality_radius}<a class="headerlink" href="#radius-chirality-radius" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The radius of the integrating sphere. The unit is <span class="math notranslate nohighlight">\(\AA^{-1}\)</span> .</p></li>
@@ -1029,7 +1283,7 @@
 </ul>
 </section>
 <section id="point-num-chirality-point-num">
-<h3>point_num {#chirality_point_num}<a class="headerlink" href="#point-num-chirality-point-num" title="Permalink to this heading">¶</a></h3>
+<h3>point_num {#chirality_point_num}<a class="headerlink" href="#point-num-chirality-point-num" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of k-points that are uniformly sampled on a spherical surface.</p></li>
@@ -1038,9 +1292,9 @@
 </section>
 </section>
 <section id="jdos">
-<h2>JDOS<a class="headerlink" href="#jdos" title="Permalink to this heading">¶</a></h2>
+<h2>JDOS<a class="headerlink" href="#jdos" title="Link to this heading">¶</a></h2>
 <section id="occ-band-jdos-occ-band">
-<h3>occ_band {#jdos_occ_band}<a class="headerlink" href="#occ-band-jdos-occ-band" title="Permalink to this heading">¶</a></h3>
+<h3>occ_band {#jdos_occ_band}<a class="headerlink" href="#occ-band-jdos-occ-band" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Specifies the occupied energy band of the system. Currently, only insulator or semiconductor materials can be calculated.</p></li>
@@ -1048,7 +1302,7 @@
 </ul>
 </section>
 <section id="omega-jdos-omega">
-<h3>omega {#jdos_omega}<a class="headerlink" href="#omega-jdos-omega" title="Permalink to this heading">¶</a></h3>
+<h3>omega {#jdos_omega}<a class="headerlink" href="#omega-jdos-omega" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Specifies the photon energy, the unit is eV. There are two parameters, indicating the starting point and the ending point.</p></li>
@@ -1056,7 +1310,7 @@
 </ul>
 </section>
 <section id="domega-jdos-domega">
-<h3>domega {#jdos_domega}<a class="headerlink" href="#domega-jdos-domega" title="Permalink to this heading">¶</a></h3>
+<h3>domega {#jdos_domega}<a class="headerlink" href="#domega-jdos-domega" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The energy interval of <span class="math notranslate nohighlight">\(\omega\)</span>.</p></li>
@@ -1064,7 +1318,7 @@
 </ul>
 </section>
 <section id="eta-jdos-eta">
-<h3>eta {#jdos_eta}<a class="headerlink" href="#eta-jdos-eta" title="Permalink to this heading">¶</a></h3>
+<h3>eta {#jdos_eta}<a class="headerlink" href="#eta-jdos-eta" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Specify the parameters of Gaussian smearing.</p></li>
@@ -1072,7 +1326,7 @@
 </ul>
 </section>
 <section id="grid-jdos-grid">
-<h3>grid {#jdos_grid}<a class="headerlink" href="#grid-jdos-grid" title="Permalink to this heading">¶</a></h3>
+<h3>grid {#jdos_grid}<a class="headerlink" href="#grid-jdos-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The grid for integration. There are 3 parameters in total.</p></li>
@@ -1081,17 +1335,17 @@
 </section>
 </section>
 <section id="optical-conductivity">
-<h2>OPTICAL_CONDUCTIVITY<a class="headerlink" href="#optical-conductivity" title="Permalink to this heading">¶</a></h2>
+<h2>OPTICAL_CONDUCTIVITY<a class="headerlink" href="#optical-conductivity" title="Link to this heading">¶</a></h2>
 <section id="occ-band-opticalconductivity-occ-band">
-<h3>occ_band {#opticalconductivity_occ_band}<a class="headerlink" href="#occ-band-opticalconductivity-occ-band" title="Permalink to this heading">¶</a></h3>
+<h3>occ_band {#opticalconductivity_occ_band}<a class="headerlink" href="#occ-band-opticalconductivity-occ-band" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
-<li><p><strong>Description</strong>: Used to specify the occupied energy band of an insulator or semiconductor. Currently this function can only calculate insulators or semiconductors.</p></li>
-<li><p><strong>Default</strong>: No default value</p></li>
+<li><p><strong>Description</strong>: The number of occupied energy bands of an insulator. When this value is not set, it will be determined according to the Fermi energy.</p></li>
+<li><p><strong>Default</strong>: -1</p></li>
 </ul>
 </section>
 <section id="omega-opticalconductivity-omega">
-<h3>omega {#opticalconductivity_omega}<a class="headerlink" href="#omega-opticalconductivity-omega" title="Permalink to this heading">¶</a></h3>
+<h3>omega {#opticalconductivity_omega}<a class="headerlink" href="#omega-opticalconductivity-omega" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The range of <span class="math notranslate nohighlight">\(\omega\)</span>. There are two parameters, indicating the starting point and the ending point. Unit is eV.</p></li>
@@ -1099,7 +1353,7 @@
 </ul>
 </section>
 <section id="domega-opticalconductivity-domega">
-<h3>domega {#opticalconductivity_domega}<a class="headerlink" href="#domega-opticalconductivity-domega" title="Permalink to this heading">¶</a></h3>
+<h3>domega {#opticalconductivity_domega}<a class="headerlink" href="#domega-opticalconductivity-domega" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The energy interval of <span class="math notranslate nohighlight">\(\omega\)</span>.</p></li>
@@ -1107,7 +1361,7 @@
 </ul>
 </section>
 <section id="eta-opticalconductivity-eta">
-<h3>eta {#opticalconductivity_eta}<a class="headerlink" href="#eta-opticalconductivity-eta" title="Permalink to this heading">¶</a></h3>
+<h3>eta {#opticalconductivity_eta}<a class="headerlink" href="#eta-opticalconductivity-eta" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Parameters for triangular smearing.</p></li>
@@ -1115,7 +1369,7 @@
 </ul>
 </section>
 <section id="grid-opticalconductivity-grid">
-<h3>grid {#opticalconductivity_grid}<a class="headerlink" href="#grid-opticalconductivity-grid" title="Permalink to this heading">¶</a></h3>
+<h3>grid {#opticalconductivity_grid}<a class="headerlink" href="#grid-opticalconductivity-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The grid for integration. There are 3 parameters in total.</p></li>
@@ -1124,9 +1378,9 @@
 </section>
 </section>
 <section id="shift-current">
-<h2>SHIFT_CURRENT<a class="headerlink" href="#shift-current" title="Permalink to this heading">¶</a></h2>
+<h2>SHIFT_CURRENT<a class="headerlink" href="#shift-current" title="Link to this heading">¶</a></h2>
 <section id="occ-band-shiftcurrent-occ-band">
-<h3>occ_band {#shiftcurrent_occ_band}<a class="headerlink" href="#occ-band-shiftcurrent-occ-band" title="Permalink to this heading">¶</a></h3>
+<h3>occ_band {#shiftcurrent_occ_band}<a class="headerlink" href="#occ-band-shiftcurrent-occ-band" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Used to specify the occupied energy band of an insulator or semiconductor. Currently this function can only calculate insulators or semiconductors.</p></li>
@@ -1134,7 +1388,7 @@
 </ul>
 </section>
 <section id="omega-shiftcurrent-omega">
-<h3>omega {#shiftcurrent_omega}<a class="headerlink" href="#omega-shiftcurrent-omega" title="Permalink to this heading">¶</a></h3>
+<h3>omega {#shiftcurrent_omega}<a class="headerlink" href="#omega-shiftcurrent-omega" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The range of <span class="math notranslate nohighlight">\(\omega\)</span>. There are two parameters, indicating the starting point and the ending point. Unit is eV.</p></li>
@@ -1142,7 +1396,7 @@
 </ul>
 </section>
 <section id="domega-shiftcurrent-domega">
-<h3>domega {#shiftcurrent_domega}<a class="headerlink" href="#domega-shiftcurrent-domega" title="Permalink to this heading">¶</a></h3>
+<h3>domega {#shiftcurrent_domega}<a class="headerlink" href="#domega-shiftcurrent-domega" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The energy interval of <span class="math notranslate nohighlight">\(\omega\)</span>.</p></li>
@@ -1150,7 +1404,7 @@
 </ul>
 </section>
 <section id="smearing-method-shiftcurrent-smearing-method">
-<h3>smearing_method {#shiftcurrent_smearing_method}<a class="headerlink" href="#smearing-method-shiftcurrent-smearing-method" title="Permalink to this heading">¶</a></h3>
+<h3>smearing_method {#shiftcurrent_smearing_method}<a class="headerlink" href="#smearing-method-shiftcurrent-smearing-method" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The method of smearing. <code class="docutils literal notranslate"><span class="pre">0</span></code>: no smearing. <code class="docutils literal notranslate"><span class="pre">1</span></code>: Gaussian smearing. <code class="docutils literal notranslate"><span class="pre">2</span></code>: adaptive smearing.</p></li>
@@ -1158,7 +1412,7 @@
 </ul>
 </section>
 <section id="eta-shiftcurrent-eta">
-<h3>eta {#shiftcurrent_eta}<a class="headerlink" href="#eta-shiftcurrent-eta" title="Permalink to this heading">¶</a></h3>
+<h3>eta {#shiftcurrent_eta}<a class="headerlink" href="#eta-shiftcurrent-eta" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Specify the parameters of Gaussian smearing.</p></li>
@@ -1166,7 +1420,7 @@
 </ul>
 </section>
 <section id="grid-shiftcurrent-grid">
-<h3>grid {#shiftcurrent_grid}<a class="headerlink" href="#grid-shiftcurrent-grid" title="Permalink to this heading">¶</a></h3>
+<h3>grid {#shiftcurrent_grid}<a class="headerlink" href="#grid-shiftcurrent-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The grid for integration. There are 3 parameters in total.</p></li>
@@ -1174,7 +1428,7 @@
 </ul>
 </section>
 <section id="method-shiftcurrent-method">
-<h3>method {#shiftcurrent_method}<a class="headerlink" href="#method-shiftcurrent-method" title="Permalink to this heading">¶</a></h3>
+<h3>method {#shiftcurrent_method}<a class="headerlink" href="#method-shiftcurrent-method" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Specify the method to calculate the shift current. <code class="docutils literal notranslate"><span class="pre">0</span></code> represents calculation using the Sternheimer equation, <code class="docutils literal notranslate"><span class="pre">1</span></code> represents the first order partial derivative calculation.</p></li>
@@ -1183,9 +1437,9 @@
 </section>
 </section>
 <section id="berry-curvature-dipole">
-<h2>BERRY_CURVATURE_DIPOLE<a class="headerlink" href="#berry-curvature-dipole" title="Permalink to this heading">¶</a></h2>
+<h2>BERRY_CURVATURE_DIPOLE<a class="headerlink" href="#berry-curvature-dipole" title="Link to this heading">¶</a></h2>
 <section id="omega-berrycurvaturedipole-omega">
-<h3>omega {#berrycurvaturedipole_omega}<a class="headerlink" href="#omega-berrycurvaturedipole-omega" title="Permalink to this heading">¶</a></h3>
+<h3>omega {#berrycurvaturedipole_omega}<a class="headerlink" href="#omega-berrycurvaturedipole-omega" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: To set the energy range for the Berry curvature dipole, you can adjust it based on the Fermi energy level. The unit is eV. There are two parameters.</p></li>
@@ -1193,30 +1447,108 @@
 </ul>
 </section>
 <section id="domega-berrycurvaturedipole-domega">
-<h3>domega {#berrycurvaturedipole_domega}<a class="headerlink" href="#domega-berrycurvaturedipole-domega" title="Permalink to this heading">¶</a></h3>
+<h3>domega {#berrycurvaturedipole_domega}<a class="headerlink" href="#domega-berrycurvaturedipole-domega" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Specifies the energy interval of the omega.</p></li>
 <li><p><strong>Default</strong>: No default value</p></li>
 </ul>
 </section>
-<section id="integrate-mode-berrycurvaturedipole-integrate-mode">
-<h3>integrate_mode {#berrycurvaturedipole_integrate_mode}<a class="headerlink" href="#integrate-mode-berrycurvaturedipole-integrate-mode" title="Permalink to this heading">¶</a></h3>
+<section id="grid-berrycurvaturedipole-grid">
+<h3>grid {#berrycurvaturedipole_grid}<a class="headerlink" href="#grid-berrycurvaturedipole-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
-<li><p><strong>Type</strong>: String</p></li>
-<li><p><strong>Description</strong>: Used for integration settings. See <a class="reference internal" href="#setting-of-integration">Setting of integration</a>.Since the integration is of a tensor, only ‘Grid’integrate_mode is available.</p></li>
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: The grid for integration. There are 3 parameters in total.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+</section>
+<section id="shg">
+<h2>SHG<a class="headerlink" href="#shg" title="Link to this heading">¶</a></h2>
+<section id="method-shg-method">
+<h3>method {#shg_method}<a class="headerlink" href="#method-shg-method" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: Specify the method to calculate the SHG. <code class="docutils literal notranslate"><span class="pre">0</span></code> represents calculation using the inter- and intra-band formula, <code class="docutils literal notranslate"><span class="pre">1</span></code> represents the velocity matrices formula.</p></li>
+<li><p><strong>Default</strong>: 0</p></li>
+</ul>
+</section>
+<section id="omega-shg-omega">
+<h3>omega {#shg_omega}<a class="headerlink" href="#omega-shg-omega" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: The range of <span class="math notranslate nohighlight">\(\omega\)</span>. There are two parameters, indicating the starting point and the ending point. Unit is eV.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+<section id="domega-shg-domega">
+<h3>domega {#shg_domega}<a class="headerlink" href="#domega-shg-domega" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: The energy interval of <span class="math notranslate nohighlight">\(\omega\)</span>.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+<section id="eta-shg-eta">
+<h3>eta {#shg_eta}<a class="headerlink" href="#eta-shg-eta" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: <span class="math notranslate nohighlight">\(\hbar\omega \to \hbar\omega + i \eta\)</span> is used to prevent numerical divergence caused by a zero denominator.</p></li>
+<li><p><strong>Default</strong>: 0.05</p></li>
+</ul>
+</section>
+<section id="grid-shg-grid">
+<h3>grid {#shg_grid}<a class="headerlink" href="#grid-shg-grid" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: The grid for integration. There are 3 parameters in total.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+</section>
+<section id="pockels">
+<h2>POCKELS<a class="headerlink" href="#pockels" title="Link to this heading">¶</a></h2>
+<section id="omega1-pockels-omega1">
+<h3>omega1 {#pockels_omega1}<a class="headerlink" href="#omega1-pockels-omega1" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: The frequency of external electric field, normally a rather small number. Unit is eV.</p></li>
+<li><p><strong>Default</strong>: 0</p></li>
+</ul>
+</section>
+<section id="omega-pockels-omega">
+<h3>omega {#pockels_omega}<a class="headerlink" href="#omega-pockels-omega" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: The range of <span class="math notranslate nohighlight">\(\omega\)</span>. There are two parameters, indicating the starting point and the ending point. Unit is eV.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+<section id="domega-pockels-domega">
+<h3>domega {#pockels_domega}<a class="headerlink" href="#domega-pockels-domega" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Real</p></li>
+<li><p><strong>Description</strong>: The energy interval of <span class="math notranslate nohighlight">\(\omega\)</span>.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
+<section id="grid-pockels-grid">
+<h3>grid {#pockels_grid}<a class="headerlink" href="#grid-pockels-grid" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: Integer</p></li>
+<li><p><strong>Description</strong>: The grid for integration. There are 3 parameters in total.</p></li>
 <li><p><strong>Default</strong>: No default value</p></li>
 </ul>
 </section>
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="setting-of-k-points">
-<h1>Setting of k points<a class="headerlink" href="#setting-of-k-points" title="Permalink to this heading">¶</a></h1>
+<h1>Setting of k points<a class="headerlink" href="#setting-of-k-points" title="Link to this heading">¶</a></h1>
 <p>As long as the kpoint_mode parameter exists in FUNCTIONS, the following setting methods are to be followed.</p>
 <section id="when-kpoint-mode-is-mp">
-<h2>When kpoint_mode is ‘mp’<a class="headerlink" href="#when-kpoint-mode-is-mp" title="Permalink to this heading">¶</a></h2>
+<h2>When kpoint_mode is ‘mp’<a class="headerlink" href="#when-kpoint-mode-is-mp" title="Link to this heading">¶</a></h2>
 <section id="mp-grid">
-<h3>mp_grid<a class="headerlink" href="#mp-grid" title="Permalink to this heading">¶</a></h3>
+<h3>mp_grid<a class="headerlink" href="#mp-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The grid dividing the Brillouin zone. There are three parameters to divide the three-dimensional Brillouin zone.</p></li>
@@ -1224,7 +1556,7 @@
 </ul>
 </section>
 <section id="k-start">
-<h3>k_start<a class="headerlink" href="#k-start" title="Permalink to this heading">¶</a></h3>
+<h3>k_start<a class="headerlink" href="#k-start" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The origin point coordinates of the Brillouin zone.</p></li>
@@ -1232,7 +1564,7 @@
 </ul>
 </section>
 <section id="k-vect1">
-<h3>k_vect1<a class="headerlink" href="#k-vect1" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect1<a class="headerlink" href="#k-vect1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Expanded vector of the Brillouin zone.</p></li>
@@ -1240,7 +1572,7 @@
 </ul>
 </section>
 <section id="k-vect2">
-<h3>k_vect2<a class="headerlink" href="#k-vect2" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect2<a class="headerlink" href="#k-vect2" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Expanded vector of the Brillouin zone.</p></li>
@@ -1248,7 +1580,7 @@
 </ul>
 </section>
 <section id="k-vect3">
-<h3>k_vect3<a class="headerlink" href="#k-vect3" title="Permalink to this heading">¶</a></h3>
+<h3>k_vect3<a class="headerlink" href="#k-vect3" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Expanded vector of the Brillouin zone.</p></li>
@@ -1257,17 +1589,25 @@
 </section>
 </section>
 <section id="when-kpoint-mode-is-line">
-<h2>When kpoint_mode is ‘line’<a class="headerlink" href="#when-kpoint-mode-is-line" title="Permalink to this heading">¶</a></h2>
+<h2>When kpoint_mode is ‘line’<a class="headerlink" href="#when-kpoint-mode-is-line" title="Link to this heading">¶</a></h2>
 <section id="kpoint-num">
-<h3>kpoint_num<a class="headerlink" href="#kpoint-num" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_num<a class="headerlink" href="#kpoint-num" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: The number of high symmetry points.</p></li>
 <li><p><strong>Default</strong>: No default value</p></li>
 </ul>
 </section>
+<section id="kpoint-label">
+<h3>kpoint_label<a class="headerlink" href="#kpoint-label" title="Link to this heading">¶</a></h3>
+<ul class="simple">
+<li><p><strong>Type</strong>: String</p></li>
+<li><p><strong>Description</strong>: Specify the labels of high symmetry points, separated by spaces.</p></li>
+<li><p><strong>Default</strong>: No default value</p></li>
+</ul>
+</section>
 <section id="high-symmetry-kpoint">
-<h3>high_symmetry_kpoint<a class="headerlink" href="#high-symmetry-kpoint" title="Permalink to this heading">¶</a></h3>
+<h3>high_symmetry_kpoint<a class="headerlink" href="#high-symmetry-kpoint" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Fractional coordinates of high symmetry points and line densities of corresponding k-lines. The first three parameters are the fractional coordinates of the high symmetry points, and the fourth parameter is the line density.</p></li>
@@ -1276,9 +1616,9 @@
 </section>
 </section>
 <section id="when-kpoint-mode-is-direct">
-<h2>When kpoint_mode is ‘direct’<a class="headerlink" href="#when-kpoint-mode-is-direct" title="Permalink to this heading">¶</a></h2>
+<h2>When kpoint_mode is ‘direct’<a class="headerlink" href="#when-kpoint-mode-is-direct" title="Link to this heading">¶</a></h2>
 <section id="id1">
-<h3>kpoint_num<a class="headerlink" href="#id1" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_num<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: the number of k points.</p></li>
@@ -1286,7 +1626,7 @@
 </ul>
 </section>
 <section id="kpoint-direct-coor">
-<h3>kpoint_direct_coor<a class="headerlink" href="#kpoint-direct-coor" title="Permalink to this heading">¶</a></h3>
+<h3>kpoint_direct_coor<a class="headerlink" href="#kpoint-direct-coor" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: Fractional coordinates of the k point.</p></li>
@@ -1296,12 +1636,12 @@
 </section>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="setting-of-integration">
-<h1>Setting of integration<a class="headerlink" href="#setting-of-integration" title="Permalink to this heading">¶</a></h1>
+<h1>Setting of integration<a class="headerlink" href="#setting-of-integration" title="Link to this heading">¶</a></h1>
 <p>As long as the integrate_mode parameter exists in FUNCTIONS, the following setting methods are followed.</p>
 <section id="when-integrate-mode-is-grid">
-<h2>When integrate_mode is ‘Grid’<a class="headerlink" href="#when-integrate-mode-is-grid" title="Permalink to this heading">¶</a></h2>
+<h2>When integrate_mode is ‘Grid’<a class="headerlink" href="#when-integrate-mode-is-grid" title="Link to this heading">¶</a></h2>
 <section id="integrate-grid">
-<h3>integrate_grid<a class="headerlink" href="#integrate-grid" title="Permalink to this heading">¶</a></h3>
+<h3>integrate_grid<a class="headerlink" href="#integrate-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: Low precision grid for integration. There are three parameters.</p></li>
@@ -1309,7 +1649,7 @@
 </ul>
 </section>
 <section id="adaptive-grid">
-<h3>adaptive_grid<a class="headerlink" href="#adaptive-grid" title="Permalink to this heading">¶</a></h3>
+<h3>adaptive_grid<a class="headerlink" href="#adaptive-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Integer</p></li>
 <li><p><strong>Description</strong>: High precision grid for integration. There are three parameters.</p></li>
@@ -1317,7 +1657,7 @@
 </ul>
 </section>
 <section id="adaptive-grid-threshold">
-<h3>adaptive_grid_threshold<a class="headerlink" href="#adaptive-grid-threshold" title="Permalink to this heading">¶</a></h3>
+<h3>adaptive_grid_threshold<a class="headerlink" href="#adaptive-grid-threshold" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: If the value of a k point is greater than this value, then the k point will be adapted.</p></li>
@@ -1326,9 +1666,9 @@
 </section>
 </section>
 <section id="when-integrate-mode-is-adaptive">
-<h2>When integrate_mode is ‘Adaptive’<a class="headerlink" href="#when-integrate-mode-is-adaptive" title="Permalink to this heading">¶</a></h2>
+<h2>When integrate_mode is ‘Adaptive’<a class="headerlink" href="#when-integrate-mode-is-adaptive" title="Link to this heading">¶</a></h2>
 <section id="relative-error">
-<h3>relative_error<a class="headerlink" href="#relative-error" title="Permalink to this heading">¶</a></h3>
+<h3>relative_error<a class="headerlink" href="#relative-error" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The relative error of the adaptive integral.</p></li>
@@ -1336,7 +1676,7 @@
 </ul>
 </section>
 <section id="absolute-error">
-<h3>absolute_error<a class="headerlink" href="#absolute-error" title="Permalink to this heading">¶</a></h3>
+<h3>absolute_error<a class="headerlink" href="#absolute-error" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The absolute error of the adaptive integral.</p></li>
@@ -1344,7 +1684,7 @@
 </ul>
 </section>
 <section id="initial-grid">
-<h3>initial_grid<a class="headerlink" href="#initial-grid" title="Permalink to this heading">¶</a></h3>
+<h3>initial_grid<a class="headerlink" href="#initial-grid" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><strong>Type</strong>: Real</p></li>
 <li><p><strong>Description</strong>: The initial grid for adaptive integration. There are three parameters.</p></li>
@@ -1364,7 +1704,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, PYATB.</p>
+    <p>&#169; Copyright 2025, PYATB.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

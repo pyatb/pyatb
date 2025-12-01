@@ -10,7 +10,7 @@ In the Geometric module, users have access to tools for computing Berry phase an
 
 The Optical module offers a range of optical property calculations, including optical conductivity and nonlinear optical responses, such as shift current and Berry curvature dipole.
 
-PYATB is licensed under GPLv3.0, making it freely available for use and modification by the scientific community. The main developers of PYATB are Gan Jin, Hongsheng Pang, Yuyang Ji, Zujian Dai, under the supervision of Prof. Lixin He at the University of Science and Technology of China.
+PYATB is licensed under GPLv3.0, making it freely available for use and modification by the scientific community. The main developers of PYATB are Gan Jin, Hongsheng Pang, Yuyang Ji, Zujian Dai, Xudong Zhu, under the supervision of Prof. Lixin He at the University of Science and Technology of China.
 
 ## Capabilities 
 
@@ -33,6 +33,8 @@ PYATB provides three major modules: *Bands module*, *Geometric module*, *Optical
     : Provides the contribution of each atomic orbital to the electronic wave functions at each $\mathbf{k}$-point in the BZ.
   - Spin texture
     : Plots the spin polarization vector as a function of momentum in the BZ.
+  - Surface states
+    : Calculates the spectral weights using the iterative surface Green’s function method.
 
 - Geometric module
   - Wilson loop
@@ -42,11 +44,17 @@ PYATB provides three major modules: *Bands module*, *Geometric module*, *Optical
   - Berry curvature
     : Computes the Berry curvature in the BZ.
   - Anomalous Hall conductivity
-    : Calculates the anomalous Hall conductivity using Berry curvature.
+    : Calculates the anomalous Hall conductivity (AHC) using Berry curvature.
+  - Spin Hall conductivity
+    : Calculates the spin Hall conductivity (SHC) using the band-projected Berry curvature-like term.
+  - Anomalous Nernst conductivity
+    : Calculates the anomalous Nernst conductivity (ANC) using the Berry-curvature–related thermoelectric kernel.
   - Chern number
     : Calculates the Chern number of a system for any given $\mathbf{k}$-plane.
   - Chirality
     : Examines the chirality of Weyl points by calculating the Berry curvature on a sphere around the $\mathbf{k}$ point.
+  - Orbital magnetization
+    : Calculates the orbital magnetization using the Berry-phase formulation.
 
 - Optical module
   - JDOS
@@ -57,6 +65,8 @@ PYATB provides three major modules: *Bands module*, *Geometric module*, *Optical
     : Calculates the shift current conductivity tensor for the bulk photovoltaic effect.
   - Berry curvature dipole
     : Calculates the Berry curvature dipole which leads to the nonlinear anomalous Hall effects.
+  - Second harmonic generation
+    : Calculates the second-harmonic generation susceptibility using Berry-connection–based nonlinear optical matrix elements.
 
 ## Methodology
 

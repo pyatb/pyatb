@@ -10,7 +10,7 @@ $$
 \Omega_n(\mathbf{k}) = \nabla \times \mathbf{A}_{n}(\mathbf{k}),
 $$ 
 
-where Berry phase $\mathbf{A}_{n}(\mathbf{k}) = i \langle u_{n\mathbf{k}}|\nabla_{\mathbf{k}}|u_{n\mathbf{k}}\rangle$, $|u_{n\mathbf{}k}\rangle$ is the periodic part of the Bloch wave function.
+where Berry connection $\mathbf{A}_{n}(\mathbf{k}) = i \langle u_{n\mathbf{k}}|\nabla_{\mathbf{k}}|u_{n\mathbf{k}}\rangle$, $|u_{n\mathbf{}k}\rangle$ is the periodic part of the Bloch wave function.
 
 We calculated the Berry curvature:
 
