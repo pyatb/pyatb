@@ -35,7 +35,7 @@ ext_modules = [
 
 # 设置默认的大版本号和是否是 release 版本
 ver_default = '1.1.2'
-ver_release = False           # 将此设置为 True 以标记为 release 版本
+ver_release = True           # 将此设置为 True 以标记为 release 版本
 
 # 获取环境变量中的 commit hash 值
 hash_suffix = os.getenv('HASH', '')
