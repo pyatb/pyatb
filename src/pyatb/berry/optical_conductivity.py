@@ -44,8 +44,10 @@ class Optical_Conductivity:
                 f.write('\n------------------------------------------------------')
                 f.write('\n\n')
 
-    def set_parameters(self, occ_band, omega, domega, eta, grid, method, **kwarg):
+    def set_parameters(self, occ_band, omega, domega, eta, grid, method, use_fermi=False, fermi_energy=0.0, **kwarg):
         self.__occ_band = occ_band
+        self.__use_fermi = use_fermi
+        self.__fermi_energy = fermi_energy
         self.__start_omega = omega[0]
         self.__end_omega = omega[1]
         self.__domega = domega
@@ -63,11 +65,14 @@ class Optical_Conductivity:
         if RANK == 0:
             with open(RUNNING_LOG, 'a') as f:
                 f.write('\nParameter setting : \n')
-                f.write(' >> occ_band : %-d\n' % (self.__occ_band))
-                f.write(' >> omega    : %-8.4f %-8.4f\n' % (self.__start_omega, self.__end_omega))
-                f.write(' >> domega   : %-10.6f\n' % (self.__domega))
-                f.write(' >> eta      : %-10.6f\n' % (self.__eta))
-                f.write(' >> method   : %-d\n' % (self.__method))
+                if self.__use_fermi:
+                    f.write(' >> fermi_energy  : %-10.6f\n'%(self.__fermi_energy))
+                else:
+                    f.write(' >> occ_band      : %-d\n' % (self.__occ_band))
+                f.write(' >> omega         : %-8.4f %-8.4f\n' % (self.__start_omega, self.__end_omega))
+                f.write(' >> domega        : %-10.6f\n' % (self.__domega))
+                f.write(' >> eta           : %-10.6f\n' % (self.__eta))
+                f.write(' >> method        : %-d\n' % (self.__method))
                 
 
     def print_data(self):
@@ -133,7 +138,7 @@ class Optical_Conductivity:
             if kpoint_num:
                 optical_conductivity_value, dielectric_function_value = self.__tb_solver.get_optical_conductivity(
                     self.nspin, self.__omega_num, self.__domega, self.__start_omega, 
-                    self.__eta, self.__occ_band, ik_process.k_direct_coor_local, total_kpoint_num, self.__method
+                    self.__eta, self.__occ_band, ik_process.k_direct_coor_local, total_kpoint_num, self.__method, self.__use_fermi, self.__fermi_energy
                 )
 
                 self.optical_conductivity += optical_conductivity_value
@@ -226,8 +231,8 @@ for key, value in direction.items():
 
     ax.set_title('Optical conductivity', fontsize=12)
     ax.set_xlim(x[0], x[-1])
-    ax.set_xlabel('$\hbar \omega$ (eV)', fontsize=12)
-    ax.set_ylabel('$\sigma_{{%s}}$ (S/m)'%(key), fontsize=12)
+    ax.set_xlabel(r'$\\hbar \\omega$ (eV)', fontsize=12)
+    ax.set_ylabel(r'$\\sigma_{{%s}}$ (S/m)'%(key), fontsize=12)
     ax.legend()
 
     plt.savefig(os.path.join(work_path, 'oc-%s.pdf'%(key)))
@@ -244,8 +249,8 @@ for key, value in direction.items():
 
     ax.set_title('Dielectric function', fontsize=12)
     ax.set_xlim(x[0], x[-1])
-    ax.set_xlabel('$\hbar \omega$ (eV)', fontsize=12)
-    ax.set_ylabel('$\epsilon_{{%s}}$'%(key), fontsize=12)
+    ax.set_xlabel(r'$\\hbar \\omega$ (eV)', fontsize=12)
+    ax.set_ylabel(r'$\\epsilon_{{%s}}$'%(key), fontsize=12)
     ax.legend()
 
     plt.savefig(os.path.join(work_path, 'df-%s.pdf'%(key)))
@@ -324,7 +329,7 @@ for index, i in enumerate(need_plot):
 
     ax[index].plot(omega, absorp_xx / 1e5)
     ax[index].set_xlim(omega[0], omega[-1])
-    ax[index].set_xlabel("$\hbar \omega$ (eV)", fontsize=12)
+    ax[index].set_xlabel(r"$\\hbar \\omega$ (eV)", fontsize=12)
     ax[index].set_ylabel(f'$\\\\alpha^{{{{{{i}}}}}}$' + ' ($\\\\times 10^5$ cm$^{{-1}}$)', fontsize=12)
 
 plt.savefig('absorption.png', dpi=600)
@@ -341,14 +346,19 @@ plt.savefig('absorption.png', dpi=600)
             print('ImportError: Absorption Plot requires matplotlib package!')
             return None  
 
-    def calculate_optical_conductivity(self, **kwarg):
+    def calculate_optical_conductivity(self, fermi_energy=0.0, occ_band=-1, **kwarg):
         '''
         calculate optical conductivity using Kubo-Greenwood formula
         '''
         COMM.Barrier()
         timer.start('optical_conductivity', 'calculate optical conductivity')
 
-        self.set_parameters(**kwarg)
+        if occ_band == -1:
+            use_fermi = True
+        else:
+            use_fermi = False
+
+        self.set_parameters(use_fermi=use_fermi, fermi_energy=fermi_energy, occ_band=occ_band, **kwarg)
         optical_conductivity_value = self.get_optical_conductivity()
 
         timer.end('optical_conductivity', 'calculate optical conductivity')

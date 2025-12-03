@@ -251,8 +251,8 @@ orb_mag_z = OM[:, 3]
 
 fig, ax = plt.subplots(1, 1, tight_layout=True)
 
-ax.set_ylabel('orbital magnetization ($\mu_B$ / u.c.)')
-ax.set_xlabel('$\Delta E_F$ (eV)')
+ax.set_ylabel('orbital magnetization (r$\\mu_B$ / u.c.)')
+ax.set_xlabel(r'$\\Delta E_F$ (eV)')
 ax.set_xlim(energy[0], energy[-1])
 
 ax.plot(energy, orb_mag_x, label='x')

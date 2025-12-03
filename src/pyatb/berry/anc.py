@@ -50,7 +50,6 @@ class ANC:
 
     def set_parameters(
         self,
-        method,
         fermi_energy,
         fermi_range,
         de,
@@ -58,7 +57,6 @@ class ANC:
         integrate_grid,
         **kwarg
     ):
-        self.__method = method
         self.__fermi_energy = fermi_energy
         self.__fermi_range = np.sort(fermi_range + fermi_energy)
         self.__de = de
@@ -72,7 +70,6 @@ class ANC:
         if RANK == 0:
             with open(RUNNING_LOG, 'a') as f:
                 f.write('\nParameter setting : \n')
-                f.write(' >> method         : %-d\n' % (self.__method))
                 f.write(' >> fermi_range    : %-10.6f%-10.6f\n' % (self.__fermi_range[0], self.__fermi_range[1]))
                 f.write(' >> de             : %-10.6f\n' % (self.__de))
                 f.write(' >> eta            : %-10.6f\n' % (self.__eta))
@@ -246,9 +243,9 @@ for i, direction in enumerate(["x", "y", "z"]):
     ax[0].set_xlabel("E - E$_F$ (eV)", fontsize=12)
 
     if is_plot_2D:
-        ax[0].set_ylabel("AHC $\sigma$ (e$^2$/h)", fontsize=12)
+        ax[0].set_ylabel(r"AHC $\\sigma$ (e$^2$/h)", fontsize=12)
     else:
-        ax[0].set_ylabel("AHC $\sigma$ (S/cm)", fontsize=12)
+        ax[0].set_ylabel(r"AHC $\\sigma$ (S/cm)", fontsize=12)
 
     anc = np.zeros_like(sigma[:, i], dtype=float)
     for i_en, mu in enumerate(energy_list):
@@ -284,7 +281,6 @@ plt.savefig(os.path.join(work_path, "ahc_anc.png"), dpi=600)
     def calculate_anc(
         self, 
         fermi_energy, 
-        method,
         fermi_range,
         de,
         eta,
@@ -294,7 +290,7 @@ plt.savefig(os.path.join(work_path, "ahc_anc.png"), dpi=600)
         COMM.Barrier()
         timer.start('ANC', 'calculate ANC')
 
-        self.set_parameters(method, fermi_energy, fermi_range, de, eta, integrate_grid)
+        self.set_parameters(fermi_energy, fermi_range, de, eta, integrate_grid)
 
         ANC_result = self.get_anc()
 

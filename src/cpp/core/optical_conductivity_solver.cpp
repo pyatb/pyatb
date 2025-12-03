@@ -24,12 +24,36 @@ void optical_conductivity_solver::set_parameters(
     this->domega = domega;
     this->start_omega = start_omega;
     this->eta = eta;
+    this->use_fermi = false;
     this->occupied_band_num = occupied_band_num;
     this->k_direct_coor = k_direct_coor;
     this->kpoint_num = k_direct_coor.rows();
     this->total_kpoint_num = total_kpoint_num;
 }
 
+void optical_conductivity_solver::set_parameters_fermi(
+    const int &nspin,
+    const int &omega_num,
+    const double &domega,
+    const double &start_omega,
+    const double &eta,
+    const double &fermi_energy, 
+    const MatrixXd &k_direct_coor,
+    const int &total_kpoint_num
+)
+{
+    this->nspin = nspin;
+    this->omega_num = omega_num;
+    this->max_omega_num = int(omega_num * 1.5);
+    this->domega = domega;
+    this->start_omega = start_omega;
+    this->eta = eta;
+    this->use_fermi = true;
+    this->fermi_energy = fermi_energy;
+    this->k_direct_coor = k_direct_coor;
+    this->kpoint_num = k_direct_coor.rows();
+    this->total_kpoint_num = total_kpoint_num;
+}
 
 void optical_conductivity_solver::KK_triangularFunction_ik(
     const VectorXd &eigenvalues_ik, 
@@ -383,9 +407,27 @@ void optical_conductivity_solver::get_optical_conductivity_by_kubo(
             velocity_matrix[i] = velocity_solver::cal_velocity_1k_base(Base_Data, exp_ikR.row(ik), eigenvalues, eigenvectors, i);
         }
 
+        int use_occupied_band_num = 0;
+        int basis_num = Base_Data.get_basis_num();
+        if (use_fermi)
+        {
+            for (int ib = 0; ib < basis_num; ++ib)
+            {
+                if (eigenvalues(ib) > this->fermi_energy)
+                {
+                    use_occupied_band_num = ib;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            use_occupied_band_num = this->occupied_band_num;
+        }
+
         MatrixXcd optical_conductivity_ik;
         MatrixXcd dielectric_function_ik;
-        (this->*solve_oc_df)(eigenvalues, velocity_matrix, occupied_band_num, optical_conductivity_ik, dielectric_function_ik);
+        (this->*solve_oc_df)(eigenvalues, velocity_matrix, use_occupied_band_num, optical_conductivity_ik, dielectric_function_ik);
         tem_optical_conductivity[omp_get_thread_num()] += optical_conductivity_ik;
         tem_dielectric_function[omp_get_thread_num()] += dielectric_function_ik;
     }

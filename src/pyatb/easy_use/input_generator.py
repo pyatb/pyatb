@@ -1,10 +1,46 @@
 import os
 import re
 import sys
+import json
+import math
+import shutil
 import argparse
+import warnings
 import numpy as np
 from pyatb.easy_use.stru_analyzer import read_abacus_stru
 from ase import Atoms
+from typing import List, Tuple
+
+def _parse_upf_valence(upf_path):
+    """从 UPF 文件解析 z_valence（优先 v2 的 PP_HEADER，其次兼容部分 v1 写法）。"""
+    with open(upf_path, "r", encoding="utf-8", errors="ignore") as f:
+        head = f.read(200000)
+
+    m = re.search(r'z[_\s]?valence\s*=\s*"?\s*([0-9]+(?:\.[0-9]*)?)', head, re.IGNORECASE)  # v2
+    if m: return float(m.group(1))
+
+    m = re.search(r'<\s*z[_\s]?valence\s*>\s*([0-9]+(?:\.[0-9]*)?)\s*<\s*/\s*z[_\s]?valence\s*>',
+                  head, re.IGNORECASE)  # v1
+    if m: return float(m.group(1))
+
+    m = re.search(r'^\s*z[_\s]?valence\s+([0-9]+(?:\.[0-9]*)?)\s*$', head,
+                  re.IGNORECASE | re.MULTILINE)  # 行式
+    if m: return float(m.group(1))
+
+    m = re.search(r'valence\s+charge[^0-9]*([0-9]+(?:\.[0-9]*)?)', head, re.IGNORECASE)  # 兜底
+    if m: return float(m.group(1))
+
+    raise ValueError(f"无法从 UPF 中解析 z_valence: {upf_path}")
+
+
+def _first_occurrence_species(ase_stru):
+    """按结构中首次出现顺序生成元素列表。"""
+    order, seen = [], set()
+    for s in ase_stru.get_chemical_symbols():
+        if s not in seen:
+            order.append(s)
+            seen.add(s)
+    return order
 
 def parse_input(input_text):
     variables = {}
@@ -27,7 +63,23 @@ def parse_input_file(file_path):
     except FileNotFoundError:
         print(f"文件 {file_path} 未找到。")
         return {}
+
+def extract_properties_from_json(json_file):
+    with open(json_file, 'r') as f:
+        data = json.load(f)
+
+    max_val = data.get("max_val", None)
+    e_fermi = data.get("fermi_energy", None)
+    band_gap = data.get("band_gap", None)
+    n_elec = int(data.get("num_electrons", 0))
     
+    # n_occu = 一半取整
+    n_occu = math.floor(n_elec / 2)
+
+    return max_val, e_fermi, band_gap, n_elec, n_occu
+
+
+
 def kpath_generator(ase_stru: Atoms, kline_density = 0.01, dim = '3', tolerance=5e-4, knum=0, kpath = None):
     """
     Generate k-points along a high-symmetry path in reciprocal space.
@@ -163,6 +215,49 @@ def generate_input_init(nspin, e_fermi, out_suffix_path, lattice_constant, latti
     return input_text
 
 
+def generate_hamgnn_input_init(nspin, e_fermi, out_suffix_path, lattice_constant, lattice_vectors, max_kpoint_num):
+    """
+    Generate the input text for initializing a simulation.
+
+    Args:
+        nspin (int): Number of spins.
+        e_fermi (float): Fermi energy.
+        out_suffix_path (str): Output suffix path.
+        lattice_constant (float): Lattice constant.
+        lattice_vectors (list): List of lattice vectors.
+        max_kpoint_num (int): Maximum number of k-points.
+
+    Returns:
+        str: The generated input text.
+    """
+    if nspin == 2:
+        HR_file = str(os.path.join(out_suffix_path, "H0.csr")) + ", " + str(os.path.join(out_suffix_path, "H1.csr"))
+    else:
+        HR_file = str(os.path.join(out_suffix_path, "H.csr"))
+    
+    input_text = f"INPUT_PARAMETERS\n{{\n"
+    input_text += f"    nspin                           {nspin}\n"
+    input_text += f"    package                         ABACUS\n"
+    input_text += f"    fermi_energy                    {e_fermi}\n"
+    input_text += f"    fermi_energy_unit               eV\n"
+    input_text += f"    HR_route                        {HR_file}\n"
+    input_text += f"    SR_route                        {out_suffix_path}/S.csr\n"
+    input_text += f"    rR_route                        {out_suffix_path}/R.csr\n"
+    input_text += f"    HR_unit                         eV\n"
+    input_text += f"    rR_unit                         Bohr\n"
+    input_text += f"    max_kpoint_num                  {max_kpoint_num}\n"
+    input_text += f"}}\n\n"
+    input_text += f"LATTICE\n{{\n"
+    input_text += f"    lattice_constant                {lattice_constant}\n"
+    input_text += f"    lattice_constant_unit           Angstrom\n"
+    input_text += f"    lattice_vector\n"
+    input_text += f"    {lattice_vectors[0][0]}  {lattice_vectors[0][1]}  {lattice_vectors[0][2]}\n"
+    input_text += f"    {lattice_vectors[1][0]}  {lattice_vectors[1][1]}  {lattice_vectors[1][2]}\n"
+    input_text += f"    {lattice_vectors[2][0]}  {lattice_vectors[2][1]}  {lattice_vectors[2][2]}\n"
+    input_text += f"}}\n"
+    return input_text
+
+
 def generate_input_band(input_text, ase_stru: Atoms, kline_density=100, dim=3, kmode='line', tolerance=5e-4, knum=0, kpath = None):
     """
     Generates the input for band structure calculation.
@@ -185,7 +280,7 @@ def generate_input_band(input_text, ase_stru: Atoms, kline_density=100, dim=3, k
     input_text += f"{{\n"
     input_text += f"    wf_collect                      0\n"
     if kmode in ["mp", "mesh"]:
-        integrate_grid, adaptive_grid, pbc = get_k_mesh_from_dim(lattice_vectors, dim, 0.015)  # band mesh 默认密度
+        integrate_grid, adaptive_grid, pbc = get_k_mesh_from_dim(lattice_vectors, dim, 0.03)  # band mesh 默认密度
         input_text += f"    kpoint_mode               mp\n"
         input_text += f"    mp_grid                   {' '.join(map(str, integrate_grid))}\n"
     else:
@@ -326,7 +421,7 @@ def generate_input_pdos(input_text, dim, lattice_vectors, e_fermi, energy_range)
     """
     e_low, e_high = e_fermi + energy_range[0], e_fermi + energy_range[1]
 
-    integrate_grid, adaptive_grid, pbc = get_k_mesh_from_dim(lattice_vectors, dim, 0.05)  # pdos 默认密度
+    integrate_grid, adaptive_grid, pbc = get_k_mesh_from_dim(lattice_vectors, dim, 0.10)  # pdos 默认密度
 
     input_text += f"\nPDOS\n"
     input_text += f"{{\n"
@@ -567,7 +662,102 @@ def generate_input_ahc(input_text, dim, lattice_vectors, mp_density=0.008):
     # print(input_text)
     return input_text
 
+def generate_input_polarization(input_text, dim, lattice_vectors, n_occu,
+                                ase_stru, stru_path, valence_str, mp_density,
+                                stru_file_field="STRU"):
+    """
+    生成极化输入（POLARIZATION）——仿写 generate_input_optical 的风格与拼接方式。
 
+    Args:
+        input_text (str): 输入文本（将把 POLARIZATION 区块追加其后）。
+        dim (int or str): 维度/周期性定义，透传给 get_k_mesh_from_dim（如 '3'/'2'/'101' 等）。
+        lattice_vectors (array-like): 晶格矢量。
+        n_occu (int): 占据态数目（occ_band）。
+        ase_stru: ASE Atoms 对象（需包含 info['pp'] 映射）。
+        stru_path (str): 对应 STRU 文件路径（用于解析相对 PP 路径基准）。
+        mp_density (float): k 网格密度。
+        stru_file_field (str): POLARIZATION 中的 stru_file 字段（默认 "STRU"）。
+        valence_str (str): "auto"（默认自动解析）或形如 "13 3 2" 的手动字符串。
+    生成极化输入（POLARIZATION）——仿写 generate_input_optical 的风格与拼接方式。
+    - 当 valence_str=="auto" 且无法从 ase_stru.info['pp'] 解析 valence 时，给出警告并继续运行，
+      此时 valence_line 设为占位字符串 "set the valence for the element in your STRU"。
+
+    Returns:
+        str: 追加了 POLARIZATION 区块后的文本。
+
+    """
+    # 计算 k 网格（与你的 optical 风格保持一致）
+    integrate_grid, adaptive_grid, pbc = get_k_mesh_from_dim(np.array(lattice_vectors), dim, mp_density)
+    nk1, nk2, nk3 = map(int, integrate_grid)
+
+    # 生成 valence_e 与 atom_type
+    use_placeholder = False
+    placeholder_valence_line = "  #  number of valence electrons for the elements; it should match the Pseudopotentials, for example: 12 6"
+
+    if isinstance(valence_str, str) and valence_str.strip().lower() != "auto":
+        # 手动模式：按空格切分并转为整数
+        tokens = valence_str.strip().split()
+        if not tokens:
+            warnings.warn("valence_str 提供了空字符串，将使用占位提示。")
+            use_placeholder = True
+            # atom_type 仍可依据结构推断
+            species_order = _first_occurrence_species(ase_stru)
+            atom_type = len(species_order)
+            valence_line = placeholder_valence_line
+        else:
+            try:
+                valences = [int(round(float(t))) for t in tokens]
+                atom_type = len(valences)
+                valence_line = ' '.join(map(str, valences))
+            except ValueError:
+                warnings.warn(f"valence_str 解析失败（应为空格分隔的数字）：{valence_str}；将使用占位提示。")
+                use_placeholder = True
+                species_order = _first_occurrence_species(ase_stru)
+                atom_type = len(species_order)
+                valence_line = placeholder_valence_line
+    else:
+        # 自动模式：尝试从 ase_stru.info['pp'] 解析
+        species_order = _first_occurrence_species(ase_stru)
+        atom_type = len(species_order)
+
+        pp_map = getattr(ase_stru, "info", {}).get("pp", None)
+        if not isinstance(pp_map, dict) or not pp_map:
+            warnings.warn("未找到有效的 ase_stru.info['pp']（缺失/不是字典/为空）。将使用占位提示继续运行。")
+            use_placeholder = True
+            valence_line = placeholder_valence_line
+        else:
+            base_dir = os.path.dirname(os.path.abspath(stru_path))
+            valences = []
+            try:
+                for elem in species_order:
+                    if elem not in pp_map or pp_map[elem] in (None, ""):
+                        raise KeyError(f"pp 映射缺少元素 {elem} 的赝势文件名")
+                    pp_name_or_path = pp_map[elem]
+                    upf_path = pp_name_or_path if os.path.isabs(pp_name_or_path) else os.path.normpath(os.path.join(base_dir, pp_name_or_path))
+                    if not os.path.isfile(upf_path):
+                        raise FileNotFoundError(f"赝势文件不存在：{upf_path}")
+                    z = _parse_upf_valence(upf_path)
+                    valences.append(int(round(z)))
+                valence_line = ' '.join(map(str, valences))
+            except Exception as e:
+                warnings.warn(f"从 pp 解析 valence 失败：{e}。将使用占位提示继续运行。")
+                use_placeholder = True
+                valence_line = placeholder_valence_line
+
+
+    # —— 仿写你的 generate_input_optical 的拼接风格 ——
+    input_text += f"\nPOLARIZATION\n"
+    input_text += f"{{\n"
+    input_text += f"    occ_band       {n_occu}\n"
+    input_text += f"    nk1            {nk1}\n"
+    input_text += f"    nk2            {nk2}\n"
+    input_text += f"    nk3            {nk3}\n"
+    input_text += f"    atom_type      {atom_type}\n"
+    input_text += f"    stru_file      {stru_file_field}\n"
+    input_text += f"    valence_e      {valence_line}\n"
+    input_text += f"}}\n"
+
+    return input_text
 
 def generate_input_anc(input_text, dim, lattice_vectors, method, mp_density, energy_range):
 
@@ -612,8 +802,8 @@ def generate_input_wilsonloop(input_text, n_occu, occu_switch, dim, lattice_vect
     return input_text
 
 
-def generate_input_chern(input_text, n_occu, occu_switch, dim, lattice_vectors, method):
-    integrate_grid, adaptive_grid, pbc = get_k_mesh_from_dim(lattice_vectors, dim, 0.04)  # Chern 密度
+def generate_input_chern(input_text, n_occu, occu_switch, dim, lattice_vectors, method, mp_density):
+    integrate_grid, adaptive_grid, pbc = get_k_mesh_from_dim(lattice_vectors, dim, mp_density)  # Chern 密度
 
     input_text += f"\nCHERN_NUMBER\n"
     input_text += f"{{\n"
@@ -668,48 +858,176 @@ def generate_input_berry(input_text, ase_stru: Atoms, n_occu, occu_switch, kline
 
 def extract_data_from_log(out_suffix_path):
     """
-    从 running_scf.log 文件中提取数据。
+    从 running_scf.log 文件中提取数据（增强版）。
 
-    参数：
-    out_suffix_path (str)：输出路径的后缀。
+    规则：
+    - 常规情况下：从全文件解析 e_tot、e_fermi、n_occu、n_bands、n_elec（遇到多次取最后一次）。
+    - 若出现 'nelec_delta is NOT zero' 行：从该行 **之后** 的内容重新解析并覆盖 n_elec / n_occu / n_bands。
+      * n_elec 优先取 'nelec now'
+      * 若没有 'nelec now'，再退而求其次找 'AUTOSET number of electrons'
+      * 不会把 'total electron number of element X' 当作总电子数
 
-    返回值：
-    e_tot (float)：总能量。
-    e_fermi (float)：费米能级。
-    n_occu (int)：占据态数目。
-    n_bands (int)：总带数目。
-    n_elec (int)：电子数目。
+    返回：
+        e_tot (float): 总能量
+        e_fermi (float): 费米能级
+        n_occu (int): 占据态数目（occupied bands）
+        n_bands (int): 总带数目（NBANDS）
+        n_elec (int): 电子数目（首选 'nelec now'）
     """
-
     log_file_path = os.path.join(out_suffix_path, "running_scf.log")
+    if not os.path.isfile(log_file_path):
+        print(f"错误：未找到日志文件 {log_file_path}")
+        return
+
+    # 结果变量（常规/默认解析结果）
     e_tot = None
     e_fermi = None
     n_occu = None
     n_bands = None
     n_elec = None
 
-    with open(log_file_path, "r") as log_file:
-        for line in log_file:
-            if "!FINAL_ETOT_IS" in line:
-                e_tot = float(line.split()[1])
-            elif "EFERMI =" in line:
-                e_fermi = float(line.split()[2])
-            elif "occupied bands =" in line:
-                n_occu = int(line.split()[3])
-            elif "NBANDS =" in line:
-                n_bands = int(line.split()[2])
-            elif "number of electrons" in line:
-                n_elec = int(line.split()[5])
+    # “nelec_delta 警告之后”的覆盖结果（若触发，将用这些覆盖默认结果）
+    post_occu = None
+    post_bands = None
+    post_elec = None
 
-    if e_tot is None or e_fermi is None:
-        print("错误：无法从 running_scf.log 中提取数据")
+    # 标记：是否进入“nelec_delta 警告之后”的区域
+    after_nelec_delta = False
+
+    # 预编译正则
+    re_etot   = re.compile(r"!FINAL_ETOT_IS\s+([+-]?\d+(?:\.\d+)?(?:[Ee][+-]?\d+)?)")
+    re_fermi  = re.compile(r"EFERMI\s*=\s*([+-]?\d+(?:\.\d+)?(?:[Ee][+-]?\d+)?)")
+    re_occu   = re.compile(r"occupied\s+bands\s*=\s*(\d+)", re.IGNORECASE)
+    re_bands  = re.compile(r"NBANDS\s*=\s*(\d+)", re.IGNORECASE)
+
+    # 不同来源的电子数（注意优先级：nelec now > AUT0SET ... > number of electrons）
+    re_nelec_now   = re.compile(r"nelec\s+now\s*:\s*=\s*(\d+)", re.IGNORECASE)
+    re_autoset_ele = re.compile(r"AUTOSET\s+number\s+of\s+electrons\s*:\s*=\s*(\d+)", re.IGNORECASE)
+    re_num_elec    = re.compile(r"number\s+of\s+electrons\s*=?\s*(:|=)?\s*([+-]?\d+(?:\.\d+)?)", re.IGNORECASE)
+
+    # 警告行
+    re_nelec_delta_warn = re.compile(r"nelec_delta\s+is\s+NOT\s+zero", re.IGNORECASE)
+
+    # 非总电子数的提示（仅记录，不计入 n_elec）
+    re_element_elec = re.compile(r"total\s+electron\s+number\s+of\s+element\s+\S+\s*=\s*\d+", re.IGNORECASE)
+
+    try:
+        with open(log_file_path, "r", encoding="utf-8", errors="ignore") as log_file:
+            for raw_line in log_file:
+                line = raw_line.strip()
+
+                # 全局解析（e_tot/e_fermi 始终取最后一次）
+                m = re_etot.search(line)
+                if m:
+                    e_tot = float(m.group(1))
+                    continue
+
+                m = re_fermi.search(line)
+                if m:
+                    e_fermi = float(m.group(1))
+                    continue
+
+                # 进入“警告之后”模式
+                if re_nelec_delta_warn.search(line):
+                    after_nelec_delta = True
+                    # 进入该模式后，将使用 post_* 收集覆盖项
+                    # 不在此处返回，继续向下扫描“之后”的值
+                    continue
+
+                # occupied bands / NBANDS / n_elec 的解析
+                # 根据是否在“警告之后”写入不同变量
+                if after_nelec_delta:
+                    m = re_occu.search(line)
+                    if m:
+                        post_occu = int(m.group(1))
+                        continue
+
+                    m = re_bands.search(line)
+                    if m:
+                        post_bands = int(m.group(1))
+                        continue
+
+                    # 电子数优先级：nelec now > AUTOSET ...
+                    m = re_nelec_now.search(line)
+                    if m:
+                        post_elec = int(m.group(1))
+                        continue
+                    m = re_autoset_ele.search(line)
+                    if m:
+                        # 只有在 post_elec 尚未由 'nelec now' 设定时才用它
+                        if post_elec is None:
+                            post_elec = int(m.group(1))
+                        continue
+                    m = re_num_elec.search(line)
+                    if m:
+                        # 尽量避免把“每元素总电子数”等误判为总电子数
+                        if not re_element_elec.search(line):
+                            # 只有当既没有 nelec now 也没有 AUTOSET 时，才兜底用它
+                            if post_elec is None:
+                                try:
+                                    post_elec = int(float(m.group(2)))
+                                except ValueError:
+                                    pass
+                        continue
+                else:
+                    # 常规模式（在警告之前）
+                    m = re_occu.search(line)
+                    if m:
+                        n_occu = int(m.group(1))
+                        continue
+
+                    m = re_bands.search(line)
+                    if m:
+                        n_bands = int(m.group(1))
+                        continue
+
+                    # 电子数：先记录，但如果后续有“警告之后”的值会被覆盖
+                    m = re_nelec_now.search(line)
+                    if m:
+                        n_elec = int(m.group(1))
+                        continue
+                    m = re_autoset_ele.search(line)
+                    if m:
+                        # 若未由 nelec now 设定，则可先用
+                        if n_elec is None:
+                            n_elec = int(m.group(1))
+                        continue
+                    m = re_num_elec.search(line)
+                    if m:
+                        if not re_element_elec.search(line):
+                            try:
+                                n_elec = int(float(m.group(2)))
+                            except ValueError:
+                                pass
+                        continue
+
+        # 如果出现了警告，则使用“警告之后”的覆盖值
+        if after_nelec_delta:
+            if post_occu is not None:
+                n_occu = post_occu
+            if post_bands is not None:
+                n_bands = post_bands
+            if post_elec is not None:
+                n_elec = post_elec
+
+        # 基本检查
+        if e_tot is None or e_fermi is None:
+            print("错误：无法从 running_scf.log 中提取 e_tot 或 e_fermi")
+            return
+
+        print(f"{log_file_path} 提取完成。")
+        print(f"E_TOTAL (eV)   =  {e_tot}")
+        print(f"E_FERMI (eV)   =  {e_fermi}")
+        print(f"OCCUPIED_BANDS =  {n_occu}")
+        print(f"NBANDS         =  {n_bands}")
+        print(f"N_ELEC         =  {n_elec}")
+
+        return e_tot, e_fermi, n_occu, n_bands, n_elec
+
+    except Exception as e:
+        print(f"读取/解析日志时发生异常：{e}")
         return
 
-    print(f"{out_suffix_path}/running_scf.log 提取完成。")
-    print(f"E_TOTAL (eV)   =  {e_tot}")
-    print(f"E_FERMI (eV)   =  {e_fermi}")
-    print(f"OCCUPIED_BANDS =  {n_occu}")
-    return e_tot, e_fermi, n_occu, n_bands, n_elec
 
 def stru_pp_orb(pseudo_dir, orbital_dir, f_stru, ase_stru: Atoms, f_out=None):
     """
@@ -751,6 +1069,8 @@ def stru_pp_orb(pseudo_dir, orbital_dir, f_stru, ase_stru: Atoms, f_out=None):
     return
 
 
+
+
 def main():
     # 创建ArgumentParser对象
     parser = argparse.ArgumentParser(description='Input Generator Script.')
@@ -765,14 +1085,15 @@ def main():
     parser.add_argument('--tolerance', '--tol', type=float, default=1e-3, help='Tolerance for determining Bravais lattice. Default is 1e-3.')
     parser.add_argument('--pdos', action='store_true', help='Projected DOS calculation, defalut energy range referred to Fermi level is 4 which means [-4, 4], you can also set as --erange="-6 8" to set [-6, 8]')
     parser.add_argument('--findnodes', '--fnodes', action='store_true', help='Find Weyl nodes calculation')
-    parser.add_argument('--erange', type=str, default='4', help='Energy range referred to Fermi level, defalut is 4 means [-4, 4], you can also set as --erange="-6 8" to set [-6, 8]')
+    parser.add_argument('--erange', type=str, default='8', help='Energy range referred to Fermi level, defalut is 8 means [-8, 8], you can also set as --erange="-6 8" to set [-6, 8]')
     parser.add_argument('--frange', type=float, default=1, help='Fermi energy range referred to the Fermi level, defalut is -1 1')
     parser.add_argument('--optical', action='store_true', help='Optical conductivity with automatically read band occupation numbers')
     parser.add_argument('--jdos', action='store_true', help='JDOS with automatically read band occupation numbers')
-    parser.add_argument('--shift', action='store_true', help='Shift current with automatically read band occupation numbers')
-    parser.add_argument('--polar', action='store_true', help='Calculate the spontaneous polarization of periodic solids by so-called Modern Theory of Polarization, namely Berry phase theory')
+    parser.add_argument('--shift','--shift_current', action='store_true', help='Shift current with automatically read band occupation numbers')
+    parser.add_argument('--polar','--polarization', action='store_true', help='Calculate the polarization of periodic solids by Modern Theory of Polarization, namely Berry phase theory')
+    parser.add_argument('--valence', '--valence_e', type=str, default='auto', help='for polarization calculation, default is auto, you can set like "14 3 4" for each of 3 elements.')
     parser.add_argument('--orange', type=float, nargs="+", default=[0, 10], help='Optical frequency range, default is [0, 10] eV')
-    parser.add_argument('--mp','--density', type=float, default=0.05, help='MP Grid density along every reciprocal vector, default is 0.05 2*pi/Angstrom.')
+    parser.add_argument('--mp','--density', type=float, default=0.10, help='MP Grid density along every reciprocal vector, default is 0.10 2*pi/Angstrom.')
     parser.add_argument('--bandunfolding','--unfolding','--bandunfold','--unfold', action='store_true', help='Band Structure Unfolding calculation, use --bandrange to set the band range, and --matrix to set the unfolding matrix.')
     parser.add_argument('--m_matrix', '--matrix', type=str, default='1 0 0  0 1 0  0 0 1', help='Band unfolding matrix in the Input file.')
     parser.add_argument('--ahc', action='store_true', help='Anomalous Hall Conductivity with defalut setting Input generated.')
@@ -787,44 +1108,47 @@ def main():
     parser.add_argument('--fatband','--pband','--projectedband', action='store_true', help='Projected Band Structures with defalut setting Input generated.')
     parser.add_argument('--spintexture','--spin','--spintex', action='store_true', help='Spin Texture Input generated. DEFAULT of Kpoint mode is line, you can set --kmode=mp to use MP grid.')
     parser.add_argument('--bandrange','--brange', type=str, default=None, help='Band range for FATBAND or BAND UNFOLDING, defalut is +- 50 bands about the occupied band.')
-    parser.add_argument('--max_kpoint_num','--maxkpt',type=int, default=4000, help='Max parallel kpoint number in one iteration.')
+    parser.add_argument('--max_kpoint_num','--maxkpt',type=int, default=2000, help='Max parallel kpoint number in one iteration.')
     parser.add_argument('--fs','--fermisurface', action='store_true', help='Fermi surface with defalut setting Input generated.')
-    
-    # 解析命令行参数
+    calculator = parser.add_mutually_exclusive_group()
+    calculator.add_argument('--abacus', action='store_true', help='Use ABACUS for SCF calculator.')
+    calculator.add_argument('--hamgnn', action='store_true', help='Use HamGNN for .csr generation.')
+
     args = parser.parse_args()
 
-    directory_path =  args.input
-    output_pyatb_path =  args.output
-    
-    if os.path.isdir(directory_path):
-        input_file_path = os.path.join(directory_path, "INPUT")
-    elif os.path.isfile(directory_path):
-        input_file_path = directory_path
-        directory_path = os.path.dirname(directory_path)
-    else:
-        print(f"路径或文件 {directory_path} 不存在。")
-        return
+    # 默认是 abacus，如果都没指定，就手动设置 abacus=True
+    if not args.abacus and not args.hamgnn:
+        args.abacus = True
+
+    # 现在你可以根据选择来决定计算器
+    if args.abacus:
+        print("Using ABACUS as calculator.")
+    elif args.hamgnn:
+        print("Using HamGNN as calculator.")
 
 
-    # 把directory_path转换为绝对路径
-    directory_path = os.path.abspath(directory_path)
 
-    variables_dict_init = parse_input_file(input_file_path)
-    if variables_dict_init:
-        if "suffix" in variables_dict_init:
-            out_suffix_path = os.path.join(directory_path, "OUT." + variables_dict_init["suffix"])
-        else:
-            out_suffix_path = os.path.join(directory_path, "OUT.ABACUS")
 
-        input_file_full = os.path.join(out_suffix_path, "INPUT")
-        variables_dict_full = parse_input_file(input_file_full)
-        latname = variables_dict_full["latname"]
-        nspin = int(variables_dict_full["nspin"])
+    if args.hamgnn:
+        directory_path =  args.input
+        directory_path = os.path.abspath(directory_path)
+
+        output_pyatb_path =  args.output
+
+        out_suffix_path = directory_path
+
+        properties_json_file = os.path.join(out_suffix_path, "properties.json")
+        latname = None
+        nspin = 1 # 先写死，后面替换
         # 使用get方法从字典中获取键值，如果键不存在，则返回空字符串 ''
-        pp_dir = os.path.join(directory_path, variables_dict_full.get("pseudo_dir", ''))
-        orb_dir = os.path.join(directory_path, variables_dict_full.get("orbital_dir", ''))
+        pp_dir  = None
+        orb_dir = None
 
-        e_tot, e_fermi, n_occu, n_bands, n_elec = extract_data_from_log(out_suffix_path)
+        # e_tot, e_fermi, n_occu, n_bands, n_elec = extract_data_from_log(out_suffix_path)
+
+        max_val, e_fermi, band_gap, n_elec, n_occu = extract_properties_from_json(properties_json_file)
+
+        n_bands = int(n_elec) # 先这样设置
 
         stru_file_path = os.path.join(directory_path, "STRU")
         with open(stru_file_path, 'r') as f_s:
@@ -835,9 +1159,35 @@ def main():
             ase_stru = read_abacus_stru(f_s, i_latname, True)
         lattice_constant = 1.0 # unit is Angstrom
         lattice_vectors = ase_stru.get_cell()
+
+
+        input_text = generate_hamgnn_input_init(nspin, e_fermi, out_suffix_path, lattice_constant, lattice_vectors, args.max_kpoint_num)
         
-        input_text = generate_input_init(nspin, e_fermi, out_suffix_path, lattice_constant, lattice_vectors, args.max_kpoint_num)
-        
+        current_directory = os.path.abspath(os.getcwd())
+
+        # 判断是否提供了output_pyatb_path，如果提供了，那么就在目录下生成相应名称的文件夹
+        if output_pyatb_path is not None:
+            pyatb_directory = os.path.join(directory_path, output_pyatb_path)
+            os.makedirs(pyatb_directory, exist_ok=True)
+            shutil.copy(os.path.join(current_directory, "STRU"), os.path.join(pyatb_directory, "STRU"))
+        # 判断当前目录是否在 directory_path 的子目录中，且不是 directory_path 本身
+        elif os.path.commonpath([current_directory, directory_path]) == directory_path and current_directory != directory_path:
+            # 如果当前目录是在 directory_path 内部（但不等于 directory_path 本身）
+            pyatb_directory = current_directory
+        else:
+            # 如果当前目录等于 directory_path 或者不在 directory_path 内部
+            pyatb_directory = os.path.join(directory_path, "pyatb")
+            os.makedirs(pyatb_directory, exist_ok=True)
+
+        get_e_file_path = os.path.join(pyatb_directory, "get_Energy_HamGNN.out")
+        with open(get_e_file_path, "w") as output_file:
+            output_file.write(f"E_TOTAL (eV)   =  None_yet\n")
+            output_file.write(f"E_FERMI (eV)   =  {e_fermi}\n")
+            output_file.write(f"BAND_GAP       =  {band_gap}\n")
+            output_file.write(f"NBANDS         =  None_yet \n")
+            output_file.write(f"NELEC          =  {n_elec}\n")
+            output_file.write(f"Occupied bands =  {n_occu} # estimated by NELEC/2 \n")
+
         if args.bandrange:
             if ' ' in args.bandrange:
                 band_range = [int(band) for band in args.bandrange.split()]
@@ -864,7 +1214,6 @@ def main():
                 num = float(erange_value)
                 energy_range = [-num, num]
 
-
         # 传递目录路径到每个函数
         if args.band:
             input_text = generate_input_band(input_text, ase_stru, args.kline, args.dim,  args.kmode, args.tolerance,  args.knum,  args.kpath)
@@ -890,47 +1239,174 @@ def main():
             input_text = generate_input_findnodes(input_text, args.dim, lattice_vectors, e_fermi, energy_range)
         if args.optical:
             input_text = generate_input_optical(input_text, args.dim, lattice_vectors, n_occu, omega_range, args.mp)
+        if args.polar:
+            input_text = generate_input_polarization(input_text, args.dim, lattice_vectors, n_occu, ase_stru, stru_file_path, args.valence, args.mp, stru_file_field="STRU")
         if args.jdos:
             input_text = generate_input_jdos(input_text, args.dim, lattice_vectors, n_occu, omega_range, args.mp)
         if args.shift:
             input_text = generate_input_shift(input_text, args.dim, lattice_vectors, n_occu, omega_range, args.mp)
         if args.chern:
-            input_text = generate_input_chern(input_text,  n_occu, args.occu, args.dim, lattice_vectors, args.method)
+            input_text = generate_input_chern(input_text,  n_occu, args.occu, args.dim, lattice_vectors, args.method, args.mp)
         if args.wilson:
             input_text = generate_input_wilsonloop(input_text,  n_occu, args.occu, args.dim, lattice_vectors, args.method)
 
-        current_directory = os.path.abspath(os.getcwd())
-        # 判断是否提供了output_pyatb_path，如果提供了，那么就在目录下生成相应名称的文件夹
-        if output_pyatb_path is not None:
-            pyatb_directory = os.path.join(directory_path, output_pyatb_path)
-            os.makedirs(pyatb_directory, exist_ok=True)
-        # 判断当前目录是否在 directory_path 的子目录中，且不是 directory_path 本身
-        elif os.path.commonpath([current_directory, directory_path]) == directory_path and current_directory != directory_path:
-            # 如果当前目录是在 directory_path 内部（但不等于 directory_path 本身）
-            pyatb_directory = current_directory
-        else:
-            # 如果当前目录等于 directory_path 或者不在 directory_path 内部
-            pyatb_directory = os.path.join(directory_path, "pyatb")
-            os.makedirs(pyatb_directory, exist_ok=True)
-        get_e_file_path = os.path.join(pyatb_directory, "get_Energy.out")
-        with open(get_e_file_path, "w") as output_file:
-            output_file.write(f"E_TOTAL (eV)   =  {e_tot}\n")
-            output_file.write(f"E_FERMI (eV)   =  {e_fermi}\n")
-            output_file.write(f"Occupied bands =  {n_occu}\n")
-            output_file.write(f"NBANDS         =  {n_bands}\n")
-            output_file.write(f"NELEC          =  {n_elec}\n")
 
         input_file_path = os.path.join(pyatb_directory, "Input")
         with open(input_file_path, "w") as file:
             file.write(input_text)
-        # 把 stru_file_path 生成一份到pyatb文件夹下，注意文件夹路径改变，PP和ORB的位置可能改变，此处进行判断和修改
-        if pp_dir is None and orb_dir is None: # 如果没有找到pseudo_dir和orbital_dir，不修改STRU文件
-            pass
+
+        print(f"[PYATB with HamGNN] Input and STRU files for PyATB is generated in: {pyatb_directory}")
+
+        return
+
+    
+
+
+
+    if args.abacus:
+        directory_path =  args.input
+        output_pyatb_path =  args.output
+
+        if os.path.isdir(directory_path):
+            input_file_path = os.path.join(directory_path, "INPUT")
+        elif os.path.isfile(directory_path):
+            input_file_path = directory_path
+            directory_path = os.path.dirname(directory_path)
         else:
-            stru_pp_orb(pp_dir, orb_dir, f_stru=stru_file_path, ase_stru=ase_stru, f_out=os.path.join(pyatb_directory, "STRU"))
-        print(f"Input and STRU files for PyATB is generated in: {pyatb_directory}")
-    else:
-        print("未能从INPUT文件中解析出任何变量。")
+            print(f"[PYATB with ABACUS] 路径或文件 {directory_path} 不存在。")
+            return
+
+        # 把directory_path转换为绝对路径
+        directory_path = os.path.abspath(directory_path)
+
+        variables_dict_init = parse_input_file(input_file_path)
+        if variables_dict_init:
+            if "suffix" in variables_dict_init:
+                out_suffix_path = os.path.join(directory_path, "OUT." + variables_dict_init["suffix"])
+            else:
+                out_suffix_path = os.path.join(directory_path, "OUT.ABACUS")
+
+            input_file_full = os.path.join(out_suffix_path, "INPUT")
+            variables_dict_full = parse_input_file(input_file_full)
+            latname = variables_dict_full["latname"]
+            nspin = int(variables_dict_full["nspin"])
+            # 使用get方法从字典中获取键值，如果键不存在，则返回空字符串 ''
+            pp_dir = os.path.join(directory_path, variables_dict_full.get("pseudo_dir", ''))
+            orb_dir = os.path.join(directory_path, variables_dict_full.get("orbital_dir", ''))
+
+            e_tot, e_fermi, n_occu, n_bands, n_elec = extract_data_from_log(out_suffix_path)
+
+            stru_file_path = os.path.join(directory_path, "STRU")
+            with open(stru_file_path, 'r') as f_s:
+                if latname == 'none':
+                    i_latname = None
+                else:
+                    i_latname = latname
+                ase_stru = read_abacus_stru(f_s, i_latname, True)
+            lattice_constant = 1.0 # unit is Angstrom
+            lattice_vectors = ase_stru.get_cell()
+
+            input_text = generate_input_init(nspin, e_fermi, out_suffix_path, lattice_constant, lattice_vectors, args.max_kpoint_num)
+            
+            current_directory = os.path.abspath(os.getcwd())
+            # 判断是否提供了output_pyatb_path，如果提供了，那么就在目录下生成相应名称的文件夹
+            if output_pyatb_path is not None:
+                pyatb_directory = os.path.join(directory_path, output_pyatb_path)
+                os.makedirs(pyatb_directory, exist_ok=True)
+            # 判断当前目录是否在 directory_path 的子目录中，且不是 directory_path 本身
+            elif os.path.commonpath([current_directory, directory_path]) == directory_path and current_directory != directory_path:
+                # 如果当前目录是在 directory_path 内部（但不等于 directory_path 本身）
+                pyatb_directory = current_directory
+            else:
+                # 如果当前目录等于 directory_path 或者不在 directory_path 内部
+                pyatb_directory = os.path.join(directory_path, "pyatb")
+                os.makedirs(pyatb_directory, exist_ok=True)
+            get_e_file_path = os.path.join(pyatb_directory, "get_Energy.out")
+            with open(get_e_file_path, "w") as output_file:
+                output_file.write(f"E_TOTAL (eV)   =  {e_tot}\n")
+                output_file.write(f"E_FERMI (eV)   =  {e_fermi}\n")
+                output_file.write(f"Occupied bands =  {n_occu}\n")
+                output_file.write(f"NBANDS         =  {n_bands}\n")
+                output_file.write(f"NELEC          =  {n_elec}\n")
+
+            # 把 stru_file_path 生成一份到pyatb文件夹下，注意文件夹路径改变，PP和ORB的位置可能改变，此处进行判断和修改
+            if pp_dir is None and orb_dir is None: # 如果没有找到pseudo_dir和orbital_dir，不修改STRU文件
+                pass
+            else:
+                stru_pp_orb(pp_dir, orb_dir, f_stru=stru_file_path, ase_stru=ase_stru, f_out=os.path.join(pyatb_directory, "STRU"))
+
+
+            if args.bandrange:
+                if ' ' in args.bandrange:
+                    band_range = [int(band) for band in args.bandrange.split()]
+                elif len(args.bandrange.split()) == 1:
+                    band_range = int(args.bandrange.split()[0])
+                    band_range = [max(1, n_occu - band_range), min(n_bands, n_occu + band_range)]  # 上下band_range条
+            else:   
+                band_range = [max(1, n_occu - 100), min(n_bands, n_occu + 100)]  # 上下100条， 如果最小值小于1那就等于1，如果最大值大于n_bands，那就等于n_bands
+
+            if args.orange:
+                if len(args.orange) == 1:
+                    omega_range = [0.0, args.orange[0]]
+                elif len(args.orange) == 2:
+                    omega_range = [args.orange[0], args.orange[1]]
+            
+            if args.erange:
+                erange_value = args.erange.strip()  # 去除前后空格
+                # 判断是单一值还是范围
+                if ' ' in erange_value:
+                    # 如果是两个数值的字符串，按空格拆分并转换为浮动数值列表
+                    energy_range = [float(v) for v in erange_value.split()]
+                else:
+                    # 如果是单一值，转换为[-value, value]的范围
+                    num = float(erange_value)
+                    energy_range = [-num, num]
+
+            # 传递目录路径到每个函数
+            if args.band:
+                input_text = generate_input_band(input_text, ase_stru, args.kline, args.dim,  args.kmode, args.tolerance,  args.knum,  args.kpath)
+            if args.fatband:
+                input_text = generate_input_fatband(input_text, ase_stru, args.kline, args.dim, args.kmode, args.tolerance, args.knum, args.kpath,  band_range, n_bands)
+            if args.spintexture:
+                input_text = generate_input_spintexture(input_text, ase_stru, args.kline, args.dim, args.kmode, args.tolerance, args.knum, args.kpath,  band_range, n_bands)
+            if args.bandunfolding:
+                input_text = generate_input_bandunfold(input_text, ase_stru, args.kline, args.dim, args.kmode, args.tolerance, args.knum, args.m_matrix, args.kpath,  band_range, n_bands)
+            if args.ahc:
+                input_text = generate_input_ahc(input_text,  args.dim, lattice_vectors, args.mp)
+            if args.anc:
+                input_text = generate_input_anc(input_text,  args.dim, lattice_vectors, args.method, args.mp, energy_range)
+            if args.berry:
+                input_text = generate_input_berry(input_text, ase_stru, n_occu, args.occu, args.kline, args.dim, args.kmode, args.tolerance, args.knum, args.kpath, args.method, args.mp)
+            if args.bcd:
+                input_text = generate_input_bcd(input_text,  args.dim, lattice_vectors,  e_fermi, energy_range)
+            if args.cpge:
+                input_text = generate_input_bcd(input_text,  args.dim,  lattice_vectors, e_fermi,energy_range)
+            if args.pdos:
+                input_text = generate_input_pdos(input_text, args.dim, lattice_vectors, e_fermi, energy_range)
+            if args.findnodes:
+                input_text = generate_input_findnodes(input_text, args.dim, lattice_vectors, e_fermi, energy_range)
+            if args.optical:
+                input_text = generate_input_optical(input_text, args.dim, lattice_vectors, n_occu, omega_range, args.mp)
+            if args.polar:
+                input_text = generate_input_polarization(input_text, args.dim, lattice_vectors, n_occu, ase_stru, stru_file_path, args.valence, args.mp, stru_file_field="STRU")
+            if args.jdos:
+                input_text = generate_input_jdos(input_text, args.dim, lattice_vectors, n_occu, omega_range, args.mp)
+            if args.shift:
+                input_text = generate_input_shift(input_text, args.dim, lattice_vectors, n_occu, omega_range, args.mp)
+            if args.chern:
+                input_text = generate_input_chern(input_text,  n_occu, args.occu, args.dim, lattice_vectors, args.method, args.mp)
+            if args.wilson:
+                input_text = generate_input_wilsonloop(input_text,  n_occu, args.occu, args.dim, lattice_vectors, args.method)
+
+
+            input_file_path = os.path.join(pyatb_directory, "Input")
+            with open(input_file_path, "w") as file:
+                file.write(input_text)
+
+            print(f"[PYATB with ABACUS]Input and STRU files for PyATB is generated in: {pyatb_directory}")
+            return
+        else:
+            print("[PYATB with ABACUS] 未能从INPUT文件中解析出任何变量。")
     
 
 if __name__ == "__main__":

@@ -234,8 +234,8 @@ plt.plot(omega, np.sqrt(data[:,direction].real**2+data[:,direction].imag**2), co
 plt.plot(omega, KK(omega,data[:,direction].imag), color = 'blue',linestyle='--',label='KK relation')
 
 plt.axhline(0)
-plt.xlabel('$\omega (eV)$')
-plt.ylabel('$\chi$ (nm^2/V)')
+plt.xlabel(r'$\\omega (eV)$')
+plt.ylabel(r'$\\chi$ (nm^2/V)')
 plt.xlim(E_min,E_max)
 
 #gap = 1.88

@@ -1,88 +1,127 @@
 # Full List of INPUT Keywords
 
 - [INPUT_PARAMETERS](#input_parameters)
-  [nspin](#nspin-input_nspin) | [package](#package-input_package) | [fermi_energy](#fermi_energy-input_fermi_energy) | [fermi_energy_unit](#fermi_energy_unit-input_fermi_energy_unit) | [HR_route](#hr_route-input_hr_route) | [SR_route](#sr_route-input_sr_route) | [rR_route](#rr_route-input_rr_route) | [binary](#binary-input_binary) | [HR_unit](#hr_unit-input_hr_unit) | [rR_unit](#rr_unit-input_rr_unit) | [max_kpoint_num](#max_kpoint_num-input_max_kpoint_num) | [sparse_format](#sparse_format-input_sparse_format)
+  
+  [nspin](#nspin-input_nspin) | [package](#package-input_package) | [fermi_energy](#fermi_energy-input_fermi_energy) | [fermi_energy_unit](#fermi_energy_unit-input_fermi_energy_unit) | [HR_route](#hr_route-input_hr_route) | [SR_route](#sr_route-input_sr_route) | [rR_route](#rr_route-input_rr_route) | [binary](#binary-input_binary) | [HR_unit](#hr_unit-input_hr_unit) | [rR_unit](#rr_unit-input_rr_unit) | [max_kpoint_num](#max_kpoint_num-input_max_kpoint_num) | [sparse_format](#sparse_format-input_sparse_format) | [w90_TB_route](#w90_tb_route-input_w90_tb_route) | [w90_TB_has_r](#w90_tb_has_r-input_w90_tb_has_r)
 
 - [LATTICE](#lattice)
+
   [lattice_constant](#lattice_constant-lattice_lattice_constant) | [lattice_constant_unit](#lattice_constant_unit-lattice_lattice_constant_unit) | [lattice_vector](#lattice_vector-lattice_lattice_vector)
 
 - [BAND_STRUCTURE](#band_structure)
-  [wf_collect](#wf_collect-bandstructure_wf_collect) | [kpoint_mode](#kpoint_mode-bandstructure_kpoint_mode)
+
+  [wf_collect](#wf_collect-bandstructure_wf_collect) | [band_range](#band_range-bandstructure_band_range) | [kpoint_mode](#kpoint_mode-bandstructure_kpoint_mode)
 
 - [BANDUNFOLDING](#bandunfolding)
+
   [stru_file](#stru_file-bandunfolding_stru_file) | [ecut](#ecut-bandunfolding_ecut) | [band_range](#band_range-bandunfolding_band_range) | [m_matrix](#m_matrix-bandunfolding_m_matrix) | [kpoint_mode](#kpoint_mode-bandunfolding_kpoint_mode)
 
 - [FERMI_ENERGY](#fermi_energy)
+
   [temperature](#temperature-fermienergy_temperature) | [electron_num](#electron_num-fermienergy_electron_num) | [grid](#grid-fermienergy_grid) | [epsilon](#epsilon-fermienergy_epsilon) | 
 
 - [FERMI_SURFACE](#fermi_surface)
+
   [bar](#bar-fermisurface_bar)  | [nbands](#nbands-fermisurface_nbands) | [kpoint_mode](#kpoint_mode-fermisurface_kpoint_mode)
 
 - [FIND_NODES](#find_nodes)
+
   [energy_range](#energy_range-findnodes_energy_range) | [k_start](#k_start-findnodes_k_start) | [k_vect1](#k_vect1-findnodes_k_vect1) | [k_vect2](#k_vect2-findnodes_k_vect2) | [k_vect3](#k_vect3-findnodes_k_vect3) | [initial_grid](#initial_grid-findnodes_initial_grid) | [initial_threshold](#initial_threshold-findnodes_initial_threshold) | [adaptive_grid](#adaptive_grid-findnodes_adaptive_grid)[adaptive_threshold](#adaptive_threshold-findnodes_adaptive_threshold) | [kpoint_mode](#kpoint_mode-findnodes_kpoint_mode)
 
 - [PDOS](#pdos)
+
   [stru_file](#stru_file-pdos_stru_file) | [e_range](#e_range-pdos_e_range) | [de](#de-pdos_de) | [sigma](#sigma-pdos_sigma) | [kpoint_mode](#kpoint_mode-pdos_kpoint_mode)
 
 - [FAT_BAND](#fat_band)
+
   [band_range](#band_range-fatband_band_range) | [stru_file](#stru_file-fatband_stru_file) | [kpoint_mode](#kpoint_mode-fatband_kpoint_mode)
 
 - [SPIN_TEXTURE](#spin_texture)
-  [nband](#nband-spintexture_nband) | [kpoint_mode](#kpoint_mode-spintexture_kpoint_mode)
+
+  [band_range](#band_range-spintexture_band_range) | [kpoint_mode](#kpoint_mode-spintexture_kpoint_mode)
+
+- [SURFACE_STATE](#surface_state)
+
+  [cal_surface_method](#cal_surface_method-surface_state_cal_surface_method) | [surface_direction](#surface_direction-surface_state_surface_direction) | [energy_windows](#energy_windows-surface_state_energy_windows) | [de](#de-surface_state_de) | [eta](#eta-surface_state_eta) | [coupling_layers](#coupling_layers-surface_state_coupling_layers) | [calculate_layer](#calculate_layer-surface_state_calculate_layer) | [kpoint_mode](#kpoint_mode-surface_state_kpoint_mode)
 
 - [WILSON_LOOP](#wilson_loop)
+
   [occ_band](#occ_band-wilsonloop_occ_band) | [k_start](#k_start-wilsonloop_k_start) | [k_vect1](#k_vect1-wilsonloop_k_vect1) | [k_vect2](#k_vect2-wilsonloop_k_vect2) | [nk1](#nk1-wilsonloop_nk1) | [nk2](#nk2-wilsonloop_nk2)
 
 - [POLARIZATION](#polarization)
+
   [occ_band](#occ_band-polarization_occ_band) | [nk1](#nk1-polarization_nk1) | [nk2](#nk2-polarization_nk2) | [nk3](#nk3-polarization_nk3) | [atom_type](#atom_type-polarization_atom_type) | [stru_file](#stru_file-polarization_stru_file) | [valence_e](#valence_e-polarization_valence_e)
 
 - [BERRY_CURVATURE](#berry_curvature)
+
   [method](#method-berrycurvature_method)  | [occ_band](#occ_band-berrycurvature_occ_band) | [kpoint_mode](#kpoint_mode-berrycurvature_kpoint_mode)
 
 - [AHC](#ahc)
+
   [method](#method-ahc_method) | [integrate_mode](#integrate_mode-ahc_integrate_mode)
 
+- [ANC](#anc)
+
+  [fermi_range](#fermi_range-anc_fermi_range) | [de](#de-anc_de) | [eta](#eta-anc_eta) | [integrate_grid](#integrate_grid-anc_integrate_grid)
+
+- [SHC](#shc)
+
+  [alpha](#alpha-shc_alpha) | [beta](#beta-shc_beta) | [gamma](#gamma-shc_gamma) | [fermi_range](#fermi_range-shc_fermi_range) | [de](#de-shc_de) | [eta](#eta-shc_eta) | [integrate_grid](#integrate_grid-shc_integrate_grid)
+
 - [CHERN_NUMBER](#chern_number)
+
   [method](#method-chernnumber_method) | [occ_band](#occ_band-chernnumber_occ_band) | [k_start](#k_start-chernnumber_k_start) | [k_vect1](#k_vect1-chernnumber_k_vect1) | [k_vect2](#k_vect2-chernnumber_k_vect2) | [integrate_mode](#integrate_mode-chernnumber_integrate_mode)
 
 - [CHIRALITY](#chirality)
-  [method](#method-chirality_method) | [k_vect](#k_vect-chirality_k_vect) | [radius](#radius-chirality_radius) | [point_num](#point_num-chirality_point_num)
+
+  [method](#method-chirality_method) | [occ_band](#occ_band-chirality_occ_band) | [k_vect](#k_vect-chirality_k_vect) | [radius](#radius-chirality_radius) | [point_num](#point_num-chirality_point_num)
 
 - [JDOS](#jdos)
+
   [occ_band](#occ_band-jdos_occ_band) | [omega](#omega-jdos_omega) | [domega](#domega-jdos_domega) | [eta](#eta-jdos_eta) | [grid](#grid-jdos_grid)
 
 - [OPTICAL_CONDUCTIVITY](#optical_conductivity)
+
   [occ_band](#occ_band-opticalconductivity_occ_band) | [omega](#omega-opticalconductivity_omega) | [domega](#domega-opticalconductivity_domega) | [eta](#eta-opticalconductivity_eta) | [grid](#grid-opticalconductivity_grid)
 
 - [SHIFT_CURRENT](#shift_current)
+
   [occ_band](#occ_band-shiftcurrent_occ_band) | [omega](#omega-shiftcurrent_omega) | [domega](#domega-shiftcurrent_domega) | [smearing_method](#smearing_method-shiftcurrent_smearing_method) | [eta](#eta-shiftcurrent_eta) | [grid](#grid-shiftcurrent_grid) | [method](#method-shiftcurrent_method)
 
 - [BERRY_CURVATURE_DIPOLE](#berry_curvature_dipole)
-  [omega](#omega-berrycurvaturedipole_omega) | [domega](#domega-berrycurvaturedipole_domega) | [integrate_mode](#integrate_mode-berrycurvaturedipole_integrate_mode)
 
-- [SHG](#SHG)
-  [omega](#omega-shg_omega) | [domega](#domega-shg_domega) | [grid](#grid-shg_grid)| [method](#grid-shg_method)
+  [omega](#omega-berrycurvaturedipole_omega) | [domega](#domega-berrycurvaturedipole_domega) | [grid](#grid-berrycurvaturedipole_grid)
+
+- [SHG](#shg)
+
+  [method](#method-shg_method) | [omega](#omega-shg_omega) | [domega](#domega-shg_domega) | [eta](#eta-shg_eta) | [grid](#grid-shg_grid)
   
-- [POCKELS](#Pockels)
-  [omega1](#omega1-pockels_omega1) |[omega](#omega-pockels_omega) | [domega](#domega-pockels_domega) | [grid](#grid-pockels_grid)
+- [POCKELS](#pockels)
+
+  [omega1](#omega1-pockels_omega1) | [omega](#omega-pockels_omega) | [domega](#domega-pockels_domega) | [grid](#grid-pockels_grid)
 
 [Setting of k points](#setting-of-k-points)
 
 - [When kpoint_mode is 'mp'](#when-kpoint_mode-is-mp)
+
   [mp_grid](#mp_grid) | [k_start](#k_start) | [k_vect1](#k_vect1) | [k_vect2](#k_vect2) | [k_vect3](#k_vect3)
 
 - [When kpoint_mode is 'line'](#when-kpoint_mode-is-line)
+
   [kpoint_num](#kpoint_num) | [high_symmetry_kpoint](#high_symmetry_kpoint)
 
 - [When kpoint_mode is 'direct'](#when-kpoint_mode-is-direct)
+
   [kpoint_num](#kpoint_num-1) | [kpoint_direct_coor](#kpoint_direct_coor)
 
 [Setting of integration](#setting-of-integration)
 
 - [When integrate_mode is 'Grid'](#when-integrate_mode-is-grid)
+
   [integrate_grid](#integrate_grid) | [adaptive_grid](#adaptive_grid) | [adaptive_grid_threshold](#adaptive_grid_threshold)
 
 - [When integrate_mode is 'Adaptive'](#when-integrate_mode-is-adaptive)
+
   [relative_error](#relative_error) | [absolute_error](#absolute_error) | [initial_grid](#initial_grid)
 
 ## INPUT_PARAMETERS
@@ -162,6 +201,18 @@
 - **Description**: Whether HR, SR, rR matrices are stored in memory is sparse storage.
 - **Default**: 0
 
+### w90_TB_route {#input_w90_tb_route}
+
+- **Type**: String
+- **Description**: Specify the tight-binding file generated by Wannier90.
+- **Default**: No default value
+
+### w90_TB_has_r {#input_w90_tb_has_r}
+
+- **Type**: Boolean
+- **Description**: Whether the tight‑binding file generated by Wannier90 contain rR information.
+- **Default**: 0
+
 ## LATTICE
 
 ### lattice_constant {#lattice_lattice_constant}
@@ -188,6 +239,12 @@
 
 - **Type**: Boolean
 - **Description**: Whether to output wave function matrix information.
+- **Default**: No default value
+
+### band_range {#bandstructure_band_range}
+
+- **Type**: Integer
+- **Description**: There are two numbers (separated by spaces) to indicate which bands are selected, counting from 1.
 - **Default**: No default value
 
 ### kpoint_mode {#bandstructure_kpoint_mode}
@@ -390,13 +447,63 @@
 
 ## SPIN_TEXTURE
 
-### nband {#spintexture_nband}
+### band_range {#spintexture_band_range}
 
 - **Type**: Integer
-- **Description**: A band index. (Band index counts from 1)
+- **Description**: There are two numbers (separated by spaces) to indicate which bands are selected, counting from 1.
 - **Default**: No default value
 
 ### kpoint_mode {#spintexture_kpoint_mode}
+
+- **Type**: String
+- **Description**: Used to set the k point. See [Setting of k points](#setting-of-k-points)
+- **Default**: No default value
+
+## SURFACE_STATE
+
+### cal_surface_method {#surface_state_cal_surface_method}
+
+- **Type**: String
+- **Description**: Perform calculations using the surface Green’s function.
+- **Default**: green_fun
+
+### surface_direction {#surface_state_surface_direction}
+
+- **Type**: String
+- **Description**: Set the orientation of the material surface: a, b, and c represent the a, b, and c axes of the lattice vectors.
+- **Default**: c
+
+### energy_windows {#surface_state_energy_windows}
+
+- **Type**: Real
+- **Description**: Set the energy range of the bands centered on the [fermi_energy](#fermi_energy-input_fermi_energy). There are two values.
+- **Default**: -1.0 1.0
+
+### de {#surface_state_de}
+
+- **Type**: Real
+- **Description**: Energy intervals dividing the energy_windows.
+- **Default**: 0.01
+
+### eta {#surface_state_eta}
+
+- **Type**: Real
+- **Description**: Set the broadening of the Green’s function, $G = (E + i*\eta - H)^{-1}$.
+- **Default**: 0.01
+
+### coupling_layers {#surface_state_coupling_layers}
+
+- **Type**: Integer
+- **Description**: By setting the number of principal layers, it is possible to ensure that interactions occur only between adjacent principal layers.
+- **Default**: No default value
+
+### calculate_layer {#surface_state_calculate_layer}
+
+- **Type**: Integer
+- **Description**: Specify the number of layers of the spectral function to output.
+- **Default**: No default value
+
+### kpoint_mode {#surface_state_kpoint_mode}
 
 - **Type**: String
 - **Description**: Used to set the k point. See [Setting of k points](#setting-of-k-points)
@@ -518,6 +625,76 @@
 - **Description**: Used for integration settings. See [Setting of integration](#setting-of-integration).
 - **Default**: No default value
 
+## ANC
+
+### fermi_range {#anc_fermi_range}
+
+- **Type**: Real
+- **Description**: Provide the range of the Fermi energy with respect to the reference point [fermi_energy](#fermi_energy-input_fermi_energy). Specify two floating-point numbers.
+- **Default**: -1.0 1.0
+
+### de {#anc_de}
+
+- **Type**: Real
+- **Description**: Energy intervals dividing the Fermi energy range.
+- **Default**: 0.01
+
+### eta {#anc_eta}
+
+- **Type**: Real
+- **Description**: When calculating the Berry curvature using the Kubo formula, the energy difference in the denominator is modified as $ E_{n\mathbf{k}} - E_{m\mathbf{k}} \to E_{n\mathbf{k}} - E_{m\mathbf{k}} + i\eta $ to avoid numerical issues caused by degeneracy.
+- **Default**: 0.01
+
+### integrate_grid {#anc_integrate_grid}
+
+- **Type**: Integer
+- **Description**: The grid for integration. There are 3 parameters in total.
+- **Default**: No default value
+
+## SHC
+
+### alpha {#shc_alpha}
+
+- **Type**: String
+- **Description**: Specify the current direction of the SHC, $\sigma_{\alpha \beta}^{\gamma}$.
+- **Default**: x
+
+### beta {#shc_beta}
+
+- **Type**: String
+- **Description**: Specify the electric field direction of the SHC, $\sigma_{\alpha \beta}^{\gamma}$.
+- **Default**: y
+
+### gamma {#shc_gamma}
+
+- **Type**: String
+- **Description**: Specify the spin polarization direction of the SHC, $\sigma_{\alpha \beta}^{\gamma}$.
+- **Default**: z
+
+### fermi_range {#shc_fermi_range}
+
+- **Type**: Real
+- **Description**: Provide the range of the Fermi energy with respect to the reference point [fermi_energy](#fermi_energy-input_fermi_energy). Specify two floating-point numbers.
+- **Default**: -1.0 1.0
+
+### de {#shc_de}
+
+- **Type**: Real
+- **Description**: Energy intervals dividing the Fermi energy range.
+- **Default**: 0.01
+
+### eta {#shc_eta}
+
+- **Type**: Real
+- **Description**: When calculating the Berry curvature using the Kubo formula, the energy difference in the denominator is modified as $ E_{n\mathbf{k}} - E_{m\mathbf{k}} \to E_{n\mathbf{k}} - E_{m\mathbf{k}} + i\eta $ to avoid numerical issues caused by degeneracy.
+- **Default**: 0.01
+
+### integrate_grid {#shc_integrate_grid}
+
+- **Type**: Integer
+- **Description**: The grid for integration. There are 3 parameters in total.
+- **Default**: No default value
+
 ## CHERN_NUMBER
 
 ### method {#chernnumber_method}
@@ -563,6 +740,12 @@
 - **Type**: Integer
 - **Description**: Method for calculating berry curvature. `0` means direct calculation, `1` means calculation by Kubo formula.
 - **Default**: 0
+
+### occ_band {#chirality_occ_band}
+
+- **Type**: Integer
+- **Description**: The number of occupied energy bands of an insulator. When this value is not set, it will be determined according to the Fermi energy.
+- **Default**: -1
 
 ### k_vect {#chirality_k_vect}
 
@@ -619,8 +802,8 @@
 ### occ_band {#opticalconductivity_occ_band}
 
 - **Type**: Integer
-- **Description**: Used to specify the occupied energy band of an insulator or semiconductor. Currently this function can only calculate insulators or semiconductors.
-- **Default**: No default value
+- **Description**: The number of occupied energy bands of an insulator. When this value is not set, it will be determined according to the Fermi energy.
+- **Default**: -1
 
 ### omega {#opticalconductivity_omega}
 
@@ -704,65 +887,69 @@
 - **Description**: Specifies the energy interval of the omega.
 - **Default**: No default value
 
-### integrate_mode {#berrycurvaturedipole_integrate_mode}
+### grid {#berrycurvaturedipole_grid}
 
-- **Type**: String
-- **Description**: Used for integration settings. See [Setting of integration](#setting-of-integration).Since the integration is of a tensor, only 'Grid'integrate_mode is available.
+- **Type**: Integer
+- **Description**: The grid for integration. There are 3 parameters in total.
 - **Default**: No default value
-  
-  
 
 ## SHG
 
+### method {#shg_method}
+
+- **Type**: Integer
+- **Description**: Specify the method to calculate the SHG. `0` represents calculation using the inter- and intra-band formula, `1` represents the velocity matrices formula.
+- **Default**: 0
+
 ### omega {#shg_omega}
 
-* **Type**: Real
-* **Description**: The range of $\omega$. There are two parameters, indicating the starting point and the ending point. Unit is eV.
-* **Default**: No default value
+- **Type**: Real
+- **Description**: The range of $\omega$. There are two parameters, indicating the starting point and the ending point. Unit is eV.
+- **Default**: No default value
 
 ### domega {#shg_domega}
 
-* **Type**: Real
-* **Description**: The energy interval of $\omega$.
-* **Default**: No default value
+- **Type**: Real
+- **Description**: The energy interval of $\omega$.
+- **Default**: No default value
+
+### eta {#shg_eta}
+
+- **Type**: Real
+- **Description**: $\hbar\omega \to \hbar\omega + i \eta$ is used to prevent numerical divergence caused by a zero denominator.
+- **Default**: 0.05
 
 ### grid {#shg_grid}
 
-* **Type**: Integer
-* **Description**: The grid for integration. There are 3 parameters in total.
-* **Default**: No default value
-
-### method {#shg_method}
-
-* **Type**: Integer
-* **Description**: Specify the method to calculate the SHG. `0` represents calculation using the inter- and intra-band formula, `1` represents the velocity matrices formula.
-* **Default**: 0
+- **Type**: Integer
+- **Description**: The grid for integration. There are 3 parameters in total.
+- **Default**: No default value
 
 ## POCKELS
 
 ### omega1 {#pockels_omega1}
 
-* **Type**: Real
-* **Description**: The frequency of external electric field, normally a rather small number. Unit is eV.
-* **Default**: 0
+- **Type**: Real
+- **Description**: The frequency of external electric field, normally a rather small number. Unit is eV.
+- **Default**: 0
 
 ### omega {#pockels_omega}
 
-* **Type**: Real
-* **Description**: The range of $\omega$. There are two parameters, indicating the starting point and the ending point. Unit is eV.
-* **Default**: No default value
+- **Type**: Real
+- **Description**: The range of $\omega$. There are two parameters, indicating the starting point and the ending point. Unit is eV.
+- **Default**: No default value
 
 ### domega {#pockels_domega}
 
-* **Type**: Real
-* **Description**: The energy interval of $\omega$.
-* **Default**: No default value
+- **Type**: Real
+- **Description**: The energy interval of $\omega$.
+- **Default**: No default value
 
 ### grid {#pockels_grid}
 
-* **Type**: Integer
-* **Description**: The grid for integration. There are 3 parameters in total.
-* **Default**: No default value
+- **Type**: Integer
+- **Description**: The grid for integration. There are 3 parameters in total.
+- **Default**: No default value
 
 
 
@@ -808,6 +995,12 @@ As long as the kpoint_mode parameter exists in FUNCTIONS, the following setting 
 
 - **Type**: Integer
 - **Description**: The number of high symmetry points.
+- **Default**: No default value
+
+### kpoint_label
+
+- **Type**: String
+- **Description**: Specify the labels of high symmetry points, separated by spaces.
 - **Default**: No default value
 
 ### high_symmetry_kpoint

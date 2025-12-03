@@ -172,7 +172,7 @@ ax.set_xlim(x[0], x[-1])
 ax.set_xticklabels([])
 ax.set_xlabel("k_vect2", fontsize=12)
 ax.set_ylim(0, 1)
-ax.set_ylabel("k_vect1 Berry phase (2$\pi$)", fontsize=12)
+ax.set_ylabel(r"k_vect1 Berry phase (2$\\pi$)", fontsize=12)
 plt.savefig(os.path.join(work_path, 'wl.pdf'))
 plt.close('all')
 

@@ -259,6 +259,8 @@ public:
         const double &start_omega,
         const double &eta,
         const int &occupied_band_num,
+        const bool &use_fermi,
+        const double &fermi_energy, 
         const MatrixXd &k_direct_coor,
         const int &total_kpoint_num,
         const int &method,

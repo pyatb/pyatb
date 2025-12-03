@@ -1,0 +1,32 @@
+INPUT_PARAMETERS
+{
+    nspin               4
+    package             ABACUS
+    fermi_energy        18.595382272
+    fermi_energy_unit   eV
+    HR_route            data-HR-sparse_SPIN0.csr
+    SR_route            data-SR-sparse_SPIN0.csr
+    rR_route            data-rR-sparse.csr
+    HR_unit             Ry
+    rR_unit             Bohr
+}
+
+LATTICE
+{
+    lattice_constant        6.65
+    lattice_constant_unit   Bohr
+    lattice_vector
+    0.0  0.5  0.5
+    0.5  0.0  0.5
+    0.5  0.5  0.0
+}
+
+ORBITAL_MAGNETIZATION
+{
+    fermi_energy            18.595382272
+    fermi_range             -3 3
+    de                      0.05
+    eta                     0.01
+    grid                    40 40 40
+}
+

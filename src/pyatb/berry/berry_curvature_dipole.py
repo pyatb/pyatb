@@ -208,13 +208,13 @@ E = data[:, 0]
 bcd_data = data[:, 1:]
 
 def partial_f(smearing, E, mu):
-    """
+    r"""
     smearing is kT
     f(E) = 1 / (np.exp((E-mu)/kT) + 1)
     expit(x) = 1 / (1 + np.exp(-x))
-    \partial_E f(E) = - 1 / kT * f(E) * (1 - f(E))
+    \\partial_E f(E) = - 1 / kT * f(E) * (1 - f(E))
 
-    return -\partial_E f(E)
+    return -\\partial_E f(E)
     """
     x = -(E - mu) / smearing
     f_E = expit(x)
@@ -251,7 +251,7 @@ fig.suptitle('Berry Curvature Dipole', fontsize=20)
 for ax, (key, value) in zip(axs.flat, direction.items()):
     ax.set_title('%s'%(key), fontsize=18)
     ax.set_xlim(E[0], E[-1])
-    ax.set_xlabel('$\omega (eV)$', fontsize=16)
+    ax.set_xlabel(r'$\\omega (eV)$', fontsize=16)
     ax.set_ylabel('$BCD_{{%s}} $'%(key), fontsize=16)
     ax.plot(E, bcd_data_smear[:, value - 1], color='b', linewidth=1, linestyle='-')
     ax.tick_params(axis='both', which='major', labelsize=12)
@@ -264,7 +264,7 @@ for key, value in direction.items():
     fig_single, ax_single = plt.subplots(tight_layout=True)
     ax_single.set_title('Berry Curvature Dipole')
     ax_single.set_xlim(E[0], E[-1])
-    ax_single.set_xlabel('$\omega (eV)$')
+    ax_single.set_xlabel(r'$\\omega (eV)$')
     ax_single.set_ylabel('$BCD_{{%s}} $'%(key))
     ax_single.plot(E, bcd_data_smear[:, value - 1], color='b', linewidth=1, linestyle='-')
     fig_single.savefig('3d_plot/bcd-'+'%s.pdf'%(key))
@@ -281,8 +281,8 @@ if is_plot_2D:
     for ax, (key, value) in zip(axs.flat, direction.items()):
         ax.set_title('%s'%(key), fontsize=18)
         ax.set_xlim(E[0], E[-1])
-        ax.set_xlabel('$\omega (eV)$', fontsize=16)
-        ax.set_ylabel('$BCD_{{%s}} (\AA)$'%(key), fontsize=16)
+        ax.set_xlabel(r'$\\omega (eV)$', fontsize=16)
+        ax.set_ylabel(r'$BCD_{{%s}} (\\AA)$'%(key), fontsize=16)
         ax.plot(E, bcd_data_smear[:, value - 1] * layer_thickness, color='b', linewidth=1, linestyle='-')
         ax.tick_params(axis='both', which='major', labelsize=12)
 
@@ -294,8 +294,8 @@ if is_plot_2D:
         fig_single, ax_single = plt.subplots(tight_layout=True)
         ax_single.set_title('Berry Curvature Dipole')
         ax_single.set_xlim(E[0], E[-1])
-        ax_single.set_xlabel('$\omega (eV)$')
-        ax_single.set_ylabel('$BCD_{{%s}} (\AA)$'%(key))
+        ax_single.set_xlabel(r'$\\omega (eV)$')
+        ax_single.set_ylabel(r'$BCD_{{%s}} (\\AA)$'%(key))
         ax_single.plot(E, bcd_data_smear[:, value - 1] * layer_thickness, color='b', linewidth=1, linestyle='-')
         fig_single.savefig('2d_plot/bcd-'+'%s_2d.pdf'%(key))
         plt.close(fig_single)

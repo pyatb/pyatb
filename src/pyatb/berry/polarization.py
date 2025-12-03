@@ -63,8 +63,12 @@ class Polarization:
         self.__nk3 = nk3
 
         self.__tb.read_stru(stru_file, False)
-        self.__atom_type = valence_e.size
-        self.__valence_e = valence_e
+        if isinstance(valence_e, int):
+            self.__atom_type = 1
+            self.__valence_e = np.array([valence_e], dtype=int)
+        else:
+            self.__atom_type = valence_e.size
+            self.__valence_e = valence_e
 
         if RANK == 0:
             with open(RUNNING_LOG, 'a') as f:

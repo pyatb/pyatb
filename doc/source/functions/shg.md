@@ -36,7 +36,7 @@ This form is generally aligns with the upper formula, while the calculation can 
 
 ## example
 
-Here, we provide an example of calculating the SHG of the GaAs (refer to folder `examples/GaAs`).
+Here, we provide an example of calculating the SHG of the GaAs (refer to folder `tutorial/GaAs_SHG/`).
 
 The `Input` file is:
 
@@ -45,14 +45,14 @@ INPUT_PARAMETERS
 {
     nspin               1
     package             ABACUS
-    fermi_energy        7.6331377499
+    fermi_energy        10.171348972
     fermi_energy_unit   eV
-    HR_route            ../data-HR-sparse_SPIN0.csr
-    SR_route            ../data-SR-sparse_SPIN0.csr
-    rR_route            ../data-rR-sparse.csr
+    HR_route            ../abacus/OUT.GaAs/data-HR-sparse_SPIN0.csr
+    SR_route            ../abacus/OUT.GaAs/data-SR-sparse_SPIN0.csr
+    rR_route            ../abacus/OUT.GaAs/data-rR-sparse.csr
     HR_unit             Ry
     rR_unit             Bohr
-   max_kpoint_num        100000
+   max_kpoint_num       100000
 }
 
 LATTICE
@@ -60,19 +60,18 @@ LATTICE
     lattice_constant        1.889727
     lattice_constant_unit   Bohr
     lattice_vector
-   0.0000000000000000    2.7650000000000001    2.7650000000000001
-     2.7650000000000001    0.0000000000000000    2.7650000000000001
-     2.7650000000000001    2.7650000000000001    0.0000000000000000
+    0.0000000000000000    2.7650000000000001    2.7650000000000001
+    2.7650000000000001    0.0000000000000000    2.7650000000000001
+    2.7650000000000001    2.7650000000000001    0.0000000000000000
 
 }
+
 SHG
 {
-
-    omega    0.01 6
-    domega   0.01
-    method   0
-    grid     30 30 30
-
+    omega           0.01 4
+    domega          0.01
+    eta             0.05
+    grid            50 50 50
 }
 ```
 
@@ -82,7 +81,9 @@ SHG
 
 `grid`: Specifies the uniform k-point grid used to calculate the SHG.
 
-`method`: Method for calculating SHG, 0 means the method of separating inter- and intra-band formula; 1 means the velocity matrices formula.
+`eta`: $\hbar\omega \to \hbar\omega + i \eta$ is used to prevent numerical divergence caused by a zero denominator.
 
-Once the task has been finished, three crucial files are produced in the `Out/Second_Harmonic_Generation` directory. These files consist of `shg.dat`, and `plot_shg.py`. 
-The first file stores the SHG's magnitude. The second file contains the script used for generating the visualization of the shg.
+Once the task has been finished, three crucial files are produced in the `Out/Second_Harmonic_Generation` directory. These files consist of `shg_real.dat`, `shg_imag.dat` and `plot_shg.py`. 
+
+The first two files contain the real and imaginary parts of the SHG's magnitude, and the last one is a plotting script.
+

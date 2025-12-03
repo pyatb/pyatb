@@ -34,6 +34,14 @@ jobs:
             python: 312
             platform_id: manylinux_x86_64
             manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 313
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
+          - os: ubuntu-latest
+            python: 314
+            platform_id: manylinux_x86_64
+            manylinux_image: manylinux2014
 
 
     steps:

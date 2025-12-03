@@ -193,7 +193,7 @@ ax.plot(x, y)
 
 ax.set_title('JDOS', fontsize=12)
 ax.set_xlim(x[0], x[-1])
-ax.set_xlabel("$\hbar \omega$ (eV)", fontsize=12)
+ax.set_xlabel(r"$\\hbar \\omega$ (eV)", fontsize=12)
 ax.set_ylabel("JDOS (st./eV)", fontsize=12)
 plt.savefig(os.path.join(work_path, 'jdos.pdf'))
 plt.close('all')

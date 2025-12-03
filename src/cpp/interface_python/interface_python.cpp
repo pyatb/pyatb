@@ -908,6 +908,8 @@ void interface_python::get_optical_conductivity_by_kubo(
     const double &start_omega,
     const double &eta,
     const int &occupied_band_num,
+    const bool &use_fermi,
+    const double &fermi_energy, 
     const MatrixXd &k_direct_coor,
     const int &total_kpoint_num,
     const int &method,
@@ -925,7 +927,16 @@ void interface_python::get_optical_conductivity_by_kubo(
     df_tem.setZero();
 
     optical_conductivity_solver OCSolver;
-    OCSolver.set_parameters(nspin, omega_num, domega, start_omega, eta, occupied_band_num, k_direct_coor, total_kpoint_num);
+
+    if (use_fermi)
+    {
+        OCSolver.set_parameters_fermi(nspin, omega_num, domega, start_omega, eta, fermi_energy, k_direct_coor, total_kpoint_num);
+    }
+    else
+    {
+        OCSolver.set_parameters(nspin, omega_num, domega, start_omega, eta, occupied_band_num, k_direct_coor, total_kpoint_num);
+    }
+    
     OCSolver.get_optical_conductivity_by_kubo(Base_Data, method, oc_tem, df_tem);
 
     for (int i = 0; i < 9; ++i)
@@ -1333,7 +1344,7 @@ void interface_python::get_inner_product_twoPoints(
 }
 
 
-PYBIND11_MODULE(interface_python, m)
+PYBIND11_MODULE(interface_python, m, py::mod_gil_not_used())
 {
     py::class_<interface_python>(m, "interface_python")
         .def(py::init<double, Matrix3d &>())

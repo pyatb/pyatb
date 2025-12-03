@@ -188,8 +188,8 @@ for key, value in direction.items():
     figure = plt.figure()
     plt.title('Shift Current')
     plt.xlim(x[0], x[-1])
-    plt.xlabel('$\omega (eV)$')
-    plt.ylabel('$\sigma_{{%s}}\,(\mu A/V^2)$'%(key))
+    plt.xlabel(r'$\\omega (eV)$')
+    plt.ylabel(r'$\\sigma_{{%s}}\\,(\\mu A/V^2)$'%(key))
     y = shift_data[:, value]
     plt.plot(x, y, color='r', linewidth=1, linestyle='-')
 
