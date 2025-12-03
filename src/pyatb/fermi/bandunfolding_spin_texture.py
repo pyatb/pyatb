@@ -236,7 +236,7 @@ def read_spectral_weight(file, efermi=0):
     spectral_weight = data[:, 1]
     with open(file, 'r') as fd:
         line = fd.readline()
-        pattern = re.compile(r'# kpoint_number = (\d+), band_number = (\d+)')
+        pattern = re.compile(r'# kpoint_number = (\\d+), band_number = (\\d+)')
         nkpts = int(pattern.search(line).group(1))
         nbands = int(pattern.search(line).group(2))
 
@@ -284,7 +284,7 @@ ax.pcolormesh(x, y, spectral, norm=norm, cmap=cmap, shading='gouraud', rasterize
 ax.set_ylabel('Energy (eV)')
 
 # ax.set_xticks([0, 5, 10])
-# ax.set_xticklabels([r'$U_2$', r'$\Gamma$', r'$V_2$'])
+# ax.set_xticklabels([r'$U_2$', r'$\\Gamma$', r'$V_2$'])
 
 fig.savefig('unfold.pdf')
 plt.close('all')

@@ -181,7 +181,15 @@ def read_abacus_stru(fd, latname=None, verbose=False) -> Atoms:
             lines_pattern = re.compile(
                 rf'{symbol}\s*\n{_re_float}\s*\n\d+\s*\n([\s\S]+?)\s*\n\w+\s*\n{_re_float}')
         lines = lines_pattern.search(block)
-        for j in [line.split() for line in lines.group(1).split('\n')]:
+        # --- 新增：逐行去掉行内注释，并跳过空行 ---
+        cleaned_rows = []
+        for raw in lines.group(1).split('\n'):
+            # 去掉行内注释（# 或 // 之后的内容）
+            no_comment = re.split(r'#|//', raw, maxsplit=1)[0].strip()
+            if not no_comment:
+                continue
+            cleaned_rows.append(no_comment.split())
+        for j in cleaned_rows:
             atom_block.append(j)
     atom_block = np.array(atom_block)
     atom_magnetism = np.array(atom_magnetism)
@@ -190,11 +198,24 @@ def read_abacus_stru(fd, latname=None, verbose=False) -> Atoms:
     atom_positions = atom_block[:, 0:3].astype(float)
     natoms = len(atom_positions)
 
-    # fix_cart
-    if (atom_block[:, 3] == ['m'] * natoms).all():
-        atom_xyz = ~atom_block[:, 4:7].astype(bool)
+    # -------- FIX CARTESIAN (健壮化) --------
+    # 可能的几种格式：
+    #  - 仅坐标：               x y z
+    #  - 后跟三位开关：         x y z  1 1 1
+    #  - 带 'm' + 三位开关：    x y z  m 1 1 1
+    cols = atom_block.shape[1]
+    if cols >= 7 and np.all(atom_block[:, 3] == 'm'):
+        # x y z m 1 1 1
+        switches = atom_block[:, 4:7].astype(int)
+        atom_xyz = ~switches.astype(bool)
+    elif cols >= 6:
+        # x y z 1 1 1
+        switches = atom_block[:, 3:6].astype(int)
+        atom_xyz = ~switches.astype(bool)
     else:
-        atom_xyz = ~atom_block[:, 3:6].astype(bool)
+        # 只有坐标：无任何约束，全部可动
+        atom_xyz = np.zeros((natoms, 3), dtype=bool)
+
     fix_cart = [FixCartesian(ci, xyz) for ci, xyz in enumerate(atom_xyz)]
 
     def _get_index(labels, num):

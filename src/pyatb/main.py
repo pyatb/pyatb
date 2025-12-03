@@ -202,9 +202,10 @@ def main():
             cal_ANC.print_plot_script()
 
     if function_switch['OPTICAL_CONDUCTIVITY']:
+        fermi_energy = input_parameters['fermi_energy']
         optical_conductivity_parameters = INPUT['OPTICAL_CONDUCTIVITY']
         cal_OC = Optical_Conductivity(m_tb)
-        cal_OC.calculate_optical_conductivity(**optical_conductivity_parameters)
+        cal_OC.calculate_optical_conductivity(fermi_energy, **optical_conductivity_parameters)
         if RANK == 0:
             cal_OC.print_plot_script()
 
@@ -240,6 +241,15 @@ def main():
         cal_berry_curvature_dipole.calculate_berry_curvature_dipole(**berry_curvature_dipole_parameters)
         if RANK == 0:
             cal_berry_curvature_dipole.print_plot_script()
+
+    if function_switch['SHC']:
+        shc_parameters = INPUT['SHC']
+        cal_SHC = SHC(m_tb)
+        fermi_energy = input_parameters['fermi_energy']
+        cal_SHC.calculate_shc(fermi_energy=fermi_energy, **shc_parameters)
+        if RANK == 0:
+            cal_SHC.print_plot_script()
+
     if function_switch['SHG']:
         shg_parameters = INPUT['SHG']
         cal_shg = Second_Harmonic_Generation(m_tb,**input_parameters, **shg_parameters)

@@ -191,10 +191,10 @@ class solver:
 
         return wilson_phase
 
-    def get_optical_conductivity(self, nspin, omega_num, domega, start_omega, eta, occupiedNumber, k_direct_coor, total_kpoint_num, method=1):
+    def get_optical_conductivity(self, nspin, omega_num, domega, start_omega, eta, occupiedNumber, k_direct_coor, total_kpoint_num, method=1, use_fermi=False, fermi_energy=0.0):
         optical_conductivity = np.zeros([9, omega_num], dtype=complex)
         dielectric_function = np.zeros([9, omega_num], dtype=complex)
-        self.tb_solver.get_optical_conductivity_by_kubo(nspin, omega_num, domega, start_omega, eta, occupiedNumber, k_direct_coor, total_kpoint_num, method, optical_conductivity, dielectric_function)
+        self.tb_solver.get_optical_conductivity_by_kubo(nspin, omega_num, domega, start_omega, eta, occupiedNumber, use_fermi, fermi_energy, k_direct_coor, total_kpoint_num, method, optical_conductivity, dielectric_function)
 
         return optical_conductivity, dielectric_function
 

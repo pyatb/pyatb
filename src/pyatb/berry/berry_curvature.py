@@ -335,13 +335,13 @@ for direction, lebal_d in enumerate(['x', 'y', 'z']):
     plt.ylabel('b2 vector (BZ)')
     plt.xlim(np.min(k1_bz_full), np.max(k1_bz_full))
     plt.ylim(np.min(k2_bz_full), np.max(k2_bz_full))
-    cbar = plt.colorbar(label=f'Berry curvature $\Omega_{{lebal_d}}\,\, (\AA$)', fraction=0.035, pad=0.04)
+    cbar = plt.colorbar(label=f'Berry curvature $\\\\Omega_{{lebal_d}} (\\AA$)', fraction=0.035, pad=0.04)
 
     # 绘制b1和b2
     # plt.plot([0, b1[0]], [0, b1[1]], color='white', lw=0.8, ls='--')
-    # plt.text(b1[0]-0.1, b1[1]-0.1, '$\mathbf{{b}}_1$', fontsize=10, ha='center', va='center', color='red')
+    # plt.text(b1[0]-0.1, b1[1]-0.1, r'$\\mathbf{{b}}_1$', fontsize=10, ha='center', va='center', color='red')
     # plt.plot([0, b2[0]], [0, b2[1]], color='white', lw=0.8, ls='--')
-    # plt.text(b2[0]-0.1, b2[1]-0.1, '$\mathbf{{b}}_2$', fontsize=10, ha='center', va='center', color='red')
+    # plt.text(b2[0]-0.1, b2[1]-0.1, r'$\\mathbf{{b}}_2$', fontsize=10, ha='center', va='center', color='red')
 
     # 绘制布里渊区，b1和b2不是倒格矢时需要屏蔽下面一行代码。
     plot_2D_BZ(b1_b2)
@@ -442,7 +442,7 @@ for direction in range(3):
     for segment in segments:
         ax[direction].plot(x_coor_array[segment], bc_data[segment, direction], label=label[direction])
 
-    ax[direction].set_ylabel(f'$\Omega_{{label[direction]}} (\AA^2)$', fontsize=mysize)
+    ax[direction].set_ylabel(f'$\\Omega_{{label[direction]}} (\\AA^2)$', fontsize=mysize)
     ax[direction].set_xlim(0, x_coor_array[-1])
     ax[direction].set_xticks(high_symmetry_kpoint_x_coor, labels=high_symmetry_kpoint_labels)
     for i in high_symmetry_kpoint_x_coor:

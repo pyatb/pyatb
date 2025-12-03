@@ -37,6 +37,7 @@ function_switch = {
     'CPGE'                    : False,
     'DRUDE_WEIGHT'            : False,
     'BOLTZ_TRANSPORT'         : False,
+    'SHC'                     : False,
     'SHG'                     : False,
     'POCKELS'                 : False
 }
@@ -60,6 +61,7 @@ need_rR_matrix = [
     'CPGE',
     'DRUDE_WEIGHT',
     'BOLTZ_TRANSPORT',
+    'SHC',
     'SHG',
     'POCKELS'
 ]
@@ -244,7 +246,6 @@ INPUT = {
 
     'ANC' : 
     {
-        'method'                      : [int, 1, 0],
         'fermi_range'                 : [float, 2, [-1.0, 1.0]],
         'de'                          : [float, 1, 0.01],
         'eta'                         : [float, 1, 0.01],  # unit is eV
@@ -257,7 +258,7 @@ INPUT = {
 
     'OPTICAL_CONDUCTIVITY' : 
     {
-        'occ_band'                    : [int, 1, None],
+        'occ_band'                    : [int, 1, -1],
         'omega'                       : [float, 2, None],
         'domega'                      : [float, 1, None],
         'eta'                         : [float, 1, 0.01],  # unit is eV
@@ -365,6 +366,7 @@ INPUT = {
     'CHIRALITY':
     {
         'method'                      : [int, 1, 0],
+        'occ_band'                    : [int, 1, -1],
         'k_vect'                      : [float, 3, [0.0, 0.0, 0.0]],
         'radius'                      : [float, 1, 0.01],
         'point_num'                   : [int, 1, 1000]
@@ -374,8 +376,8 @@ INPUT = {
     {
         'cal_surface_method'          : [str, 1, 'green_fun'],
         'surface_direction'           : [str, 1, 'c'],
-        'energy_windows'              : [float, 2, None],
-        'de'                          : [float, 1, None],
+        'energy_windows'              : [float, 2, [-1.0, 1.0]],
+        'de'                          : [float, 1, 0.01],
         'eta'                         : [float, 1, 0.01],  # unit is eV
         'coupling_layers'             : [int, 1, None],
         'calculate_layer'             : [int, 1, 1],
@@ -411,11 +413,26 @@ INPUT = {
         'band_index_range'            : [int, 2, None],
         'kpoint_mode'                 : [str, 1, None]
     },
+
+    'SHC' : 
+    {
+        'alpha'                       : [str, 1, "x"],
+        'beta'                        : [str, 1, "y"],
+        'gamma'                       : [str, 1, "z"],
+        'fermi_range'                 : [float, 2, [-1.0, 1.0]],
+        'de'                          : [float, 1, 0.01],
+        'eta'                         : [float, 1, 0.01],  # unit is eV
+        # 'k_start'                     : [float, 3, [0.0, 0.0, 0.0]],
+        # 'k_vect1'                     : [float, 3, [1.0, 0.0, 0.0]],
+        # 'k_vect2'                     : [float, 3, [0.0, 1.0, 0.0]],
+        # 'k_vect3'                     : [float, 3, [0.0, 0.0, 1.0]],
+        'integrate_grid'              : [int, 3, [4, 4, 4]]
+    },
     
     'SHG':
     {
         'method'                      : [int, 1, 0],
-        'eta'                      : [float, 1, 0.05],
+        'eta'                         : [float, 1, 0.05],
         'omega'                       : [float, 2, None],
         'domega'                      : [float, 1, None],
         #'k_start'                     : [float, 3, [0.0, 0.0, 0.0]],

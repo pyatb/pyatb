@@ -25,6 +25,7 @@ class Chirality:
         self.__tb = tb
         self.__max_kpoint_num = tb.max_kpoint_num
         self.__tb_solver = tb.tb_solver
+        self.__use_fermi_energy = True
 
         output_path = os.path.join(OUTPUT_PATH, 'Chirality')
         if RANK == 0:
@@ -47,12 +48,16 @@ class Chirality:
                 f.write('\n------------------------------------------------------')
                 f.write('\n\n')
 
-    def set_parameters(self, fermi_energy, k_vect, radius, point_num, method=0, **kwarg):
+    def set_parameters(self, fermi_energy, k_vect, radius, point_num, method=0, occ_band=-1, **kwarg):
         self.fermi_energy = fermi_energy
         self.k_vect_direct = k_vect
         self.radius = radius
         self.point_num = point_num
         self.method = method
+
+        if occ_band != -1:
+            self.__use_fermi_energy = False
+            self.occ_band = occ_band
 
         if RANK == 0:
             with open(RUNNING_LOG, 'a') as f:
@@ -63,12 +68,17 @@ class Chirality:
                 f.write(' >> point_num    : %-d\n' % (self.point_num))
                 f.write(' >> method       : %d\n' % (self.method))
 
+                if self.__use_fermi_energy:
+                    f.write(' >> Calculate berry curvature using fermi energy\n')
+                else:
+                    f.write(' >> Calculate berry curvature using occupied band number: %d\n' % (self.occ_band))
+
     def generate_k_sphere(self, k_vect_direct, radius, point_num):
         phi = np.sqrt(5) - 1
         point_list = np.zeros([point_num,3],dtype = float)
         point_list_cartesian = np.zeros([point_num,3],dtype = float)
         k_vect_cartesian = self.__tb.direct_to_cartesian_kspace(k_vect_direct)
-        print(k_vect_direct,k_vect_cartesian)
+        # print(k_vect_direct,k_vect_cartesian)
         #generate a spere in cartesian space
         for i in range(point_num):
             
@@ -108,7 +118,10 @@ class Chirality:
         berry_curvature_cartesian = np.zeros([kpoint_num,3],dtype = float)
 
         if kpoint_num:
-            berry_curvature_values = self.__tb_solver.get_total_berry_curvature_fermi(k_direct_coor, self.fermi_energy, self.method)
+            if self.__use_fermi_energy:
+                berry_curvature_values = self.__tb_solver.get_total_berry_curvature_fermi(k_direct_coor, self.fermi_energy, self.method)
+            else:
+                berry_curvature_values = self.__tb_solver.get_total_berry_curvature_occupiedNumber(k_direct_coor, self.occ_band, self.method)
             
         
         for i in range(kpoint_num):
@@ -126,7 +139,7 @@ class Chirality:
 
     def print_data(self, ans):
         output_path = self.output_path
-        descr = 'Chirality is ' + str(ans) 
+        descr = '\nChirality is ' + str(ans) 
         with open(os.path.join(output_path, "chirality.dat"), 'w') as f:
             print(descr, file=f)
 
@@ -185,11 +198,11 @@ class Chirality:
         COMM.Barrier()
         return None
 
-    def calculate_chirality(self, fermi_energy, **kwarg):
+    def calculate_chirality(self, fermi_energy, occ_band=-1, **kwarg):
         COMM.Barrier()
         timer.start('Chirality', 'calculate chirality')
 
-        self.set_parameters(fermi_energy=fermi_energy, **kwarg)
+        self.set_parameters(fermi_energy=fermi_energy, occ_band=occ_band, **kwarg)
         self.get_chirality()
 
         timer.end('Chirality', 'calculate chirality')

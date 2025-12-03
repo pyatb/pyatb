@@ -306,7 +306,7 @@ d_label = {{
     'z' : 2
 }}
 
-# Kramers-Kronig transform on [0, \infty).
+# Kramers-Kronig transform on [0, \\infty).
 def KK_pos_half_axis(omega, imag):
     num = omega.shape[0]
     real = np.zeros(num)
@@ -343,8 +343,8 @@ ax.plot(omega, np.sqrt(plot_shg_real**2 + plot_shg_imga**2), color='red', label=
 
 ax.axhline(0.0, color ="black", alpha = 1, lw = 1, linestyle='--')
 
-ax.set_xlabel('$\hbar \omega (eV)$')
-ax.set_ylabel('$\chi^{{%s}}$ (nm/V)'%(a+b+c))
+ax.set_xlabel(r'$\\hbar \\omega (eV)$')
+ax.set_ylabel(r'$\\chi^{{%s}}$ (nm/V)'%(a+b+c))
 ax.set_xlim(omega[0], omega[-1])
 ax.legend()
 

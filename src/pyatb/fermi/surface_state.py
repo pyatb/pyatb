@@ -268,7 +268,7 @@ def read_spectral_weight(file, efermi=0):
     spectral_weight = data[:, 1]
     with open(file, 'r') as fd:
         line = fd.readline()
-        pattern = re.compile(r'# kpoint_number = (\d+), energy_points = (\d+), calculate_layer_nums = (\d+)')
+        pattern = re.compile(r'# kpoint_number = (\\d+), energy_points = (\\d+), calculate_layer_nums = (\\d+)')
         nkpts = int(pattern.search(line).group(1))
         energy_points = int(pattern.search(line).group(2))
         calculate_layer_nums = int(pattern.search(line).group(3))
