@@ -8,7 +8,8 @@ class tb:
         self.lattice_constant = lattice_constant
         self.lattice_vector = lattice_vector
         self.reciprocal_vector = np.linalg.inv(self.lattice_vector).transpose()
-        self.unit_cell_volume = np.linalg.det(lattice_vector) * lattice_constant**3
+        # Physical volume is positive for either lattice basis orientation.
+        self.unit_cell_volume = abs(np.linalg.det(lattice_vector) * lattice_constant**3)
         self.read_atom_position = False
         self.read_atom_orb = False
         

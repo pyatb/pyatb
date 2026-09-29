@@ -2,6 +2,7 @@
 #define BASE_DATA_H
 
 #include <iostream>
+#include <cmath>
 #include <array>
 #include "tools.h"
 #include "cell_atom.h"
@@ -20,7 +21,8 @@ public:
 
     int get_basis_num(){return this->basis_num;}
     double get_lattice_constant(){return this->lattice_constant;}
-    double get_primitiveCell_volume(){return this->lattice_vector.determinant() * this->lattice_constant * this-> lattice_constant * this->lattice_constant;}
+    // Physical integration measure; basis orientation stays in lattice/reciprocal vectors.
+    double get_primitiveCell_volume(){return std::abs(this->lattice_vector.determinant() * this->lattice_constant * this->lattice_constant * this->lattice_constant);}
     Matrix3d get_lattice_vector(){return this->lattice_vector;}
     Matrix3d get_reciprocal_vector(){return this->reciprocal_vector;}
 
