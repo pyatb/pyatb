@@ -233,7 +233,8 @@ INPUT = {
         'output_prefix'               : [str, 1, 'COHP'],     # Prefix for COHP output files
         'input_file'                  : [str, 1, ''],         # Original Input path used for reproducibility metadata
         'orbital_dir'                 : [str, 1, ''],         # Directory containing numerical orbital files
-        'kpoint_mode'                 : [str, 1, None]        # K-point specification for COHP sampling
+        'kpoint_mode'                 : [str, 1, None],       # K-point specification for COHP sampling
+        'kpoint_weights'              : [float, -1, []]     # Optional explicit k-point weights, normalized internally
     },
 
     'FERMI_ENERGY' : 

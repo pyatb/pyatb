@@ -91,10 +91,16 @@ def get_general_parameter(parameter_name: str, default: None, data: None, parame
                         break
                     values.append(default[0](token))
                 if not values:
+                    # An omitted numeric list can use its default, but an explicit
+                    # keyword without values is a malformed request (e.g. weights).
+                    if default[0] is not str:
+                        raise ValueError(parameter_name + " requires at least one value")
                     if default[2] is None:
                         raise KeyError('key parameter missing: ' + parameter_name)
                     return default[2]
-                return ','.join(values)
+                if default[0] is str:
+                    return ','.join(values)
+                return values
             else:
                 tem = []
                 for i_size in range(default[1]):

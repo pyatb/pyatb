@@ -56,7 +56,7 @@ back to the directory containing `STRU`.
 ## Output
 
 The output directory is `Out/COHP`. The main spectrum is written to
-`COHP.dat` by default, with columns `energy_eV` and `COHP`. If
+`COHP.dat` by default, with columns `energy_eV` and the signed method label (default `-COHP`). If
 `shift_to_efermi` is set to `1`, the energy axis is `E - E_F`.
 
 `COHP.meta.json` records the selected atoms, selected global orbital indices,
@@ -67,3 +67,56 @@ same directory and can be run explicitly to create `cohp.pdf`.
 
 COHP currently supports `nspin = 1` and collinear `nspin = 2`. For spin-polarized
 data, set `spin` to `sum`, `up`, or `down`.
+
+## Pair, sign and integration conventions
+
+The two resolved **global orbital sets**, rather than the atom IDs, determine
+pair normalization: identical sets use factor 1, disjoint sets use factor 2
+(the sum of both Hermitian directions). This also applies to disjoint channels
+on the same atom. Partially overlapping or empty selections raise `ValueError`;
+split overlapping queries into identical/disjoint blocks explicitly.
+
+`invert=1` (the default) writes `-COHP` or `-COOP`; `invert=0` writes the raw
+population. The data header, metadata `spectrum_label`, and generated plot agree.
+Existing numeric columns and filenames are retained. COHP spectra have units
+eV/eV (dimensionless), COOP spectra 1/eV.
+
+`COHP.meta.json` additionally contains `occupied_integral`:
+
+```json
+{
+  "method": "ICOHP",
+  "occupation": "E <= EF (zero temperature)",
+  "unit": "eV",
+  "raw_value": -1.0,
+  "value": 1.0,
+  "label": "-ICOHP",
+  "spin_degeneracy": 2.0
+}
+```
+
+The numbers above are illustrative. This is the discrete sum over eigenstates
+with **absolute energy E <= fermi_energy**, including normalized k weights and
+the selected spin channel(s), before any broadening. `raw_value` preserves the
+Hamilton/overlap population sign; `value` follows `invert`. ICOOP uses the same
+object with method `ICOOP` and unit `dimensionless`. These are zero-temperature
+cutoff sums, not finite-temperature occupation-weighted bond energies; SCF
+fractional occupations are not an input. They are independent of `e_range`,
+`de`, `sigma`, and shifting the displayed energy axis. A line-path k sample
+still yields its weighted sum, not a Brillouin-zone integral.
+
+K weights default to uniform and explicit non-negative finite weights are
+normalized to sum to one. An explicit `kpoint_weights` keyword without values
+is an error; omit the keyword to request uniform weights. `nspin=1, spin=sum` has degeneracy 2. For `nspin=2`,
+`up`/`down` select one channel and `sum` adds both, with no extra factor 2.
+
+The Gaussian retains PyATB's convention
+`exp(-(dE/sigma)^2)/(sqrt(pi)*sigma)` (standard deviation `sigma/sqrt(2)`).
+Contributions within 10 sigma are sampled even when the state is at or outside
+the plotting window. The finite plotted portion is **not renormalized** and its
+numerical integral need not equal the discrete occupied integral. Grid samples
+start at `e_range[0]` with spacing `de`, ending at the last sample at or below
+`e_range[1]` (up to floating-point rounding). Metadata records requested and
+sampled ranges and the broadening convention. `fermi_energy` and range endpoints
+must be finite; `de` and `sigma` must be finite and positive, and the range must
+span at least one grid step.
