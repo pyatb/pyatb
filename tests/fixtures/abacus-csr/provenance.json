@@ -1,0 +1,30 @@
+{
+  "develop-hrs1_nao.csr.gz": {
+    "original_sha256": "8733d47dd6a24b2cdcddd88ce998c8eb61e8b8f035add425b6b7e03c3828a311",
+    "producer_commit": "94576a801",
+    "basis": "LCAO",
+    "nspin": 1,
+    "system": "Si2"
+  },
+  "develop-sr_nao.csr.gz": {
+    "original_sha256": "08cd467b09893fd1544a17e01652f201b28225ecd29c9de0409b1c25cbc98d9b",
+    "producer_commit": "94576a801",
+    "basis": "LCAO",
+    "nspin": 1,
+    "system": "Si2"
+  },
+  "lts-data-HR-sparse_SPIN0.csr.gz": {
+    "original_sha256": "5f187455960a3c7ed2d3c7b68492e0e666799dad356c889db68d8e37d86a3ff6",
+    "producer_commit": "f71921fe8",
+    "basis": "LCAO",
+    "nspin": 1,
+    "system": "Si2"
+  },
+  "lts-data-SR-sparse_SPIN0.csr.gz": {
+    "original_sha256": "15ed7bae1fb95a65d038c96a3ded39911cc1ccdafc0dd4ba672ca99c8bc9893a",
+    "producer_commit": "f71921fe8",
+    "basis": "LCAO",
+    "nspin": 1,
+    "system": "Si2"
+  }
+}
