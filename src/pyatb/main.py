@@ -17,6 +17,11 @@ import os
 
 def _cohp_parameters_with_default_input(cohp_parameters, input_path):
     parameters = dict(cohp_parameters)
+    # The parser uses None for required fields and [] for optional lists;
+    # read_input converts parsed lists to arrays before this adapter is called.
+    weights = parameters.get("kpoint_weights")
+    if weights is not None and len(weights) == 0:
+        parameters["kpoint_weights"] = None
     if not parameters.get("input_file"):
         parameters["input_file"] = os.path.join(input_path, "Input")
     return parameters

@@ -11,13 +11,22 @@ import shutil
 import numpy as np
 
 
-def cohp_values_one_k(matrix, eigenvalues, eigenvectors, atom_i_orbs, atom_j_orbs):
+def cohp_values_one_k(
+    matrix,
+    eigenvalues,
+    eigenvectors,
+    atom_i_orbs,
+    atom_j_orbs,
+    pair_factor=1.0,
+):
     atom_i_orbs = np.asarray(atom_i_orbs, dtype=int)
     atom_j_orbs = np.asarray(atom_j_orbs, dtype=int)
     block = matrix[np.ix_(atom_i_orbs, atom_j_orbs)]
     coeff_i = eigenvectors[atom_i_orbs, :]
     coeff_j = eigenvectors[atom_j_orbs, :]
-    values = np.einsum("ib,ij,jb->b", coeff_i.conjugate(), block, coeff_j, optimize=True).real
+    values = pair_factor * np.einsum(
+        "ib,ij,jb->b", coeff_i.conjugate(), block, coeff_j, optimize=True
+    ).real
     return np.asarray(eigenvalues, dtype=float), values
 
 
@@ -104,21 +113,66 @@ class COHP:
         return [0, 1]
 
     def _accumulate_one_k(self, spectrum, matrix, eigenvalues, eigenvectors, atom_i_orbs,
-                          atom_j_orbs, energy_min, de, sigma, invert):
+                          atom_j_orbs, energy_min, de, sigma, invert,
+                          pair_factor=1.0, kpoint_weight=1.0, fermi_energy=None):
         e_num = spectrum.shape[0]
-        energy_max = energy_min + de * e_num
-        interval = int(10 * sigma / de)
-        energies, values = cohp_values_one_k(matrix, eigenvalues, eigenvectors, atom_i_orbs, atom_j_orbs)
+        energies, values = cohp_values_one_k(
+            matrix,
+            eigenvalues,
+            eigenvectors,
+            atom_i_orbs,
+            atom_j_orbs,
+            pair_factor=pair_factor,
+        )
+        # Integrate the discrete states before any windowing or broadening.
+        # Reuse the contraction for both outputs; inversion affects display only.
+        occupied = None
+        if fermi_energy is not None:
+            occupied = float(kpoint_weight * values[energies <= fermi_energy].sum())
         if invert:
             values = -values
         for energy, value in zip(energies, values):
-            if energy - energy_min <= 1e-8 or energy_max - energy <= 1e-8:
+            # Include boundary states and tails of states outside the plot window.
+            # The continuous Gaussian is truncated at 10 sigma, without rescaling
+            # the part that falls within the requested energy grid.
+            start_index = max(0, int(np.ceil((energy - 10 * sigma - energy_min) / de)))
+            end_index = min(e_num, int(np.floor((energy + 10 * sigma - energy_min) / de)) + 1)
+            if start_index >= end_index:
                 continue
-            index = int((energy - energy_min) / de)
-            start_index = max(0, index - interval)
-            end_index = min(e_num, index + interval + 1)
             delta_E = energy_min + np.arange(start_index, end_index, dtype=float) * de - energy
-            spectrum[start_index:end_index] += value * gauss(sigma, delta_E)
+            spectrum[start_index:end_index] += kpoint_weight * value * gauss(sigma, delta_E)
+        return occupied
+
+    @staticmethod
+    def _pair_factor(atom_i_orbs, atom_j_orbs):
+        first, second = set(atom_i_orbs), set(atom_j_orbs)
+        if not first or not second:
+            raise ValueError("COHP orbital selections must be non-empty")
+        if first == second:
+            return 1.0
+        if first.isdisjoint(second):
+            return 2.0
+        raise ValueError("COHP orbital selections partially overlap; use identical or disjoint sets")
+
+    @staticmethod
+    def _normalized_kpoint_weights(total_kpoint_num, weights=None):
+        if total_kpoint_num <= 0:
+            raise ValueError("COHP requires a positive number of k points")
+        if weights is None:
+            return np.full(total_kpoint_num, 1.0 / total_kpoint_num, dtype=float)
+        weights = np.asarray(weights, dtype=float)
+        if weights.shape != (total_kpoint_num,):
+            raise ValueError(
+                "kpoint_weights must contain one value per generated k point "
+                "(%d expected, %d received)" % (total_kpoint_num, weights.size)
+            )
+        if not np.all(np.isfinite(weights)) or np.any(weights < 0.0):
+            raise ValueError("kpoint_weights must be finite and non-negative")
+        scale = float(weights.max())
+        if scale <= 0.0:
+            raise ValueError("kpoint_weights must have a positive sum")
+        weights = weights / scale
+        return weights / weights.sum()
 
     def _matrix_for_method(self, solver, kpoints, method):
         method = method.upper()
@@ -140,14 +194,28 @@ class COHP:
         COMM.Barrier()
         timer.start("cohp", "calculate COHP")
 
+        fermi_energy = float(fermi_energy)
+        if not np.isfinite(fermi_energy):
+            raise ValueError("fermi_energy must be finite")
         if e_range is None:
             e_range = [fermi_energy - 10.0, fermi_energy + 10.0]
-        energy_min = float(e_range[0])
-        energy_max = float(e_range[1])
-        de = float(de)
-        sigma = float(sigma)
-        e_num = int((energy_max - energy_min) / de) + 1
+        limits = np.asarray(e_range, dtype=float)
+        if limits.shape != (2,) or not np.all(np.isfinite(limits)):
+            raise ValueError("e_range must contain two finite energies")
+        energy_min, energy_max = limits
+        de, sigma = float(de), float(sigma)
+        if not np.isfinite(de) or not np.isfinite(sigma) or de <= 0 or sigma <= 0:
+            raise ValueError("de and sigma must be finite and positive")
+        with np.errstate(over="ignore"):
+            intervals = (energy_max - energy_min) / de
+        if not np.isfinite(intervals) or intervals < 1:
+            raise ValueError("e_range must increase and span at least one grid step de")
+        e_num = int(np.floor(np.nextafter(intervals, np.inf))) + 1
         spectrum = np.zeros(e_num, dtype=float)
+        occupied_integral = 0.0
+        method = method.upper()
+        if method not in ("COHP", "COOP"):
+            raise ValueError("COHP method must be COHP or COOP")
 
         if self.__k_generator is None:
             self.set_k_generator(**kwarg)
@@ -162,6 +230,14 @@ class COHP:
             orbital_dir=kwarg.get("orbital_dir"),
         )
         spin_indices = self._spin_indices(spin)
+        pair_factor = self._pair_factor(selection.atom_i_orbitals, selection.atom_j_orbitals)
+        supplied_kpoint_weights = kwarg.get("kpoint_weights")
+        kpoint_weights = self._normalized_kpoint_weights(
+            self.__k_generator.total_kpoint_num,
+            supplied_kpoint_weights,
+        )
+        self._last_pair_factor = pair_factor
+        self._last_kpoint_weight_mode = "explicit_normalized" if supplied_kpoint_weights is not None else "uniform"
 
         if RANK == 0:
             with open(RUNNING_LOG, "a") as f:
@@ -176,17 +252,22 @@ class COHP:
                 f.write(" >> de           : %.6f\n" % de)
                 f.write(" >> sigma        : %.6f\n" % sigma)
 
+        chunk_start = 0
         for ik in self.__k_generator:
+            chunk_weights = kpoint_weights[chunk_start:chunk_start + ik.shape[0]]
+            chunk_start += ik.shape[0]
             ik_process = kpoint_generator.kpoints_in_different_process(SIZE, RANK, ik)
             kpoint_num = ik_process.k_direct_coor_local.shape[0]
             if not kpoint_num:
                 continue
+            local_start = ik_process.ik_start_index
+            local_weights = chunk_weights[local_start:local_start + kpoint_num]
             for ispin in spin_indices:
                 solver = self.__tb_solver[ispin]
                 eigenvectors, eigenvalues = solver.diago_H(ik_process.k_direct_coor_local)
                 matrices = self._matrix_for_method(solver, ik_process.k_direct_coor_local, method)
                 for single_k in range(kpoint_num):
-                    self._accumulate_one_k(
+                    occupied_integral += self._accumulate_one_k(
                         spectrum,
                         matrices[single_k],
                         eigenvalues[single_k],
@@ -197,12 +278,18 @@ class COHP:
                         de,
                         sigma,
                         bool(invert),
+                        pair_factor=pair_factor,
+                        kpoint_weight=local_weights[single_k],
+                        fermi_energy=fermi_energy,
                     )
 
         spectrum = COMM.reduce(spectrum, root=0, op=op_sum)
+        occupied_integral = COMM.reduce(occupied_integral, root=0, op=op_sum)
 
         if RANK == 0:
-            spectrum = spectrum / self.__k_generator.total_kpoint_num * self._spin_degeneracy_factor(spin)
+            degeneracy = self._spin_degeneracy_factor(spin)
+            spectrum = spectrum * degeneracy
+            occupied_integral *= degeneracy
             energy_grid = np.array([energy_min + i * de for i in range(e_num)], dtype=float)
             if shift_to_efermi:
                 output_energy = energy_grid - fermi_energy
@@ -217,25 +304,35 @@ class COHP:
                 spin,
                 fermi_energy,
                 bool(shift_to_efermi),
+                bool(invert),
+                occupied_integral,
+                {"sigma_eV": sigma, "de_eV": de,
+                 "requested_energy_range_eV": limits.tolist(),
+                 "sampled_energy_range_eV": [float(energy_grid[0]), float(energy_grid[-1])]},
             )
 
         COMM.Barrier()
         timer.end("cohp", "calculate COHP")
 
     def print_data(self, output_prefix, energy, spectrum, selection, method, spin,
-                   fermi_energy, shifted):
+                   fermi_energy, shifted, invert=False, occupied_integral=None, broadening=None):
+        label = ("-" if invert else "") + method.upper()
         data_filename = "%s.dat" % output_prefix
         meta_filename = "%s.meta.json" % output_prefix
         np.savetxt(
             os.path.join(self.output_path, data_filename),
             np.c_[energy, spectrum],
             fmt="%0.8f",
-            header="energy_eV %s" % method.upper(),
+            header="energy_eV %s" % label,
         )
 
         metadata = {
             "method": method.upper(),
             "spin": spin,
+            "invert": bool(invert),
+            "sign_convention": "negative population" if invert else "raw population",
+            "spectrum_label": label,
+            "spectrum_unit": "dimensionless" if method.upper() == "COHP" else "1/eV",
             "fermi_energy_eV": float(fermi_energy),
             "energy_shifted_to_efermi": shifted,
             "files": {
@@ -244,6 +341,9 @@ class COHP:
             "atom_i_orbitals": selection.atom_i_orbitals,
             "atom_j_orbitals": selection.atom_j_orbitals,
             "total_orbitals": selection.orbital_map.total_orbitals,
+            "pair_convention": "unordered Hermitian orbital-set pair (identical: 1, disjoint: 2)",
+            "pair_factor": float(getattr(self, "_last_pair_factor", 1.0)),
+            "kpoint_weight_mode": getattr(self, "_last_kpoint_weight_mode", "uniform"),
             "atoms": [
                 {
                     "index": atom.index,
@@ -256,6 +356,19 @@ class COHP:
                 for atom in selection.orbital_map.atoms
             ],
         }
+        if occupied_integral is not None:
+            metadata["occupied_integral"] = {
+                "method": "I" + method.upper(),
+                "occupation": "E <= EF (zero temperature)",
+                "unit": "eV" if method.upper() == "COHP" else "dimensionless",
+                "raw_value": float(occupied_integral),
+                "value": float(-occupied_integral if invert else occupied_integral),
+                "label": ("-" if invert else "") + "I" + method.upper(),
+                "spin_degeneracy": self._spin_degeneracy_factor(spin),
+            }
+        if broadening is not None:
+            metadata["broadening"] = dict(broadening, kernel="exp(-(dE/sigma)^2)/(sqrt(pi)*sigma)",
+                                          cutoff_sigma=10., window_renormalized=False)
         with open(os.path.join(self.output_path, meta_filename), "w") as file_obj:
             json.dump(metadata, file_obj, indent=4)
 
@@ -283,9 +396,9 @@ fig, ax = plt.subplots(1, 1, tight_layout=True)
 ax.axvline(0.0, color="0.7", linewidth=0.8)
 ax.axhline(0.0, color="0.7", linewidth=0.8)
 ax.plot(cohp, energy)
-ax.set_xlabel(metadata["method"])
+ax.set_xlabel(metadata.get("spectrum_label", metadata["method"]))
 ax.set_ylabel(r"$E-E_F$ (eV)" if metadata["energy_shifted_to_efermi"] else "Energy (eV)")
-ax.set_title(metadata["method"])
+ax.set_title(metadata.get("spectrum_label", metadata["method"]))
 plt.savefig(os.path.join(work_path, "cohp.pdf"))
 plt.close("all")
 """
