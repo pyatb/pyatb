@@ -1,6 +1,6 @@
 import numpy as np
 from pyatb.tb import tb
-from pyatb.io.abacus_read_xr import abacus_readHR, abacus_readSR, abacus_readrR
+from pyatb.io.abacus_read_xr import abacus_readHR, abacus_readSR, abacus_readrR, _align_abacus_R
 from pyatb.io.wannier90_read_tb import wannier90_readHR, wannier90_readTB
 
 
@@ -37,6 +37,17 @@ def init_tb(
 
         if need_rR:
             rR = abacus_readrR(rR_route, rR_unit)
+        # H/S/rR may omit different all-zero R blocks in ABACUS CSR output.
+        matrices = [HR, SR] if nspin != 2 else [HR_up, HR_dn, SR]
+        if need_rR:
+            matrices.extend(rR)
+        aligned = _align_abacus_R(*matrices)
+        if nspin != 2:
+            HR, SR = aligned[:2]
+            rR = aligned[2:]
+        else:
+            HR_up, HR_dn, SR = aligned[:3]
+            rR = aligned[3:]
     elif package == 'WANNIER90':
         if nspin == 2:
             raise ValueError('WANNIER90 only for nspin = 1 or 4 !')
