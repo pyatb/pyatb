@@ -1,0 +1,210 @@
+{
+  "omp_w600": [
+    {
+      "repeat": 0,
+      "official_response_seconds": 56.702291128225625,
+      "precontract_response_seconds": 10.139181290753186,
+      "errors": {
+        "max_abs": 7.455817445973096e-08,
+        "global_peak_relative": 1.6599529782315594e-15,
+        "max_component_peak_relative": 1.2919639128880741e-14,
+        "atol": 4.4915835229960524e-05,
+        "rtol": 1e-10
+      }
+    },
+    {
+      "repeat": 1,
+      "official_response_seconds": 55.71058648265898,
+      "precontract_response_seconds": 9.016091271303594,
+      "errors": {
+        "max_abs": 7.455817445973096e-08,
+        "global_peak_relative": 1.6599529782315594e-15,
+        "max_component_peak_relative": 1.2919639128880741e-14,
+        "atol": 4.4915835229960524e-05,
+        "rtol": 1e-10
+      }
+    },
+    {
+      "repeat": 2,
+      "official_response_seconds": 55.710075804032385,
+      "precontract_response_seconds": 9.87347180210054,
+      "errors": {
+        "max_abs": 7.455817445973096e-08,
+        "global_peak_relative": 1.6599529782315594e-15,
+        "max_component_peak_relative": 1.2919639128880741e-14,
+        "atol": 4.4915835229960524e-05,
+        "rtol": 1e-10
+      }
+    },
+    {
+      "repeat": 3,
+      "official_response_seconds": 55.75793037749827,
+      "precontract_response_seconds": 9.025086873210967,
+      "errors": {
+        "max_abs": 7.455817445973096e-08,
+        "global_peak_relative": 1.6599529782315594e-15,
+        "max_component_peak_relative": 1.2919639128880741e-14,
+        "atol": 4.4915835229960524e-05,
+        "rtol": 1e-10
+      }
+    }
+  ],
+  "mpi_w600": [
+    {
+      "repeat": 0,
+      "official_response_seconds": 44.97801080399999,
+      "precontract_response_seconds": 9.77233114,
+      "errors": {
+        "max_abs": 7.730538386645592e-08,
+        "global_peak_relative": 1.721116471967338e-15,
+        "max_component_peak_relative": 1.3395682894752771e-14,
+        "strict_allclose": true,
+        "rtol": 1e-10,
+        "atol": 1e-12
+      }
+    },
+    {
+      "repeat": 1,
+      "official_response_seconds": 43.082989761,
+      "precontract_response_seconds": 9.801948997,
+      "errors": {
+        "max_abs": 7.730538386645592e-08,
+        "global_peak_relative": 1.721116471967338e-15,
+        "max_component_peak_relative": 1.3395682894752771e-14,
+        "strict_allclose": true,
+        "rtol": 1e-10,
+        "atol": 1e-12
+      }
+    },
+    {
+      "repeat": 2,
+      "official_response_seconds": 43.175625363,
+      "precontract_response_seconds": 9.732928559,
+      "errors": {
+        "max_abs": 7.730538386645592e-08,
+        "global_peak_relative": 1.721116471967338e-15,
+        "max_component_peak_relative": 1.3395682894752771e-14,
+        "strict_allclose": true,
+        "rtol": 1e-10,
+        "atol": 1e-12
+      }
+    },
+    {
+      "repeat": 3,
+      "official_response_seconds": 43.16224522,
+      "precontract_response_seconds": 9.816273207,
+      "errors": {
+        "max_abs": 7.730538386645592e-08,
+        "global_peak_relative": 1.721116471967338e-15,
+        "max_component_peak_relative": 1.3395682894752771e-14,
+        "strict_allclose": true,
+        "rtol": 1e-10,
+        "atol": 1e-12
+      }
+    }
+  ],
+  "omp_w1200": [
+    {
+      "repeat": 0,
+      "official_response_seconds": 108.74935933854431,
+      "precontract_response_seconds": 14.601421887986362,
+      "errors": {
+        "max_abs": 7.246533517631924e-08,
+        "global_peak_relative": 1.6133582927223286e-15,
+        "max_component_peak_relative": 1.4057953600874692e-14,
+        "atol": 4.4915835188750034e-05,
+        "rtol": 1e-10
+      }
+    },
+    {
+      "repeat": 1,
+      "official_response_seconds": 107.74045596923679,
+      "precontract_response_seconds": 13.966294618323445,
+      "errors": {
+        "max_abs": 7.246533517631924e-08,
+        "global_peak_relative": 1.6133582927223286e-15,
+        "max_component_peak_relative": 1.4057953600874692e-14,
+        "atol": 4.4915835188750034e-05,
+        "rtol": 1e-10
+      }
+    },
+    {
+      "repeat": 2,
+      "official_response_seconds": 107.74684508424252,
+      "precontract_response_seconds": 15.277563562616706,
+      "errors": {
+        "max_abs": 7.246533517631924e-08,
+        "global_peak_relative": 1.6133582927223286e-15,
+        "max_component_peak_relative": 1.4057953600874692e-14,
+        "atol": 4.4915835188750034e-05,
+        "rtol": 1e-10
+      }
+    },
+    {
+      "repeat": 3,
+      "official_response_seconds": 107.77560504712164,
+      "precontract_response_seconds": 13.967272392474115,
+      "errors": {
+        "max_abs": 7.246533517631924e-08,
+        "global_peak_relative": 1.6133582927223286e-15,
+        "max_component_peak_relative": 1.4057953600874692e-14,
+        "atol": 4.4915835188750034e-05,
+        "rtol": 1e-10
+      }
+    }
+  ],
+  "mpi_w1200": [
+    {
+      "repeat": 0,
+      "official_response_seconds": 83.81486296899999,
+      "precontract_response_seconds": 13.770827741000002,
+      "errors": {
+        "max_abs": 7.679882693323606e-08,
+        "global_peak_relative": 1.7098385593967918e-15,
+        "max_component_peak_relative": 1.4185797039185214e-14,
+        "strict_allclose": true,
+        "rtol": 1e-10,
+        "atol": 1e-12
+      }
+    },
+    {
+      "repeat": 1,
+      "official_response_seconds": 81.58241352399999,
+      "precontract_response_seconds": 13.737135483000001,
+      "errors": {
+        "max_abs": 7.679882693323606e-08,
+        "global_peak_relative": 1.7098385593967918e-15,
+        "max_component_peak_relative": 1.4185797039185214e-14,
+        "strict_allclose": true,
+        "rtol": 1e-10,
+        "atol": 1e-12
+      }
+    },
+    {
+      "repeat": 2,
+      "official_response_seconds": 81.95684830900001,
+      "precontract_response_seconds": 13.765570589,
+      "errors": {
+        "max_abs": 7.679882693323606e-08,
+        "global_peak_relative": 1.7098385593967918e-15,
+        "max_component_peak_relative": 1.4185797039185214e-14,
+        "strict_allclose": true,
+        "rtol": 1e-10,
+        "atol": 1e-12
+      }
+    },
+    {
+      "repeat": 3,
+      "official_response_seconds": 81.776381648,
+      "precontract_response_seconds": 13.809479469,
+      "errors": {
+        "max_abs": 7.679882693323606e-08,
+        "global_peak_relative": 1.7098385593967918e-15,
+        "max_component_peak_relative": 1.4185797039185214e-14,
+        "strict_allclose": true,
+        "rtol": 1e-10,
+        "atol": 1e-12
+      }
+    }
+  ]
+}
