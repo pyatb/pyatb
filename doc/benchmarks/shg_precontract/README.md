@@ -138,3 +138,37 @@ not add a new MPI implementation to the solver.
 Compare the saved `chi_raw` arrays with `numpy.testing.assert_allclose` using
 rtol=1e-10, atol=1e-12 and require identical `omega_eV`/`kpoints` arrays. Do not
 apply additional wrapper prefactors before this arithmetic equivalence check.
+
+## GaAs spectra before and after optimization
+
+![GaAs raw response before and after precontraction](gaas_comparison.png)
+
+This is the first OpenMP pair of the measured 8000-point/1200-energy case.
+The top panels compare the real and imaginary parts of `xyz` and the largest
+baseline raw component (`zyz`). Original results are continuous lines;
+precontracted results are subsampled hollow markers for legibility. Display
+selection uses baseline amplitudes, not the size of the comparison error.
+It does not assert a symmetry selection rule for this input model.
+The bottom panels use every energy and all 27 complex components. The complete
+arrays must pass rtol=1e-10, atol=1e-12 before any figure is generated.
+
+These are raw method-0 API results before wrapper unit/spin factors. Agreement
+establishes preservation of the baseline calculation; it does not independently
+validate the material model, crystal symmetry, k-grid convergence, or absolute
+physical susceptibility. The exact fixed inputs and approximation boundaries
+remain those described above. These figures do not claim agreement with an
+experimental GaAs spectrum.
+
+The representative numerical outputs are included under `spectra/` so that
+reviewers can regenerate the overlay without material inputs or a PYATB build:
+
+```bash
+python doc/benchmarks/shg_precontract/plot_comparison.py \
+  --original doc/benchmarks/shg_precontract/spectra/original.npz \
+  --candidate doc/benchmarks/shg_precontract/spectra/precontracted.npz \
+  --output doc/benchmarks/shg_precontract/gaas_comparison
+```
+
+This analysis-only script requires NumPy and Matplotlib and writes PDF, PNG and
+JSON diagnostics, including the input-array file hashes. It does not change
+or rerun the solver, and there is no timing assertion in the plot script.
