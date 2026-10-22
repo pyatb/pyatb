@@ -255,7 +255,7 @@ class Second_Harmonic_Generation:
             #np.savetxt(f, self.kvec_d, fmt='%0.8f')
         #kpt_num = self.kvec_d.shape
         if self.nspin == 1:
-            factor = 2.0
+            factor = 1.0
         elif self.nspin == 4:
             factor = 1.0
 

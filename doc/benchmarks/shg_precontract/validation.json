@@ -1,0 +1,106 @@
+{
+  "paired": [
+    {
+      "case": "omp_w600",
+      "repeat": 0,
+      "strict_allclose": true
+    },
+    {
+      "case": "omp_w600",
+      "repeat": 1,
+      "strict_allclose": true
+    },
+    {
+      "case": "omp_w600",
+      "repeat": 2,
+      "strict_allclose": true
+    },
+    {
+      "case": "omp_w600",
+      "repeat": 3,
+      "strict_allclose": true
+    },
+    {
+      "case": "mpi_w600",
+      "repeat": 0,
+      "strict_allclose": true
+    },
+    {
+      "case": "mpi_w600",
+      "repeat": 1,
+      "strict_allclose": true
+    },
+    {
+      "case": "mpi_w600",
+      "repeat": 2,
+      "strict_allclose": true
+    },
+    {
+      "case": "mpi_w600",
+      "repeat": 3,
+      "strict_allclose": true
+    },
+    {
+      "case": "omp_w1200",
+      "repeat": 0,
+      "strict_allclose": true
+    },
+    {
+      "case": "omp_w1200",
+      "repeat": 1,
+      "strict_allclose": true
+    },
+    {
+      "case": "omp_w1200",
+      "repeat": 2,
+      "strict_allclose": true
+    },
+    {
+      "case": "omp_w1200",
+      "repeat": 3,
+      "strict_allclose": true
+    },
+    {
+      "case": "mpi_w1200",
+      "repeat": 0,
+      "strict_allclose": true
+    },
+    {
+      "case": "mpi_w1200",
+      "repeat": 1,
+      "strict_allclose": true
+    },
+    {
+      "case": "mpi_w1200",
+      "repeat": 2,
+      "strict_allclose": true
+    },
+    {
+      "case": "mpi_w1200",
+      "repeat": 3,
+      "strict_allclose": true
+    }
+  ],
+  "cross_mode": [
+    {
+      "nomega": 600,
+      "version": "official",
+      "strict_allclose": true
+    },
+    {
+      "nomega": 600,
+      "version": "precontract",
+      "strict_allclose": true
+    },
+    {
+      "nomega": 1200,
+      "version": "official",
+      "strict_allclose": true
+    },
+    {
+      "nomega": 1200,
+      "version": "precontract",
+      "strict_allclose": true
+    }
+  ]
+}

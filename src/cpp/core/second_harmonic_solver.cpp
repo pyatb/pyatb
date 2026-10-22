@@ -1,6 +1,9 @@
 #include "second_harmonic_solver.h"
 #include <fstream>
 #include <cmath>
+#include <array>
+#include <complex>
+#include <vector>
 void second_harmonic_solver::set_parameters(
     const int &method,
     const double &eta,
@@ -123,6 +126,35 @@ MatrixXcd second_harmonic_solver::get_second_harmonic_ik(
     
     if (method == 0)
     {
+    // Frequency-independent coefficients indexed by ordered (source, target) pairs.
+    // Only regular static denominators are contracted. Near-midpoint triples
+    // retain the exact upstream expressions and branch-specific cutoffs below.
+    const double precontract_threshold_eV = 1e-2;
+    // Extremely ill-conditioned upstream midpoints can amplify a different
+    // summation order. Preserve the complete upstream order for that k point.
+    // This is an algorithm-selection guard, not a denominator regularization.
+    const double order_guard_eV = 1e-7;
+    bool allow_precontract = true;
+    const double scan_cutoff = start_omega + omega_num * domega + range;
+    for (int n=0; n<basis_num && allow_precontract; ++n)
+    for (int m=0; m<basis_num && allow_precontract; ++m)
+    for (int p=0; p<basis_num && allow_precontract; ++p)
+    {
+        const double en=eigenvalues(n), em=eigenvalues(m), ep=eigenvalues(p);
+        const int fn=en<=fermi_energy, fm=em<=fermi_energy, fp=ep<=fermi_energy;
+        const bool active = ((fn-fm)!=0 && std::abs(en-em)<2.0*scan_cutoff) ||
+                            ((fp-fn)!=0 && std::abs(en-ep)<scan_cutoff) ||
+                            ((fm-fp)!=0 && std::abs(ep-em)<scan_cutoff);
+        if (active && std::abs(2.0*ep-en-em)<order_guard_eV)
+            allow_precontract=false;
+    }
+
+    using tensor27 = std::array<std::complex<double>, 27>;
+    const tensor27 zero_tensor{};
+    std::vector<tensor27> coeff_one(basis_num * basis_num, zero_tensor);
+    std::vector<tensor27> coeff_two(basis_num * basis_num, zero_tensor);
+    // Untouched coefficient pairs are exactly zero and need no frequency scan.
+    std::vector<unsigned char> active_pairs(basis_num * basis_num, 0);
     for(int nband = 0; nband < basis_num; nband++)
     {
         
@@ -177,6 +209,38 @@ MatrixXcd second_harmonic_solver::get_second_harmonic_ik(
                 double f_p = 0;
                 if(E_p<=fermi_energy)
                 {f_p = 1;}
+                const double midpoint = 2.0 * E_p - E_n - E_m;
+                if (allow_precontract && std::abs(midpoint) >= precontract_threshold_eV)
+                {
+                    const double cutoff = start_omega + omega_num * domega + range;
+                    const bool branch_two = (f_n-f_m)!=0 && std::abs(E_n-E_m)<2.0*cutoff;
+                    const bool branch_pn = (f_p-f_n)!=0 && std::abs(E_n-E_p)<cutoff;
+                    const bool branch_mp = (f_m-f_p)!=0 && std::abs(E_p-E_m)<cutoff;
+                    if (branch_two || branch_pn || branch_mp)
+                    {
+                        if (branch_two) active_pairs[nband*basis_num+mband]=1;
+                        if (branch_pn) active_pairs[nband*basis_num+pband]=1;
+                        if (branch_mp) active_pairs[pband*basis_num+mband]=1;
+                        for (int a=0; a<3; ++a)
+                        for (int b=0; b<3; ++b)
+                        for (int c=0; c<3; ++c)
+                        {
+                            const int direction = a*9+b*3+c;
+                            const std::complex<double> numerator = r_nm[a](nband,mband) *
+                                (r_nm[b](mband,pband)*r_nm[c](pband,nband) +
+                                 r_nm[c](mband,pband)*r_nm[b](pband,nband));
+                            const auto weight = numerator / midpoint;
+                            if (branch_two)
+                                coeff_two[nband*basis_num+mband][direction] += weight*(f_n-f_m);
+                            if (branch_pn)
+                                coeff_one[nband*basis_num+pband][direction] += weight*(0.5*(f_p-f_n));
+                            if (branch_mp)
+                                coeff_one[pband*basis_num+mband][direction] += weight*(0.5*(f_m-f_p));
+                        }
+                    }
+                    continue;
+                }
+
                 
                     
                 if ((f_n-f_m)!=0&& fabs(E_n-E_m)<(start_omega+omega_num*domega+range)*2.0)    
@@ -226,6 +290,26 @@ MatrixXcd second_harmonic_solver::get_second_harmonic_ik(
             }
         }
     }
+    // Dynamic factors now visit ordered pairs, after summing the third band.
+    if (allow_precontract)
+    {
+        for (int n=0; n<basis_num; ++n)
+        for (int m=0; m<basis_num; ++m)
+        {
+            const int pair = n*basis_num+m;
+            if (!active_pairs[pair]) continue;
+            const double gap = eigenvalues(m)-eigenvalues(n);
+            for (int iw=0; iw<omega_num; ++iw)
+            {
+                const std::complex<double> z = start_omega+iw*domega+IMAG_UNIT*eta;
+                const auto one = 1.0/(gap-z);
+                const auto two = 1.0/(gap-2.0*z);
+                for (int abc=0; abc<27; ++abc)
+                    shg(abc,iw) += coeff_one[pair][abc]*one + coeff_two[pair][abc]*two;
+            }
+        }
+    }
+
     }
     
     
