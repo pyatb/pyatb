@@ -257,7 +257,7 @@ VectorXcd linear_response::get_partial2_eigenvectors_1k_SumOverStates(
         double delta_e = eigenvalues(band_index) - eigenvalues(i);
         if (std::abs(delta_e) > degenerate_threshold)
         {
-            T(i) = ( CH_beta_C_alpha(i) - E_beta * CSC_beta(i) - eigenvalues(band_index) * CS_beta_C_alpha(i) + 
+            T(i) = ( CH_beta_C_alpha(i) - E_beta * CSC_alpha(i) - eigenvalues(band_index) * CS_beta_C_alpha(i) + 
                      CH_alpha_C_beta(i) - E_alpha * CSC_beta(i) - eigenvalues(band_index) * CS_alpha_C_beta(i) + 
                      H_beta_alpha_bar(i) - E_alpha * S_beta_bar(i) - E_beta * S_alpha_bar(i) - eigenvalues(band_index) * S_beta_alpha_bar(i)
                    ) / delta_e;
